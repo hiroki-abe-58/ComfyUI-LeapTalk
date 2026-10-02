@@ -1,0 +1,26 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+_comfyui/
+/results/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.mp4
+*.webm
+*.mkv
+*.wav
+*.mp3
+*.log
+.env
+.env.*
+.claude/
+.DS_Store
+Thumbs.db
+# local runtime registration (contains machine paths)
+leaptalk.runtimes.json

@@ -1,0 +1,511 @@
+{
+ "method": "frames at word timings (first, middle, last word, end of speech + 0.2 s), chunk-boundary frame pairs, first vs last frame; automatic proxies below. Not a listening test; not a lip-sync metric.",
+ "cases": {
+  "a_short": {
+   "sync": {
+    "frames": 234,
+    "mouth_box_px": [
+     317,
+     389,
+     204,
+     307
+    ],
+    "audio_s": 9.35,
+    "corr_mouthdev_rms_by_lag_frames": {
+     "-5": -0.186,
+     "-4": -0.16,
+     "-3": -0.104,
+     "-2": 0.006,
+     "-1": 0.136,
+     "0": 0.252,
+     "1": 0.262,
+     "2": 0.211,
+     "3": 0.174,
+     "4": 0.149,
+     "5": 0.142
+    },
+    "best_lag_frames": 1,
+    "best_corr": 0.262,
+    "mean_mouthdev_speech_frames": 19.702695846557617,
+    "mean_mouthdev_silence_frames": 14.985600471496582,
+    "first_word": {
+     "text": "Hello",
+     "start": 0.275,
+     "end": 0.625
+    },
+    "last_word": {
+     "text": "watching",
+     "start": 8.325,
+     "end": 9.1
+    },
+    "frames_after_last_word": 6
+   },
+   "boundaries": {
+    "frames": 234,
+    "slice_len": 28,
+    "boundary_mean_diff": 2.885,
+    "inner_mean_diff": 1.825,
+    "inner_p95_diff": 3.893,
+    "boundary_max_diff": 4.04,
+    "top5_jumps": [
+     [
+      202,
+      5.54,
+      false
+     ],
+     [
+      10,
+      5.19,
+      false
+     ],
+     [
+      127,
+      5.04,
+      false
+     ],
+     [
+      205,
+      4.83,
+      false
+     ],
+     [
+      72,
+      4.82,
+      false
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 4.19
+   }
+  },
+  "b_long": {
+   "sync": {
+    "frames": 850,
+    "mouth_box_px": [
+     307,
+     378,
+     204,
+     307
+    ],
+    "audio_s": 33.975,
+    "corr_mouthdev_rms_by_lag_frames": {
+     "-5": -0.147,
+     "-4": -0.057,
+     "-3": 0.055,
+     "-2": 0.158,
+     "-1": 0.23,
+     "0": 0.248,
+     "1": 0.195,
+     "2": 0.152,
+     "3": 0.163,
+     "4": 0.183,
+     "5": 0.172
+    },
+    "best_lag_frames": 0,
+    "best_corr": 0.248,
+    "mean_mouthdev_speech_frames": 21.078006744384766,
+    "mean_mouthdev_silence_frames": 17.89335060119629,
+    "first_word": {
+     "text": "Good",
+     "start": 0.375,
+     "end": 0.575
+    },
+    "last_word": {
+     "text": "Goodbye",
+     "start": 32.737,
+     "end": 33.7
+    },
+    "frames_after_last_word": 7
+   },
+   "boundaries": {
+    "frames": 850,
+    "slice_len": 28,
+    "boundary_mean_diff": 2.823,
+    "inner_mean_diff": 1.49,
+    "inner_p95_diff": 2.678,
+    "boundary_max_diff": 3.793,
+    "top5_jumps": [
+     [
+      15,
+      4.05,
+      false
+     ],
+     [
+      11,
+      3.93,
+      false
+     ],
+     [
+      28,
+      3.79,
+      true
+     ],
+     [
+      756,
+      3.74,
+      true
+     ],
+     [
+      823,
+      3.69,
+      false
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 3.22
+   }
+  },
+  "a_long": {
+   "sync": {
+    "frames": 770,
+    "mouth_box_px": [
+     317,
+     389,
+     204,
+     307
+    ],
+    "audio_s": 30.775,
+    "corr_mouthdev_rms_by_lag_frames": {
+     "-5": -0.195,
+     "-4": -0.148,
+     "-3": -0.075,
+     "-2": 0.01,
+     "-1": 0.091,
+     "0": 0.144,
+     "1": 0.136,
+     "2": 0.09,
+     "3": 0.081,
+     "4": 0.096,
+     "5": 0.113
+    },
+    "best_lag_frames": 0,
+    "best_corr": 0.144,
+    "mean_mouthdev_speech_frames": 19.602834701538086,
+    "mean_mouthdev_silence_frames": 14.179086685180664,
+    "first_word": {
+     "text": "Good",
+     "start": 0.275,
+     "end": 0.475
+    },
+    "last_word": {
+     "text": "Goodbye",
+     "start": 29.738,
+     "end": 30.5
+    },
+    "frames_after_last_word": 8
+   },
+   "boundaries": {
+    "frames": 770,
+    "slice_len": 28,
+    "boundary_mean_diff": 3.155,
+    "inner_mean_diff": 1.711,
+    "inner_p95_diff": 3.38,
+    "boundary_max_diff": 6.345,
+    "top5_jumps": [
+     [
+      336,
+      6.34,
+      true
+     ],
+     [
+      191,
+      5.73,
+      false
+     ],
+     [
+      750,
+      5.15,
+      false
+     ],
+     [
+      490,
+      4.79,
+      false
+     ],
+     [
+      196,
+      4.76,
+      true
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 4.44
+   }
+  },
+  "b_short": {
+   "sync": {
+    "frames": 260,
+    "mouth_box_px": [
+     307,
+     378,
+     204,
+     307
+    ],
+    "audio_s": 10.4,
+    "corr_mouthdev_rms_by_lag_frames": {
+     "-5": -0.14,
+     "-4": -0.048,
+     "-3": 0.072,
+     "-2": 0.194,
+     "-1": 0.287,
+     "0": 0.318,
+     "1": 0.291,
+     "2": 0.261,
+     "3": 0.234,
+     "4": 0.201,
+     "5": 0.19
+    },
+    "best_lag_frames": 0,
+    "best_corr": 0.318,
+    "mean_mouthdev_speech_frames": 21.389190673828125,
+    "mean_mouthdev_silence_frames": 17.804645538330078,
+    "first_word": {
+     "text": "Hello",
+     "start": 0.375,
+     "end": 0.75
+    },
+    "last_word": {
+     "text": "watching",
+     "start": 9.262,
+     "end": 10.125
+    },
+    "frames_after_last_word": 7
+   },
+   "boundaries": {
+    "frames": 260,
+    "slice_len": 28,
+    "boundary_mean_diff": 2.985,
+    "inner_mean_diff": 1.411,
+    "inner_p95_diff": 2.706,
+    "boundary_max_diff": 3.943,
+    "top5_jumps": [
+     [
+      11,
+      4.56,
+      false
+     ],
+     [
+      168,
+      3.94,
+      true
+     ],
+     [
+      14,
+      3.85,
+      false
+     ],
+     [
+      84,
+      3.65,
+      true
+     ],
+     [
+      227,
+      3.62,
+      false
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 3.83
+   }
+  },
+  "a_short_wanvae": {
+   "sync": {
+    "frames": 234,
+    "mouth_box_px": [
+     317,
+     389,
+     204,
+     307
+    ],
+    "audio_s": 9.35,
+    "corr_mouthdev_rms_by_lag_frames": {
+     "-5": -0.18,
+     "-4": -0.157,
+     "-3": -0.102,
+     "-2": 0.022,
+     "-1": 0.169,
+     "0": 0.294,
+     "1": 0.292,
+     "2": 0.229,
+     "3": 0.189,
+     "4": 0.165,
+     "5": 0.161
+    },
+    "best_lag_frames": 0,
+    "best_corr": 0.294,
+    "mean_mouthdev_speech_frames": 19.087461471557617,
+    "mean_mouthdev_silence_frames": 13.996725082397461,
+    "first_word": {
+     "text": "Hello",
+     "start": 0.275,
+     "end": 0.625
+    },
+    "last_word": {
+     "text": "watching",
+     "start": 8.325,
+     "end": 9.1
+    },
+    "frames_after_last_word": 6
+   },
+   "boundaries": {
+    "frames": 234,
+    "slice_len": 28,
+    "boundary_mean_diff": 2.19,
+    "inner_mean_diff": 1.636,
+    "inner_p95_diff": 3.478,
+    "boundary_max_diff": 3.227,
+    "top5_jumps": [
+     [
+      202,
+      5.01,
+      false
+     ],
+     [
+      10,
+      4.74,
+      false
+     ],
+     [
+      205,
+      4.47,
+      false
+     ],
+     [
+      127,
+      4.15,
+      false
+     ],
+     [
+      73,
+      3.97,
+      false
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 3.84
+   }
+  },
+  "a_short_cfg2": {
+   "sync": {
+    "frames": 234,
+    "mouth_box_px": [
+     317,
+     389,
+     204,
+     307
+    ],
+    "audio_s": 9.35,
+    "corr_mouthdev_rms_by_lag_frames": {
+     "-5": -0.154,
+     "-4": -0.139,
+     "-3": -0.075,
+     "-2": 0.02,
+     "-1": 0.113,
+     "0": 0.189,
+     "1": 0.182,
+     "2": 0.151,
+     "3": 0.109,
+     "4": 0.061,
+     "5": 0.045
+    },
+    "best_lag_frames": 0,
+    "best_corr": 0.189,
+    "mean_mouthdev_speech_frames": 52.76435089111328,
+    "mean_mouthdev_silence_frames": 40.80271530151367,
+    "first_word": {
+     "text": "Hello",
+     "start": 0.275,
+     "end": 0.625
+    },
+    "last_word": {
+     "text": "watching",
+     "start": 8.325,
+     "end": 9.1
+    },
+    "frames_after_last_word": 6
+   },
+   "boundaries": {
+    "frames": 234,
+    "slice_len": 28,
+    "boundary_mean_diff": 4.708,
+    "inner_mean_diff": 4.051,
+    "inner_p95_diff": 9.059,
+    "boundary_max_diff": 6.488,
+    "top5_jumps": [
+     [
+      202,
+      15.96,
+      false
+     ],
+     [
+      10,
+      12.23,
+      false
+     ],
+     [
+      206,
+      11.47,
+      false
+     ],
+     [
+      126,
+      11.3,
+      false
+     ],
+     [
+      95,
+      11.2,
+      false
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 8.46
+   }
+  },
+  "b_concat_97s": {
+   "boundaries": {
+    "frames": 2414,
+    "slice_len": 28,
+    "boundary_mean_diff": 2.76,
+    "inner_mean_diff": 1.471,
+    "inner_p95_diff": 2.753,
+    "boundary_max_diff": 5.744,
+    "top5_jumps": [
+     [
+      336,
+      5.74,
+      true
+     ],
+     [
+      1834,
+      4.52,
+      false
+     ],
+     [
+      191,
+      4.52,
+      false
+     ],
+     [
+      795,
+      4.38,
+      false
+     ],
+     [
+      1835,
+      4.34,
+      false
+     ]
+    ],
+    "first_vs_last_frame_mean_abs": 3.84
+   }
+  }
+ },
+ "observations": {
+  "lite_tae_and_wan_vae": "coherent faces; mouth moves from the first word; last word visible; mouth closed 0.2 s after speech; identity stable over 34 s and 96.5 s",
+  "chunk_boundaries": "frame change at boundaries 2.2-3.2 (of 255) vs 1.4-1.8 inside chunks; no visible seam in reviewed pairs",
+  "audio_guidance_2_0": "strong artifacts: over-sharpened, discoloured lips, exaggerated features",
+  "silence": "mostly still, closed mouth",
+  "speech_fixture_asr_wer": {
+   "short_a": 0.038,
+   "long_a": 0.031,
+   "short_b": 0.038,
+   "long_b": 0.062
+  }
+ }
+}

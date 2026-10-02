@@ -1,0 +1,197 @@
+{
+ "ai_generated": true,
+ "selection": "all four portrait x speech combinations of the release test are published (no cherry-picking); plus the Wan VAE decoder variant of portrait A / short speech. Videos are the runtime's own output.mp4 (H.264 CRF 18 + AAC 192 kb/s), not edited.",
+ "portraits": {
+  "generator": "stabilityai/stable-diffusion-xl-base-1.0 @ 462165984030d82259a11f4367a4eed129e94a7b (fp16 variant), license CreativeML Open RAIL++-M",
+  "prompts": {
+   "portrait_a": "studio head-and-shoulders portrait photo of a fictional adult woman in her thirties, shoulder-length dark brown hair, relaxed neutral expression, lips closed, looking straight into the camera, plain light gray background, soft even front lighting, natural skin texture, sharp focus, 85mm photo",
+   "portrait_b": "studio head-and-shoulders portrait photo of a fictional adult man in his forties, short brown hair, light stubble, calm neutral expression, lips closed, looking straight into the camera, plain dark blue-gray background, soft even front lighting, natural skin texture, sharp focus, 85mm photo"
+  },
+  "negative_prompt": "cartoon, illustration, painting, 3d render, text, watermark, logo, signature, frame, deformed face, asymmetric eyes, extra teeth, open mouth, smiling with teeth, hands, sunglasses, hat, jewelry, celebrity, blurry, low quality, oversaturated",
+  "steps": 30,
+  "guidance_scale": 6.0,
+  "size": 1024,
+  "selected": {
+   "input_portrait_a.png": "portrait_a seed 1101",
+   "input_portrait_b.png": "portrait_b seed 2203"
+  },
+  "selection_criteria": "frontal, centered head-and-shoulders, closed mouth, no visible artifacts (3 candidates per portrait)",
+  "note": "Fictional people generated for this test; any resemblance to a real person is unintended. Selected candidates are recorded separately."
+ },
+ "speech": {
+  "generator": "hexgrad/Kokoro-82M @ f3ff3571791e39611d31c381e3a41a3af07b4987 (Apache-2.0), kokoro 0.9.4, misaki G2P (en)",
+  "scripts": {
+   "short": "Hello there! Every frame of this short clip was generated on a local computer. The voice is synthetic, and so is the face. Thanks for watching.",
+   "long": "Good morning, and welcome to a quick look at a local talking head test. Everything you are watching was made on one desktop computer, without any cloud service. The portrait was generated from a text description, so this person does not exist, and this voice comes from an open text to speech model. The video model only sees the picture and the sound, and it tries to move the lips, the jaw, and the head in time with the speech. Please judge the mouth movements for yourself, especially at the start and at the very end. Goodbye!"
+  },
+  "voices": {
+   "a": "af_heart",
+   "b": "am_michael"
+  },
+  "files": {
+   "short_a": {
+    "file": "speech_short_a_af_heart.wav",
+    "voice": "af_heart",
+    "script": "short",
+    "sample_rate": 24000,
+    "channels": 1,
+    "samples": 224400,
+    "duration_s": 9.35,
+    "peak": 0.4906,
+    "first_word": {
+     "text": "Hello",
+     "start": 0.275,
+     "end": 0.625
+    },
+    "last_word": {
+     "text": ".",
+     "start": 9.1,
+     "end": 9.25
+    },
+    "sha256": "ee07013bcbe35dcb3cb9c6cc0a8f65824d538c19299801ca58cb4a6e463869d6"
+   },
+   "long_a": {
+    "file": "speech_long_a_af_heart.wav",
+    "voice": "af_heart",
+    "script": "long",
+    "sample_rate": 24000,
+    "channels": 1,
+    "samples": 738600,
+    "duration_s": 30.775,
+    "peak": 0.4546,
+    "first_word": {
+     "text": "Good",
+     "start": 0.275,
+     "end": 0.475
+    },
+    "last_word": {
+     "text": "!",
+     "start": 30.5,
+     "end": 30.675
+    },
+    "sha256": "8f5e6b78c8084571dd80dde94c80c5e925e77931719089a38d3ba59f3ab4d1e8"
+   },
+   "short_b": {
+    "file": "speech_short_b_am_michael.wav",
+    "voice": "am_michael",
+    "script": "short",
+    "sample_rate": 24000,
+    "channels": 1,
+    "samples": 249600,
+    "duration_s": 10.4,
+    "peak": 0.4499,
+    "first_word": {
+     "text": "Hello",
+     "start": 0.375,
+     "end": 0.75
+    },
+    "last_word": {
+     "text": ".",
+     "start": 10.125,
+     "end": 10.3
+    },
+    "sha256": "c3965123f0d0a9fb30ad9c13de5c9e2f7d3553f97e941dd723c0e129c0c8420a"
+   },
+   "long_b": {
+    "file": "speech_long_b_am_michael.wav",
+    "voice": "am_michael",
+    "script": "long",
+    "sample_rate": 24000,
+    "channels": 1,
+    "samples": 815400,
+    "duration_s": 33.975,
+    "peak": 0.5368,
+    "first_word": {
+     "text": "Good",
+     "start": 0.375,
+     "end": 0.575
+    },
+    "last_word": {
+     "text": "!",
+     "start": 33.7,
+     "end": 33.875
+    },
+    "sha256": "ac4bef5c199633139dda918185e1bcf1ef545ece87b97b5a7718218ddf7457eb"
+   }
+  },
+  "note": "Synthetic speech from scripts written for this test; not a recording or clone of a real person's voice."
+ },
+ "videos": {
+  "leaptalk_a_short_9s.mp4": {
+   "portrait": "input_portrait_a.png",
+   "decoder": "lite_tae",
+   "audio_guidance": 1.0,
+   "audio_seconds": 9.35,
+   "frames": 234,
+   "chunks": 9,
+   "generator_forwards": 9,
+   "process_seconds": 32.512,
+   "sampling_loop_seconds": 4.753,
+   "sha256": "d7627f55cf79cd34f3a69a7de23c8146ba363b51beca1caf701cba200cb69997"
+  },
+  "leaptalk_a_long_31s.mp4": {
+   "portrait": "input_portrait_a.png",
+   "decoder": "lite_tae",
+   "audio_guidance": 1.0,
+   "audio_seconds": 30.775,
+   "frames": 770,
+   "chunks": 28,
+   "generator_forwards": 28,
+   "process_seconds": 37.942,
+   "sampling_loop_seconds": 13.985,
+   "sha256": "407076118737ddce88f313eae47eca5f563cb55c660b101235a18bbc89f0815d"
+  },
+  "leaptalk_b_short_10s.mp4": {
+   "portrait": "input_portrait_b.png",
+   "decoder": "lite_tae",
+   "audio_guidance": 1.0,
+   "audio_seconds": 10.4,
+   "frames": 260,
+   "chunks": 10,
+   "generator_forwards": 10,
+   "process_seconds": 27.541,
+   "sampling_loop_seconds": 5.04,
+   "sha256": "1bfe72413e15715bad0598c350c9f0ca45efe2a987f764e25f38206fd539eb8c"
+  },
+  "leaptalk_b_long_34s.mp4": {
+   "portrait": "input_portrait_b.png",
+   "decoder": "lite_tae",
+   "audio_guidance": 1.0,
+   "audio_seconds": 33.975,
+   "frames": 850,
+   "chunks": 31,
+   "generator_forwards": 31,
+   "process_seconds": 40.603,
+   "sampling_loop_seconds": 15.747,
+   "sha256": "8bf295c3e71edce5320f6f540e623764ab9fc12859751c502a9f203fd1b4c151"
+  },
+  "leaptalk_a_short_9s_wanvae.mp4": {
+   "portrait": "input_portrait_a.png",
+   "decoder": "wan_vae",
+   "audio_guidance": 1.0,
+   "audio_seconds": 9.35,
+   "frames": 234,
+   "chunks": 9,
+   "generator_forwards": 9,
+   "process_seconds": 37.825,
+   "sampling_loop_seconds": 12.982,
+   "sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920"
+  }
+ },
+ "runtime": {
+  "leaptalk": "5d8fef8dac3d1c9d3b3d5d9cceb6c76acc81e2c1",
+  "weights": {
+   "z-rx/leaptalk": "b33b788fd1c9b3df11627e00c6a0415272d829dc",
+   "Soul-AILab/SoulX-FlashHead-1_3B": "59119b6c681230c3eeee157e224ae1941746711e",
+   "facebook/wav2vec2-base-960h": "22aad52d435eb6dbaf354bdad9b0da84ce7d6156"
+  }
+ },
+ "inputs_sha256": {
+  "input_portrait_a.png": "f06c31abe5b549e29306825811c5b6410aa3a52ce3ca6b3d575e1ad5a35d408e",
+  "input_portrait_b.png": "fb38e1ca8549a58c2bab2a336016b3d5bde8c99d281b7bd81cbe82ef1a93490d",
+  "input_speech_a_short_9s.wav": "ee07013bcbe35dcb3cb9c6cc0a8f65824d538c19299801ca58cb4a6e463869d6",
+  "input_speech_a_long_31s.wav": "8f5e6b78c8084571dd80dde94c80c5e925e77931719089a38d3ba59f3ab4d1e8",
+  "input_speech_b_short_10s.wav": "c3965123f0d0a9fb30ad9c13de5c9e2f7d3553f97e941dd723c0e129c0c8420a",
+  "input_speech_b_long_34s.wav": "ac4bef5c199633139dda918185e1bcf1ef545ece87b97b5a7718218ddf7457eb"
+ }
+}

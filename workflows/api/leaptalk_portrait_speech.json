@@ -1,0 +1,79 @@
+{
+ "1": {
+  "class_type": "LeapTalkRuntime",
+  "inputs": {
+   "runtime_id": "windows-native"
+  },
+  "_meta": {
+   "title": "LeapTalk Runtime"
+  }
+ },
+ "2": {
+  "class_type": "LoadImage",
+  "inputs": {
+   "image": "leaptalk_example_portrait.png"
+  },
+  "_meta": {
+   "title": "Portrait (one image)"
+  }
+ },
+ "3": {
+  "class_type": "LoadAudio",
+  "inputs": {
+   "audio": "leaptalk_example_speech.wav"
+  },
+  "_meta": {
+   "title": "Speech"
+  }
+ },
+ "4": {
+  "class_type": "LeapTalkGenerate",
+  "inputs": {
+   "runtime": [
+    "1",
+    0
+   ],
+   "image": [
+    "2",
+    0
+   ],
+   "audio": [
+    "3",
+    0
+   ],
+   "decoder": "lite_tae",
+   "audio_guidance": 1.0,
+   "preview": true
+  },
+  "_meta": {
+   "title": "LeapTalk Generate"
+  }
+ },
+ "5": {
+  "class_type": "SaveVideo",
+  "inputs": {
+   "video": [
+    "4",
+    0
+   ],
+   "filename_prefix": "leaptalk/talking",
+   "format": "auto",
+   "codec": "auto"
+  },
+  "_meta": {
+   "title": "Save Video"
+  }
+ },
+ "6": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "4",
+    1
+   ]
+  },
+  "_meta": {
+   "title": "Report (JSON)"
+  }
+ }
+}

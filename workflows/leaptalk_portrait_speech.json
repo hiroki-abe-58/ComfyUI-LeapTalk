@@ -1,0 +1,685 @@
+{
+ "id": "7d29b75d-e267-4875-9979-4a1e1ac530cf",
+ "revision": 0,
+ "last_node_id": 6,
+ "last_link_id": 10,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "LeapTalkRuntime",
+   "pos": [
+    60,
+    60
+   ],
+   "size": [
+    270,
+    58
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "showAdvanced": null,
+   "inputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "runtime_id",
+     "locked": null,
+     "name": "runtime_id",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "COMBO",
+     "widget": {
+      "name": "runtime_id"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "runtime",
+     "locked": null,
+     "name": "runtime",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "LEAPTALK_RUNTIME",
+     "pos": null,
+     "slot_index": null,
+     "links": [
+      6
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LeapTalkRuntime"
+   },
+   "widgets_values": [
+    "windows-native"
+   ],
+   "widgets_values_named": {
+    "runtime_id": "windows-native"
+   }
+  },
+  {
+   "id": 2,
+   "type": "LoadImage",
+   "pos": [
+    60,
+    220
+   ],
+   "size": [
+    282.798828125,
+    314
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "showAdvanced": null,
+   "inputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "image",
+     "locked": null,
+     "name": "image",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "COMBO",
+     "widget": {
+      "name": "image"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "choose file to upload",
+     "locked": null,
+     "name": "upload",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "IMAGEUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "IMAGE",
+     "locked": null,
+     "name": "IMAGE",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "IMAGE",
+     "pos": null,
+     "slot_index": null,
+     "links": [
+      7
+     ]
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "MASK",
+     "locked": null,
+     "name": "MASK",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "MASK",
+     "pos": null,
+     "slot_index": null,
+     "links": null
+    }
+   ],
+   "title": "Portrait (one image)",
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "leaptalk_example_portrait.png",
+    "image"
+   ],
+   "widgets_values_named": {
+    "image": "leaptalk_example_portrait.png",
+    "upload": "image"
+   }
+  },
+  {
+   "id": 3,
+   "type": "LoadAudio",
+   "pos": [
+    60,
+    660
+   ],
+   "size": [
+    282.798828125,
+    136
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "showAdvanced": null,
+   "inputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "audio",
+     "locked": null,
+     "name": "audio",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "COMBO",
+     "widget": {
+      "name": "audio"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "audioUI",
+     "locked": null,
+     "name": "audioUI",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "AUDIO_UI",
+     "widget": {
+      "name": "audioUI"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "choose file to upload",
+     "locked": null,
+     "name": "upload",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "AUDIOUPLOAD",
+     "widget": {
+      "name": "upload"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "AUDIO",
+     "locked": null,
+     "name": "AUDIO",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "AUDIO",
+     "pos": null,
+     "slot_index": null,
+     "links": [
+      8
+     ]
+    }
+   ],
+   "title": "Speech",
+   "properties": {
+    "Node name for S&R": "LoadAudio"
+   },
+   "widgets_values": [
+    "leaptalk_example_speech.wav",
+    ""
+   ],
+   "widgets_values_named": {
+    "audio": "leaptalk_example_speech.wav",
+    "upload": ""
+   }
+  },
+  {
+   "id": 4,
+   "type": "LeapTalkGenerate",
+   "pos": [
+    520,
+    60
+   ],
+   "size": [
+    351.10703125,
+    146
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "showAdvanced": null,
+   "inputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "runtime",
+     "locked": null,
+     "name": "runtime",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "LEAPTALK_RUNTIME",
+     "pos": null,
+     "link": 6
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "image",
+     "locked": null,
+     "name": "image",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "IMAGE",
+     "pos": null,
+     "link": 7
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "audio",
+     "locked": null,
+     "name": "audio",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "AUDIO",
+     "pos": null,
+     "link": 8
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "decoder",
+     "locked": null,
+     "name": "decoder",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "COMBO",
+     "widget": {
+      "name": "decoder"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "audio_guidance",
+     "locked": null,
+     "name": "audio_guidance",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "FLOAT",
+     "widget": {
+      "name": "audio_guidance"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "preview",
+     "locked": null,
+     "name": "preview",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "BOOLEAN",
+     "widget": {
+      "name": "preview"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "video",
+     "locked": null,
+     "name": "video",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "VIDEO",
+     "pos": null,
+     "slot_index": null,
+     "links": [
+      9
+     ]
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "report",
+     "locked": null,
+     "name": "report",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "STRING",
+     "pos": null,
+     "slot_index": null,
+     "links": [
+      10
+     ]
+    }
+   ],
+   "title": "LeapTalk Generate",
+   "properties": {
+    "Node name for S&R": "LeapTalkGenerate"
+   },
+   "widgets_values": [
+    "lite_tae",
+    1,
+    true
+   ],
+   "widgets_values_named": {
+    "decoder": "lite_tae",
+    "audio_guidance": 1,
+    "preview": true
+   }
+  },
+  {
+   "id": 5,
+   "type": "SaveVideo",
+   "pos": [
+    1000,
+    60
+   ],
+   "size": [
+    270,
+    106
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "showAdvanced": null,
+   "inputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "video",
+     "locked": null,
+     "name": "video",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "VIDEO",
+     "pos": null,
+     "link": 9
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "filename_prefix",
+     "locked": null,
+     "name": "filename_prefix",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "format",
+     "locked": null,
+     "name": "format",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "COMFY_DYNAMICCOMBO_V3",
+     "widget": {
+      "name": "format"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "codec",
+     "locked": null,
+     "name": "format.codec",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "COMFY_DYNAMICCOMBO_V3",
+     "widget": {
+      "name": "format.codec"
+     },
+     "link": null
+    },
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "codec",
+     "locked": null,
+     "name": "codec",
+     "nameLocked": null,
+     "removable": null,
+     "shape": 7,
+     "type": "COMFY_DYNAMICCOMBO_V3",
+     "widget": {
+      "name": "codec"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "video",
+     "locked": null,
+     "name": "video",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "VIDEO",
+     "pos": null,
+     "slot_index": null,
+     "links": null
+    }
+   ],
+   "properties": {},
+   "widgets_values": [
+    "leaptalk/talking",
+    "auto",
+    "auto",
+    "auto"
+   ],
+   "widgets_values_named": {
+    "filename_prefix": "leaptalk/talking",
+    "format": "auto",
+    "format.codec": "auto",
+    "codec": "auto"
+   }
+  },
+  {
+   "id": 6,
+   "type": "PreviewAny",
+   "pos": [
+    1000,
+    330
+   ],
+   "size": [
+    210,
+    122
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "showAdvanced": null,
+   "inputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "source",
+     "locked": null,
+     "name": "source",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "*",
+     "pos": null,
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "color_off": null,
+     "color_on": null,
+     "dir": null,
+     "label": null,
+     "localized_name": "STRING",
+     "locked": null,
+     "name": "STRING",
+     "nameLocked": null,
+     "removable": null,
+     "shape": null,
+     "type": "STRING",
+     "pos": null,
+     "slot_index": null,
+     "links": null
+    }
+   ],
+   "title": "Report (JSON)",
+   "properties": {
+    "Node name for S&R": "PreviewAny"
+   },
+   "widgets_values": [],
+   "widgets_values_named": {}
+  }
+ ],
+ "links": [
+  [
+   6,
+   1,
+   0,
+   4,
+   0,
+   "LEAPTALK_RUNTIME"
+  ],
+  [
+   7,
+   2,
+   0,
+   4,
+   1,
+   "IMAGE"
+  ],
+  [
+   8,
+   3,
+   0,
+   4,
+   2,
+   "AUDIO"
+  ],
+  [
+   9,
+   4,
+   0,
+   5,
+   0,
+   "VIDEO"
+  ],
+  [
+   10,
+   4,
+   1,
+   6,
+   0,
+   "STRING"
+  ]
+ ],
+ "floatingLinks": null,
+ "groups": [],
+ "definitions": null,
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 1.8260869565217388,
+   "offset": [
+    65,
+    167.80952380952385
+   ]
+  },
+  "reroutes": null
+ },
+ "version": 0.4
+}

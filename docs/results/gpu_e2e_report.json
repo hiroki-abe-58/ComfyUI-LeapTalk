@@ -1,0 +1,1511 @@
+{
+ "steps": {
+  "generate": {
+   "status": "success",
+   "wall_s": 34.65,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 234,
+     "audio_seconds": 9.35
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 9,
+    "output_frames": 234,
+    "generated_frames": 252,
+    "trimmed_tail_frames": 18,
+    "forwards": {
+     "total": 9,
+     "conditional": 9,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 224400,
+     "input_seconds": 9.35,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 149600,
+     "padded_samples_16k": 161280,
+     "peak_16k": 0.4918,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 9.35
+     }
+    },
+    "timings": {
+     "import_s": 18.367,
+     "pipeline_load_s": 6.006,
+     "lora_load_merge_s": 0.973,
+     "audio_proj_s": 0.209,
+     "audio_load_s": 1.172,
+     "reference_encode_s": 0.231,
+     "encode_finalize_s": 0.221,
+     "verify_s": 0.155,
+     "sampling_loop_s": 4.753,
+     "chunk_mean_s": 0.4284,
+     "audio_encode_mean_s": 0.0129,
+     "denoise_mean_s": 0.3559,
+     "decode_mean_s": 0.0485,
+     "color_mean_s": 0.0046,
+     "history_mean_s": 0.0061,
+     "frame_io_mean_s": 0.0646,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 34.36,
+    "wall_seconds_per_audio_second": 3.675,
+    "process_seconds": 32.512
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "long": {
+   "status": "success",
+   "wall_s": 43.4,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 850,
+     "audio_seconds": 33.975
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 31,
+    "output_frames": 850,
+    "generated_frames": 868,
+    "trimmed_tail_frames": 18,
+    "forwards": {
+     "total": 31,
+     "conditional": 31,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 815400,
+     "input_seconds": 33.975,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 543600,
+     "padded_samples_16k": 555520,
+     "peak_16k": 0.5348,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 33.975
+     }
+    },
+    "timings": {
+     "import_s": 18.581,
+     "pipeline_load_s": 2.347,
+     "lora_load_merge_s": 1.099,
+     "audio_proj_s": 0.17,
+     "audio_load_s": 1.263,
+     "reference_encode_s": 0.223,
+     "encode_finalize_s": 0.23,
+     "verify_s": 0.494,
+     "sampling_loop_s": 15.747,
+     "chunk_mean_s": 0.4313,
+     "audio_encode_mean_s": 0.0128,
+     "denoise_mean_s": 0.3589,
+     "decode_mean_s": 0.0486,
+     "color_mean_s": 0.0045,
+     "history_mean_s": 0.0062,
+     "frame_io_mean_s": 0.0581,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 42.32,
+    "wall_seconds_per_audio_second": 1.245,
+    "process_seconds": 40.603
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "a_long": {
+   "status": "success",
+   "wall_s": 40.31,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 770,
+     "audio_seconds": 30.775
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 28,
+    "output_frames": 770,
+    "generated_frames": 784,
+    "trimmed_tail_frames": 14,
+    "forwards": {
+     "total": 28,
+     "conditional": 28,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 738600,
+     "input_seconds": 30.775,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 492400,
+     "padded_samples_16k": 501760,
+     "peak_16k": 0.4408,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 30.775
+     }
+    },
+    "timings": {
+     "import_s": 17.941,
+     "pipeline_load_s": 2.172,
+     "lora_load_merge_s": 0.977,
+     "audio_proj_s": 0.191,
+     "audio_load_s": 0.985,
+     "reference_encode_s": 0.54,
+     "encode_finalize_s": 0.251,
+     "verify_s": 0.477,
+     "sampling_loop_s": 13.985,
+     "chunk_mean_s": 0.4342,
+     "audio_encode_mean_s": 0.0128,
+     "denoise_mean_s": 0.3617,
+     "decode_mean_s": 0.0487,
+     "color_mean_s": 0.0044,
+     "history_mean_s": 0.0062,
+     "frame_io_mean_s": 0.0576,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 39.7,
+    "wall_seconds_per_audio_second": 1.29,
+    "process_seconds": 37.942
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "b_short": {
+   "status": "success",
+   "wall_s": 30.27,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 260,
+     "audio_seconds": 10.4
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 10,
+    "output_frames": 260,
+    "generated_frames": 280,
+    "trimmed_tail_frames": 20,
+    "forwards": {
+     "total": 10,
+     "conditional": 10,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 249600,
+     "input_seconds": 10.4,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 166400,
+     "padded_samples_16k": 179200,
+     "peak_16k": 0.4528,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 10.4
+     }
+    },
+    "timings": {
+     "import_s": 17.265,
+     "pipeline_load_s": 2.145,
+     "lora_load_merge_s": 1.035,
+     "audio_proj_s": 0.18,
+     "audio_load_s": 0.87,
+     "reference_encode_s": 0.199,
+     "encode_finalize_s": 0.228,
+     "verify_s": 0.158,
+     "sampling_loop_s": 5.04,
+     "chunk_mean_s": 0.4264,
+     "audio_encode_mean_s": 0.0109,
+     "denoise_mean_s": 0.3569,
+     "decode_mean_s": 0.0485,
+     "color_mean_s": 0.0038,
+     "history_mean_s": 0.0061,
+     "frame_io_mean_s": 0.0529,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 29.46,
+    "wall_seconds_per_audio_second": 2.832,
+    "process_seconds": 27.541
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "a_short_wanvae": {
+   "status": "success",
+   "wall_s": 40.3,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 234,
+     "audio_seconds": 9.35
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "wan_vae",
+    "chunks": 9,
+    "output_frames": 234,
+    "generated_frames": 252,
+    "trimmed_tail_frames": 18,
+    "forwards": {
+     "total": 9,
+     "conditional": 9,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 224400,
+     "input_seconds": 9.35,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 149600,
+     "padded_samples_16k": 161280,
+     "peak_16k": 0.4918,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 9.35
+     }
+    },
+    "timings": {
+     "import_s": 18.072,
+     "pipeline_load_s": 2.526,
+     "lora_load_merge_s": 1.039,
+     "audio_proj_s": 0.141,
+     "audio_load_s": 1.128,
+     "reference_encode_s": 1.156,
+     "encode_finalize_s": 0.2,
+     "verify_s": 0.147,
+     "sampling_loop_s": 12.982,
+     "chunk_mean_s": 1.284,
+     "audio_encode_mean_s": 0.0127,
+     "denoise_mean_s": 0.3592,
+     "decode_mean_s": 0.83,
+     "color_mean_s": 0.0043,
+     "history_mean_s": 0.0775,
+     "frame_io_mean_s": 0.0614,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 6589699072,
+     "cuda_max_reserved_bytes": 8113881088,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3659571712,
+       "peak_reserved_bytes": 3936354304,
+       "reserved_bytes": 3936354304,
+       "reserved_after_release_bytes": 3936354304
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 4037059072,
+       "peak_reserved_bytes": 4626317312,
+       "reserved_bytes": 4626317312,
+       "reserved_after_release_bytes": 3957325824
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5975992832,
+       "peak_reserved_bytes": 6748635136,
+       "reserved_bytes": 6748635136,
+       "reserved_after_release_bytes": 3957325824
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 6589699072,
+       "peak_reserved_bytes": 8113881088,
+       "reserved_bytes": 8113881088
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "Wan2.1 VAE (VAE_Wan/Wan2.1_VAE.pth)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 39.76,
+    "wall_seconds_per_audio_second": 4.252,
+    "process_seconds": 37.825
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "a_short_cfg2": {
+   "status": "success",
+   "wall_s": 35.31,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 234,
+     "audio_seconds": 9.35
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 9,
+    "output_frames": 234,
+    "generated_frames": 252,
+    "trimmed_tail_frames": 18,
+    "forwards": {
+     "total": 18,
+     "conditional": 9,
+     "unconditional": 9
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 224400,
+     "input_seconds": 9.35,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 149600,
+     "padded_samples_16k": 161280,
+     "peak_16k": 0.4918,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 9.35
+     }
+    },
+    "timings": {
+     "import_s": 19.56,
+     "pipeline_load_s": 2.235,
+     "lora_load_merge_s": 1.034,
+     "audio_proj_s": 0.192,
+     "audio_load_s": 1.012,
+     "reference_encode_s": 0.215,
+     "encode_finalize_s": 0.241,
+     "verify_s": 0.204,
+     "sampling_loop_s": 8.076,
+     "chunk_mean_s": 0.7854,
+     "audio_encode_mean_s": 0.012,
+     "denoise_mean_s": 0.7144,
+     "decode_mean_s": 0.0484,
+     "color_mean_s": 0.0042,
+     "history_mean_s": 0.006,
+     "frame_io_mean_s": 0.0587,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 34.82,
+    "wall_seconds_per_audio_second": 3.724,
+    "process_seconds": 33.203
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "b_stereo48k": {
+   "status": "success",
+   "wall_s": 31.38,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 48000,
+     "frames": 260,
+     "audio_seconds": 10.4
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 10,
+    "output_frames": 260,
+    "generated_frames": 280,
+    "trimmed_tail_frames": 20,
+    "forwards": {
+     "total": 10,
+     "conditional": 10,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 48000,
+     "input_channels": 2,
+     "input_samples": 499200,
+     "input_seconds": 10.4,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 166400,
+     "padded_samples_16k": 179200,
+     "peak_16k": 0.3202,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 48000,
+      "channels": 2,
+      "decoded_seconds": 10.4
+     }
+    },
+    "timings": {
+     "import_s": 17.982,
+     "pipeline_load_s": 2.217,
+     "lora_load_merge_s": 1.05,
+     "audio_proj_s": 0.161,
+     "audio_load_s": 1.042,
+     "reference_encode_s": 0.206,
+     "encode_finalize_s": 0.208,
+     "verify_s": 0.175,
+     "sampling_loop_s": 5.085,
+     "chunk_mean_s": 0.433,
+     "audio_encode_mean_s": 0.0148,
+     "denoise_mean_s": 0.3584,
+     "decode_mean_s": 0.0488,
+     "color_mean_s": 0.0045,
+     "history_mean_s": 0.0063,
+     "frame_io_mean_s": 0.0529,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 30.45,
+    "wall_seconds_per_audio_second": 2.928,
+    "process_seconds": 28.548
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "a_clip_0p5s": {
+   "status": "success",
+   "wall_s": 30.27,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 13,
+     "audio_seconds": 0.5
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 2,
+    "output_frames": 13,
+    "generated_frames": 56,
+    "trimmed_tail_frames": 43,
+    "forwards": {
+     "total": 2,
+     "conditional": 2,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 12000,
+     "input_seconds": 0.5,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 8000,
+     "padded_samples_16k": 35840,
+     "peak_16k": 0.2726,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 0.5
+     }
+    },
+    "timings": {
+     "import_s": 18.692,
+     "pipeline_load_s": 4.784,
+     "lora_load_merge_s": 1.062,
+     "audio_proj_s": 0.176,
+     "audio_load_s": 0.944,
+     "reference_encode_s": 0.245,
+     "encode_finalize_s": 0.172,
+     "verify_s": 0.03,
+     "sampling_loop_s": 1.176,
+     "chunk_mean_s": 0.5453,
+     "audio_encode_mean_s": 0.0449,
+     "denoise_mean_s": 0.4155,
+     "decode_mean_s": 0.0683,
+     "color_mean_s": 0.0057,
+     "history_mean_s": 0.0105,
+     "frame_io_mean_s": 0.0426,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8680808448,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8680808448,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 30.0,
+    "wall_seconds_per_audio_second": 60.0,
+    "process_seconds": 27.695
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "b_silence_3s": {
+   "status": "success",
+   "wall_s": 27.22,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 16000,
+     "frames": 75,
+     "audio_seconds": 3.0
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 3,
+    "output_frames": 75,
+    "generated_frames": 84,
+    "trimmed_tail_frames": 9,
+    "forwards": {
+     "total": 3,
+     "conditional": 3,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 16000,
+     "input_channels": 1,
+     "input_samples": 48000,
+     "input_seconds": 3.0,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 48000,
+     "padded_samples_16k": 53760,
+     "peak_16k": 0.0,
+     "silent": true,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 16000,
+      "channels": 1,
+      "decoded_seconds": 3.0
+     }
+    },
+    "timings": {
+     "import_s": 17.117,
+     "pipeline_load_s": 2.942,
+     "lora_load_merge_s": 0.989,
+     "audio_proj_s": 0.178,
+     "audio_load_s": 0.883,
+     "reference_encode_s": 0.206,
+     "encode_finalize_s": 0.194,
+     "verify_s": 0.047,
+     "sampling_loop_s": 1.989,
+     "chunk_mean_s": 0.4246,
+     "audio_encode_mean_s": 0.0105,
+     "denoise_mean_s": 0.3568,
+     "decode_mean_s": 0.0472,
+     "color_mean_s": 0.0037,
+     "history_mean_s": 0.0061,
+     "frame_io_mean_s": 0.0442,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8680808448,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8680808448,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 26.65,
+    "wall_seconds_per_audio_second": 8.885,
+    "process_seconds": 24.957
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "doctor": {
+   "status": "success",
+   "overall": "ok",
+   "checks": [
+    [
+     "upstream_files",
+     "ok"
+    ],
+    [
+     "model:soulx_dir/Model_Pro/config.json",
+     "ok"
+    ],
+    [
+     "model:soulx_dir/Model_Pro/diffusion_pytorch_model.safetensors",
+     "ok"
+    ],
+    [
+     "model:soulx_dir/VAE_Wan/Wan2.1_VAE.pth",
+     "ok"
+    ],
+    [
+     "model:wav2vec_dir/config.json",
+     "ok"
+    ],
+    [
+     "model:wav2vec_dir/preprocessor_config.json",
+     "ok"
+    ],
+    [
+     "model:wav2vec_dir/model.safetensors",
+     "ok"
+    ],
+    [
+     "model:leaptalk_dir/lora/adapter_config.json",
+     "ok"
+    ],
+    [
+     "model:leaptalk_dir/lora/adapter_model.safetensors",
+     "ok"
+    ],
+    [
+     "model:leaptalk_dir/audio_proj_step_10400.pt",
+     "ok"
+    ],
+    [
+     "model:leaptalk_dir/taew2_1.pth",
+     "ok"
+    ],
+    [
+     "python_packages",
+     "ok"
+    ],
+    [
+     "cuda",
+     "ok"
+    ],
+    [
+     "sdpa_probe",
+     "ok"
+    ],
+    [
+     "attention_backend",
+     "ok"
+    ],
+    [
+     "ffmpeg",
+     "ok"
+    ]
+   ]
+  },
+  "cancel": {
+   "status": "error",
+   "messages": [
+    "execution_start",
+    "execution_cached",
+    "execution_interrupted"
+   ],
+   "error_excerpt": null,
+   "wall_s": 31.9,
+   "job_dir": "job-20261003-071948-e1d655f0b4d6",
+   "stop_report": {
+    "active_before": 1,
+    "active_after": 0,
+    "graceful": true,
+    "seconds": 2.12
+   },
+   "runner_pid_alive_after": false,
+   "gpu_used_mib_after": 2424,
+   "expected": "interrupted"
+  },
+  "error": {
+   "status": "error",
+   "messages": [
+    "execution_start",
+    "execution_cached",
+    "execution_error"
+   ],
+   "error_excerpt": "runtime job failed (exit 2): JobError: model files: leaptalk_dir/lora/adapter_config.json missing; leaptalk_dir/lora/adapter_model.safetensors missing; leaptalk_dir/audio_proj_step_10400.pt missing; leaptalk_dir/taew2_1.pth missing\n",
+   "wall_s": 4.4,
+   "job_dir": "job-20261003-072020-23d0f2a522a7",
+   "stop_report": null,
+   "runner_pid_alive_after": false,
+   "gpu_used_mib_after": 2424,
+   "expected": "error"
+  },
+  "crash": {
+   "job_dir": "job-20261003-072024-6b5d353daa63",
+   "runner_pid": 71648,
+   "runner_tree_before": 4,
+   "left_after": [],
+   "seconds_to_clean": 4.3,
+   "gpu_used_mib_after": 2424
+  },
+  "b_concat_97s": {
+   "status": "success",
+   "wall_s": 70.59,
+   "decoded": [
+    {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "frames": 2414,
+     "audio_seconds": 96.525
+    }
+   ],
+   "report_excerpt": {
+    "decoder": "lite_tae",
+    "chunks": 87,
+    "output_frames": 2414,
+    "generated_frames": 2436,
+    "trimmed_tail_frames": 22,
+    "forwards": {
+     "total": 87,
+     "conditional": 87,
+     "unconditional": 0
+    },
+    "audio": {
+     "input_sample_rate": 24000,
+     "input_channels": 1,
+     "input_samples": 2316600,
+     "input_seconds": 96.525,
+     "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+     "samples_16k": 1544400,
+     "padded_samples_16k": 1559040,
+     "peak_16k": 0.5348,
+     "silent": false,
+     "muxed": {
+      "codec": "aac",
+      "sample_rate": 24000,
+      "channels": 1,
+      "decoded_seconds": 96.525
+     }
+    },
+    "timings": {
+     "import_s": 18.331,
+     "pipeline_load_s": 2.417,
+     "lora_load_merge_s": 1.031,
+     "audio_proj_s": 0.199,
+     "audio_load_s": 1.018,
+     "reference_encode_s": 0.213,
+     "encode_finalize_s": 0.225,
+     "verify_s": 1.406,
+     "sampling_loop_s": 43.146,
+     "chunk_mean_s": 0.4346,
+     "audio_encode_mean_s": 0.0135,
+     "denoise_mean_s": 0.3616,
+     "decode_mean_s": 0.0485,
+     "color_mean_s": 0.0045,
+     "history_mean_s": 0.0062,
+     "frame_io_mean_s": 0.0582,
+     "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+    },
+    "memory": {
+     "cuda_max_allocated_bytes": 8681316352,
+     "cuda_max_reserved_bytes": 11874074624,
+     "phases": {
+      "pipeline_load": {
+       "peak_allocated_bytes": 3418540544,
+       "peak_reserved_bytes": 3688890368,
+       "reserved_bytes": 3688890368,
+       "reserved_after_release_bytes": 3688890368
+      },
+      "lora_merge_and_audio_proj": {
+       "peak_allocated_bytes": 3796027904,
+       "peak_reserved_bytes": 4378853376,
+       "reserved_bytes": 4378853376,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "reference_encode": {
+       "peak_allocated_bytes": 5407036416,
+       "peak_reserved_bytes": 5735710720,
+       "reserved_bytes": 5735710720,
+       "reserved_after_release_bytes": 3709861888
+      },
+      "chunk_loop": {
+       "peak_allocated_bytes": 8681316352,
+       "peak_reserved_bytes": 11874074624,
+       "reserved_bytes": 11874074624
+      }
+     }
+    },
+    "weights": {
+     "lora": {
+      "checkpoint_tensors": 480,
+      "applied_tensors": 480,
+      "r": 64,
+      "alpha": 64,
+      "scale": 1.0,
+      "target_modules": [
+       "k",
+       "o",
+       "q",
+       "v"
+      ],
+      "merged": true,
+      "blocks.0.self_attn.q_rel_change": 0.1563
+     },
+     "audio_proj": {
+      "file": "audio_proj_step_10400.pt",
+      "tensors": 10,
+      "strict": true,
+      "values_applied": true,
+      "proj1_rel_change_vs_base": 0.6382
+     },
+     "base": {
+      "model": "SoulX-FlashHead-1_3B Model_Pro",
+      "class": "WanModelAudioProject",
+      "dtype": "bfloat16"
+     },
+     "decoder": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)",
+     "audio_encoder": "wav2vec2-base-960h"
+    },
+    "wall_seconds": 70.27,
+    "wall_seconds_per_audio_second": 0.728,
+    "process_seconds": 68.419
+   },
+   "checks": {
+    "one_video": true,
+    "has_audio": true,
+    "frames_match_report": true,
+    "512x512_25fps": true,
+    "lora_applied": true
+   }
+  },
+  "timeout": {
+   "status": "error",
+   "messages": [
+    "execution_start",
+    "execution_cached",
+    "execution_error"
+   ],
+   "error_excerpt": "runtime job exceeded 60 s\n",
+   "wall_s": 65.8,
+   "job_dir": "job-20261003-072258-ec316d60d16c",
+   "stop_report": {
+    "active_before": 1,
+    "active_after": 0,
+    "graceful": true,
+    "seconds": 1.77
+   },
+   "runner_pid_alive_after": false,
+   "gpu_used_mib_after": 2424,
+   "expected": "error"
+  }
+ },
+ "gpu_idle_mib_before": 2424,
+ "nodes_registered": {
+  "LeapTalkRuntime": true,
+  "LeapTalkGenerate": true,
+  "LeapTalkDoctor": true
+ },
+ "runtime_choices": [
+  "e2e-missing-model",
+  "e2e-timeout",
+  "win-native"
+ ],
+ "gpu_idle_mib_after": 2424,
+ "install": "git archive of the release commit's code into ComfyUI/custom_nodes/<a differently named folder> (folder name contained a space and a non-ASCII character)",
+ "comfyui": "v0.38.0 (6b747c0), --cpu, 127.0.0.1, free port"
+}

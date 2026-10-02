@@ -1,0 +1,72 @@
+{
+ "a_short": {
+  "official": {
+   "command": "python inference.py --ckpt_dir <SoulX-FlashHead-1_3B> --wav2vec_dir <wav2vec2-base-960h> --lora_dir <leaptalk> --audio_proj <leaptalk>/audio_proj_step_10400.pt --compile off --num_inference_steps 1 --lite --cond_image <portrait> --audio_path <speech> --out <out.mp4>",
+   "process": "single process (WORLD_SIZE unset, as torchrun --nproc_per_node=1 without USP)",
+   "frames_written": 252,
+   "chunks": 9,
+   "generator_forwards": 9,
+   "scheduler_timesteps": [
+    1000.0
+   ],
+   "guidance_scale": 1.0,
+   "decoder": "TAEHV",
+   "lora": {
+    "checkpoint_tensors": 480,
+    "loaded_equal": 480,
+    "n_missing": 0,
+    "r": 64,
+    "alpha": 64,
+    "scaling": 1.0
+   },
+   "audio_proj_equals_file": true,
+   "hooks": "observation only: generator call counter, per-chunk latents, sha256 of every frame passed to the video writer"
+  },
+  "package_through_comfyui_clean_install": {
+   "frames": 234,
+   "chunks": 9,
+   "generator_forwards": 9,
+   "frames_sha256_aggregate": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163"
+  },
+  "identical_frames": 234,
+  "compared_frames": 234,
+  "note": "the package keeps ceil(audio seconds x 25) frames; the official script writes every generated frame and cuts the MP4 with ffmpeg -shortest",
+  "package_direct_runner": {
+   "frames": 234,
+   "identical_frames": 234
+  }
+ },
+ "b_long": {
+  "official": {
+   "command": "python inference.py --ckpt_dir <SoulX-FlashHead-1_3B> --wav2vec_dir <wav2vec2-base-960h> --lora_dir <leaptalk> --audio_proj <leaptalk>/audio_proj_step_10400.pt --compile off --num_inference_steps 1 --lite --cond_image <portrait> --audio_path <speech> --out <out.mp4>",
+   "process": "single process (WORLD_SIZE unset, as torchrun --nproc_per_node=1 without USP)",
+   "frames_written": 868,
+   "chunks": 31,
+   "generator_forwards": 31,
+   "scheduler_timesteps": [
+    1000.0
+   ],
+   "guidance_scale": 1.0,
+   "decoder": "TAEHV",
+   "lora": {
+    "checkpoint_tensors": 480,
+    "loaded_equal": 480,
+    "n_missing": 0,
+    "r": 64,
+    "alpha": 64,
+    "scaling": 1.0
+   },
+   "audio_proj_equals_file": true,
+   "hooks": "observation only: generator call counter, per-chunk latents, sha256 of every frame passed to the video writer"
+  },
+  "package_through_comfyui_clean_install": {
+   "frames": 850,
+   "chunks": 31,
+   "generator_forwards": 31,
+   "frames_sha256_aggregate": "7bcffb23687269d4b20d6f9a629d2ad27e0cebdd9c68e9a6185e58a53460acc4"
+  },
+  "identical_frames": 850,
+  "compared_frames": 850,
+  "note": "the package keeps ceil(audio seconds x 25) frames; the official script writes every generated frame and cuts the MP4 with ffmpeg -shortest"
+ }
+}

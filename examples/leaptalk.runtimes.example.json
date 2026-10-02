@@ -1,0 +1,37 @@
+{
+ "schema_version": 1,
+ "runtimes": {
+  "windows-native": {
+   "kind": "native",
+   "description": "Tested: Windows 11 host, separate venv (Python 3.12, torch 2.7.1+cu128), RTX 5090",
+   "python": "D:\\leaptalk\\venv\\Scripts\\python.exe",
+   "upstream_dir": "D:\\leaptalk\\LeapTalk",
+   "models": {
+    "soulx_dir": "D:\\leaptalk\\models\\SoulX-FlashHead-1_3B",
+    "wav2vec_dir": "D:\\leaptalk\\models\\wav2vec2-base-960h",
+    "leaptalk_dir": "D:\\leaptalk\\models\\leaptalk"
+   },
+   "ffmpeg": "D:\\leaptalk\\bin\\ffmpeg.exe",
+   "env": {
+    "CUDA_VISIBLE_DEVICES": "0"
+   },
+   "timeout_minutes": 30,
+   "max_audio_seconds": 600
+  },
+  "linux-native": {
+   "kind": "native",
+   "description": "Untested with real weights: Linux host, separate venv",
+   "python": "/opt/leaptalk/venv/bin/python",
+   "upstream_dir": "/opt/leaptalk/LeapTalk",
+   "models": {
+    "soulx_dir": "/opt/leaptalk/models/SoulX-FlashHead-1_3B",
+    "wav2vec_dir": "/opt/leaptalk/models/wav2vec2-base-960h",
+    "leaptalk_dir": "/opt/leaptalk/models/leaptalk"
+   },
+   "ffmpeg": "/usr/bin/ffmpeg",
+   "env": {
+    "CUDA_VISIBLE_DEVICES": "0"
+   }
+  }
+ }
+}

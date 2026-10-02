@@ -1,0 +1,21 @@
+ComfyUI-LeapTalk
+Copyright 2026 hiroki-abe-58
+
+This product is an unofficial community integration. It is not affiliated with or endorsed by the
+LeapTalk authors, Soul AI Lab (SoulX-FlashHead), Meta (wav2vec 2.0), the TAEHV author, Alibaba (Wan),
+Hugging Face or Comfy Org.
+
+This repository contains no model weights and does not download anything at run time. At run time it
+imports an unmodified checkout of zhangrongxiang/LeapTalk (Apache License 2.0) that the administrator
+installs separately, and loads weights the administrator downloads (see docs/LICENSING.md):
+Soul-AILab/SoulX-FlashHead-1_3B (Apache License 2.0), z-rx/leaptalk (Apache License 2.0; its
+taew2_1.pth is byte-identical to madebyollin/taehv taew2_1.pth, MIT License) and
+facebook/wav2vec2-base-960h (Apache License 2.0).
+
+runtime/leaptalk_job.py re-implements the chunk loop of LeapTalk's inference.py (stream mode),
+Copyright the LeapTalk authors, Apache License 2.0, calling the upstream helper functions unchanged;
+the differences are listed at the top of that file.
+
+The process-control, configuration and test code is adapted from ComfyUI-MonarchRT and
+ComfyUI-CausalForcing (https://github.com/hiroki-abe-58), Copyright 2026 hiroki-abe-58,
+Apache License 2.0.

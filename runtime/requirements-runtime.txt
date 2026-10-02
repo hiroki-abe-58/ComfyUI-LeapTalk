@@ -1,0 +1,34 @@
+# Runtime environment used for the published results (Windows 11, Python 3.12.13, RTX 5090).
+# This is NOT installed into ComfyUI's Python. Create a separate venv for the runtime, e.g.:
+#   uv venv leaptalk-venv --python 3.12
+#   uv pip install --python leaptalk-venv torch==2.7.1+cu128 torchvision==0.22.1+cu128 torchaudio==2.7.1+cu128 --index-url https://download.pytorch.org/whl/cu128
+#   uv pip install --python leaptalk-venv -r runtime/requirements-runtime.txt
+# torch 2.7.1+cu128 includes sm_120 (RTX 50 series). No flash-attn / SageAttention: LeapTalk then
+# uses torch scaled_dot_product_attention. No torch.compile / Triton is needed for this recipe.
+diffusers==0.38.0
+transformers==4.57.3
+peft==0.19.1
+accelerate==1.13.0
+safetensors==0.8.0rc0
+librosa==0.11.0
+soundfile==0.13.1
+imageio==2.37.3
+imageio-ffmpeg==0.6.0
+loguru==0.7.3
+einops==0.8.2
+numpy==2.4.6
+pyloudnorm==0.2.0
+pillow==11.3.0
+tqdm==4.67.3
+scipy==1.17.1
+mediapipe==0.10.35
+PyYAML==6.0.3
+# imported unconditionally by LeapTalk's model code (multi-GPU paths are not used here)
+xfuser==0.4.5
+yunchang==0.6.4
+DistVAE==0.0.0b5
+sentencepiece==0.2.1
+beautifulsoup4==4.14.3
+# output verification and the Doctor
+av==19.0.0
+psutil==7.2.2

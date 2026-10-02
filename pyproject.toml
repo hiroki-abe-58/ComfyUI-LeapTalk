@@ -1,0 +1,47 @@
+[project]
+# Comfy Registry node id: immutable once published.
+name = "leaptalk"
+version = "0.1.0"
+description = "Unofficial community integration, not affiliated with the LeapTalk authors: turn a portrait and speech into a talking video locally in ComfyUI with the official LeapTalk weights and 1-step recipe (SoulX-FlashHead base), run in a separate Python environment."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = []
+# Only what was tested with real weights: Windows 11 ComfyUI host with a native Windows runtime venv, NVIDIA RTX 5090.
+classifiers = [
+    "Operating System :: Microsoft :: Windows",
+    "Environment :: GPU :: NVIDIA CUDA",
+]
+
+[project.urls]
+Repository = "https://github.com/hiroki-abe-58/ComfyUI-LeapTalk"
+Issues = "https://github.com/hiroki-abe-58/ComfyUI-LeapTalk/issues"
+Documentation = "https://github.com/hiroki-abe-58/ComfyUI-LeapTalk#readme"
+Upstream = "https://github.com/zhangrongxiang/LeapTalk"
+
+[tool.comfy]
+PublisherId = "hiroki-abe-58"
+DisplayName = "LeapTalk for ComfyUI"
+Icon = ""
+includes = []
+# Tested with ComfyUI v0.38.0 only; older versions are not verified.
+requires-comfyui = ">=0.38.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib -p no:cacheprovider"
+
+[tool.ruff]
+line-length = 160
+target-version = "py310"
+extend-exclude = ["_comfyui"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+# E501: long strings stay intact; S101: asserts in tests; S603/S607: subprocess with argv lists is the design (no shell),
+# see docs/SECURITY.md; S110/S311/S108: best-effort cleanup, test signals, test temp paths
+ignore = ["B905", "E501", "S101", "S603", "S607", "S110", "S311", "S108"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["leaptalk_comfy"]
+known-third-party = ["comfy", "comfy_api", "comfy_extras", "folder_paths", "nodes", "execution", "conftest"]

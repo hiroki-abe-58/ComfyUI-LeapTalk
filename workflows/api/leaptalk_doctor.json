@@ -1,0 +1,24 @@
+{
+ "1": {
+  "class_type": "LeapTalkDoctor",
+  "inputs": {
+   "runtime_id": "windows-native",
+   "verify_sha256": false
+  },
+  "_meta": {
+   "title": "LeapTalk Doctor"
+  }
+ },
+ "2": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "1",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Doctor report"
+  }
+ }
+}
