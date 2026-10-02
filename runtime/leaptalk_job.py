@@ -212,12 +212,18 @@ class Control:
     def __init__(self, job_dir: Path, watch_stdin: bool):
         self.cancel_file = job_dir / "CANCEL"
         self.stdin_closed = threading.Event()
-        if watch_stdin:
+        # Windows: ignored. There the caller's job object ends this process tree when ComfyUI goes away,
+        # and a thread blocked on a stdin pipe can stall the process.
+        if watch_stdin and os.name != "nt":
             threading.Thread(target=self._watch, daemon=True).start()
 
     def _watch(self) -> None:
+        # Read the raw file descriptor: a daemon thread blocked in sys.stdin.buffer.read() holds the
+        # BufferedReader lock, and CPython aborts at interpreter shutdown when it cannot take that lock
+        # ("_enter_buffered_busy ... at interpreter shutdown"). os.read holds no Python-level lock.
         try:
-            while sys.stdin.buffer.read(4096):
+            fd = sys.stdin.fileno()
+            while os.read(fd, 4096):
                 pass
         except (OSError, ValueError):
             pass

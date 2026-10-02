@@ -174,3 +174,13 @@ def test_parent_death_ends_the_tree(tmp_path):
 
 def test_fake_runner_path_is_the_one_used(fake_runner):
     assert client.RUNTIME_SCRIPTS[client.JOB_SCRIPT] == FAKE_JOB
+
+
+def test_runner_with_stdin_watch_exits_cleanly(tmp_path, fake_runner, monkeypatch):
+    """With --watch-stdin (always used on Linux/macOS) the runner must exit 0 after a successful job:
+    a stdin-reading daemon thread must not abort the interpreter at shutdown."""
+    monkeypatch.setattr(client, "IS_WINDOWS", False)  # force --watch-stdin on every OS
+    rt = make_runtime(tmp_path, "ok")
+    out = client.generate(rt, _image(), speech_like(1.2), 24000)
+    assert out.result["output_frames"] == 30
+    assert out.result["host"]["process"]["pid"] > 0
