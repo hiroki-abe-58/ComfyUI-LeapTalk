@@ -82,8 +82,13 @@ Per chunk (28 new frames, mean over chunks 3+ as the official script reports):
 
 The output plays at 25 fps; "frames/s" is how fast frames are produced once the models are loaded,
 not the end-to-end time of a job. These numbers are not comparable with the paper's figures (other
-GPU, other measurement). No streaming to a viewer is implemented: the video is returned when the job
-ends (previews of finished chunks are shown in ComfyUI while it runs).
+GPU, other measurement).
+
+No streaming to a viewer is implemented: the video is returned when the job ends. While it runs, the
+last frame of each finished chunk is sent to the ComfyUI client as a progress preview. Measured over
+ComfyUI's websocket for the 30.8 s clip: the first preview arrived 24.0 s after queueing (start-up plus
+the first chunk), then one per chunk about every 0.5 s (28 previews), and the finished video 39.6 s
+after queueing.
 
 ## Memory
 

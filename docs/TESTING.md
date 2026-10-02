@@ -43,6 +43,7 @@ the GPU work) and drives it through the HTTP API with real weights:
 | --- | --- |
 | generate / long / cases | `LoadImage` + `LoadAudio` -> **LeapTalk Generate** -> `SaveVideo`; the saved MP4 is decoded completely: exactly one video and one audio stream, 512x512 at 25 fps, frame count equal to the report (`ceil(audio seconds x 25)`), LoRA 480/480 tensors applied |
 | doctor | **LeapTalk Doctor** reports `ok` |
+| preview | (separate check over ComfyUI's websocket) one JPEG progress preview per finished chunk reaches the client before the job ends |
 | error | a runtime with a missing model folder fails with the runner's message, nothing left |
 | cancel | `/interrupt` during the chunk loop -> `execution_interrupted`, runner tree gone, GPU memory back to idle |
 | timeout | `timeout_minutes: 1` with a 97 s clip -> error, nothing left |
