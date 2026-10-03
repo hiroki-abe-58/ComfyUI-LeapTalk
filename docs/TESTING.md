@@ -93,7 +93,12 @@ and back, cancel / timeout / runtime error / worker killed during a job / worker
 idle, each followed by a normal job, idle timeout and explicit Unload, prompts queued at once with an
 Unload between them, and ComfyUI killed while the worker idles and while it generates. The v0.1.0
 baseline was run with the same driver against `git archive v0.1.0` installed alone in the same test
-ComfyUI. Results: `docs/results/v020/`, summarised in docs/BENCHMARKS.md.
+ComfyUI. The `shipped` step queues the API workflows of an installed copy (`--shipped-dir`) with only the
+runtime id and input names replaced; it was run against `git archive` of the release commit installed
+under a different folder name. Results: `docs/results/v020/`, summarised in docs/BENCHMARKS.md.
+
+Release assets: `.github/workflows/verify-release.yml` (run by hand) downloads every asset of a release
+anonymously and checks them with `sha256sum -c SHA256SUMS`.
 
 ## Official reference
 

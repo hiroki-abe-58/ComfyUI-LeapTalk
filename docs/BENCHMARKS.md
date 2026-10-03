@@ -205,6 +205,18 @@ These defaults are deliberately conservative for this 64 GB workstation. If your
 close other applications, use `decoder = wan_vae` (job peak about 3.5 GiB lower) or, if you accept the
 risk, adjust `memory_guard` in the runtime config.
 
+**Clean install.** The release commit, installed with `git archive` into a folder named
+`LeapTalk clean v0.2 ü` as the only LeapTalk package of the test ComfyUI, queued its shipped API
+workflows (only the runtime id and input file names replaced). Lite TAE: the v0.1 workflow (one-shot) and
+the first job of `leaptalk_persistent.json` gave the official frames, Status and Unload worked; the
+following warm jobs were refused by the memory guard at that moment (the background commit charge had
+grown by about 0.6 GiB; projected 97.2–97.4 % against the 97 % limit), with the worker kept and a clear
+message. The same workflows with `decoder = wan_vae`: the v0.1 workflow one-shot, then
+`leaptalk_persistent.json` three times on one worker (portrait A, B, A; 38.6 s, 15.6 s, 14.1 s; A's frames
+identical both times and equal to the one-shot result; the workflow's Worker status node reported the
+idle worker after each job), Status, Unload, and ComfyUI killed while a worker idled (gone after 1.2 s).
+Records: `docs/results/v020/clean_install_*.json`.
+
 **Failure handling (real runs, persistent backend).** Cancel during a job: stopped between chunks, the
 worker was kept, the next job ran on it. Job timeout (`timeout_minutes = 1`, 96.5 s with `wan_vae`):
 `LeapTalk job exceeded 60 s`, cancelled cleanly. Missing model folder: the worker failed to start with

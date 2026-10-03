@@ -919,6 +919,8 @@ class Runner:
                     ins["image"] = self.img(img)
                 if node.get("class_type") == "LoadAudio":
                     ins["audio"] = self.aud(aud)
+                if node.get("class_type") == "LeapTalkGenerate" and self.a.shipped_decoder:
+                    ins["decoder"] = self.a.shipped_decoder
             return wf
 
         out = {"v01_one_shot": self.run("shipped_v01_portrait_speech", load("leaptalk_portrait_speech"))}
@@ -1045,6 +1047,7 @@ def main() -> int:
     ap.add_argument("--oneshot-reps", type=int, default=3)
     ap.add_argument("--warm-reps", type=int, default=5)
     ap.add_argument("--failure-decoder", default="lite_tae", choices=("lite_tae", "wan_vae"), help="decoder of the failure / lifecycle steps")
+    ap.add_argument("--shipped-decoder", default="", choices=("", "lite_tae", "wan_vae"), help="'shipped' step: replace the workflows' decoder (recorded)")
     ap.add_argument("--bench", default="", help="benchmark fixtures as IMG:AUDIO,... (default A:a_short,B:b_long)")
     ap.add_argument("--shipped-dir", default=str(REPO), help="installed package folder whose workflows/api the 'shipped' step queues")
     a = ap.parse_args()

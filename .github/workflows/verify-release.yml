@@ -1,0 +1,37 @@
+name: Verify release assets
+
+# Run by hand after publishing a release: downloads every asset of the release anonymously (public
+# URLs, no token) and checks them against the release's SHA256SUMS with sha256sum -c.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, e.g. v0.2.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: sha256sum -c on the downloaded assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download the assets anonymously and check SHA256SUMS
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::tag must look like v1.2.3"; exit 1; }
+          mkdir assets && cd assets
+          curl -fsSL "https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}" \
+            | python3 -c 'import json, sys; [print(a["name"], a["browser_download_url"]) for a in json.load(sys.stdin)["assets"]]' > ../assets.txt
+          while read -r name url; do curl -fsSL -o "$name" "$url"; done < ../assets.txt
+          ls -l
+          if grep -q $'\r' SHA256SUMS; then echo "::error::SHA256SUMS has CRLF line endings"; exit 1; fi
+          listed=$(awk '{print $2}' SHA256SUMS | sort)
+          present=$(ls | grep -vx SHA256SUMS | sort)
+          [ "$listed" = "$present" ] || { echo "::error::assets and SHA256SUMS differ"; diff <(echo "$listed") <(echo "$present") || true; exit 1; }
+          sha256sum -c SHA256SUMS

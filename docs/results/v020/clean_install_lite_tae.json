@@ -1,0 +1,1487 @@
+{
+ "label": "v0.2.0-8566d2c-clean-install",
+ "legacy_workflow": false,
+ "steps": {
+  "status0": {
+   "status": {
+    "prompt_id": "958e0efe-e6c5-4140-9701-a15898df7c6f",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 76.98,
+     "commit_gib": 71.81,
+     "available_gib": 24.74
+    },
+    "history_tail": [],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2463
+   },
+   "worker_processes_after_status": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  "shipped": {
+   "v01_one_shot": {
+    "name": "shipped_v01_portrait_speech",
+    "prompt_id": "f40c7b0e-f0af-4278-befa-c526d941964c",
+    "status": "success",
+    "queued_at": "2026-10-03T18:47:12",
+    "wall_s": 36.011,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 20,
+     "commit_pct_max": 94.53,
+     "commit_gib_max": 88.18,
+     "commit_gib_start": 71.87,
+     "available_gib_min": 21.98,
+     "gpu_mib_max": 14345,
+     "gpu_mib_start": 2463
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 29.56,
+     "preview_vs_job": {
+      "own_job_mad": 0.13
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-184712-43cccb30fda3",
+     "backend": {
+      "requested": "runtime default",
+      "runtime_default": "one-shot",
+      "effective": "one-shot"
+     },
+     "runtime_id": "main",
+     "decoder": "lite_tae",
+     "worker_instance_id": null,
+     "worker_interpreter_pid": null,
+     "worker_launcher_pid": null,
+     "one_shot_runner_pid": 76960,
+     "engine_instance_id": "1ad050d46b274aea9701896b1367bfa7",
+     "initialization_id": "init-1ad050d46b27",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 1,
+      "jobs_ok": 1,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": null,
+     "started_new_worker": null,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": null,
+     "expected_add_gib": null,
+     "startup_s": null,
+     "worker_engine_init_timings": null,
+     "one_shot_engine_init_timings": {
+      "import_s": 21.901,
+      "pipeline_load_s": 3.273,
+      "lora_load_merge_s": 1.225,
+      "audio_proj_s": 0.191,
+      "fingerprint_s": 0.036
+     },
+     "queue_wait_s": null,
+     "job_wall_s": null,
+     "host_wall_s": 35.937,
+     "node_wall_seconds": 35.94,
+     "process_seconds": 33.931,
+     "timings": {
+      "audio_load_s": 1.16,
+      "reference_encode_s": 0.224,
+      "encode_finalize_s": 0.219,
+      "verify_s": 0.158,
+      "sampling_loop_s": 4.905,
+      "chunk_mean_s": 0.4552,
+      "audio_encode_mean_s": 0.0148,
+      "denoise_mean_s": 0.3799,
+      "decode_mean_s": 0.0493,
+      "color_mean_s": 0.0046,
+      "history_mean_s": 0.0063,
+      "frame_io_mean_s": 0.0629,
+      "job_total_s": 7.06,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163",
+     "reference_latent_sha256": "0f471eb92a1a675099d9717b2fc499bd479c78e6c6c99506bd1a7fb6c33c804c",
+     "mp4_sha256": "d7627f55cf79cd34f3a69a7de23c8146ba363b51beca1caf701cba200cb69997",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3427060224,
+       "cuda_reserved_bytes": 3709861888,
+       "gpu_used_bytes": 5533925376,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1795395584,
+       "process_private_bytes": 8386637824
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5407036416,
+        "peak_reserved_bytes": 5735710720,
+        "reserved_bytes": 5735710720,
+        "reserved_after_release_bytes": 3709861888
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 8681316352,
+        "peak_reserved_bytes": 11874074624,
+        "reserved_bytes": 11874074624
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3428108800,
+       "cuda_reserved_bytes": 3711959040,
+       "gpu_used_bytes": 5538119680,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2738212864,
+       "process_private_bytes": 9371340800
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 8681316352,
+      "cuda_max_reserved_bytes": 11874074624,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5407036416,
+        "peak_reserved_bytes": 5735710720,
+        "reserved_bytes": 5735710720,
+        "reserved_after_release_bytes": 3709861888
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 8681316352,
+        "peak_reserved_bytes": 11874074624,
+        "reserved_bytes": 11874074624
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": true,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/leaptalk/talking_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   },
+   "persistent": [
+    {
+     "name": "shipped_persistent_1",
+     "prompt_id": "02371eb8-86fa-42a9-b790-1c3eb76b145b",
+     "status": "success",
+     "queued_at": "2026-10-03T18:47:49",
+     "wall_s": 30.127,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 30,
+      "commit_pct_max": 95.32,
+      "commit_gib_max": 88.92,
+      "commit_gib_start": 72.59,
+      "available_gib_min": 19.15,
+      "gpu_mib_max": 14345,
+      "gpu_mib_start": 2463
+     },
+     "ws": {
+      "progress_msgs": 9,
+      "previews": 9,
+      "first_preview_after_s": 25.76,
+      "preview_vs_job": {
+       "own_job_mad": 0.13,
+       "previous_job_mad": 0.13,
+       "previous_job": "job-20261003-184712-43cccb30fda3"
+      }
+     },
+     "job": {
+      "job_id": "job-20261003-184749-10f0969301cc",
+      "backend": {
+       "requested": "persistent",
+       "runtime_default": "one-shot",
+       "effective": "persistent"
+      },
+      "runtime_id": "main",
+      "decoder": "lite_tae",
+      "worker_instance_id": "w39b6fa1eab3c48079120",
+      "worker_interpreter_pid": 38684,
+      "worker_launcher_pid": 60052,
+      "one_shot_runner_pid": null,
+      "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4",
+      "initialization_id": "init-8d13ccb4ea51",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 1,
+       "jobs_ok": 1,
+       "jobs_failed": 0
+      },
+      "weight_fingerprint": {
+       "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+       "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+       "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+       "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+      },
+      "worker_jobs_done": 1,
+      "started_new_worker": true,
+      "restart_reason": null,
+      "unloaded_persistent_worker": null,
+      "memory_check": "ok: commit 77.8 %, available 24.7 GiB, projected 95.0 %",
+      "expected_add_gib": 16.0,
+      "startup_s": 22.907,
+      "worker_engine_init_timings": {
+       "import_s": 18.774,
+       "pipeline_load_s": 2.295,
+       "lora_load_merge_s": 1.384,
+       "audio_proj_s": 0.176,
+       "fingerprint_s": 0.031
+      },
+      "one_shot_engine_init_timings": null,
+      "queue_wait_s": 0.0,
+      "job_wall_s": 7.047,
+      "host_wall_s": 30.047,
+      "node_wall_seconds": 30.04,
+      "process_seconds": 7.022,
+      "timings": {
+       "audio_load_s": 0.979,
+       "reference_encode_s": 0.219,
+       "encode_finalize_s": 0.211,
+       "verify_s": 0.151,
+       "sampling_loop_s": 4.709,
+       "chunk_mean_s": 0.4327,
+       "audio_encode_mean_s": 0.0146,
+       "denoise_mean_s": 0.3574,
+       "decode_mean_s": 0.0493,
+       "color_mean_s": 0.0045,
+       "history_mean_s": 0.0065,
+       "frame_io_mean_s": 0.0611,
+       "job_total_s": 6.784,
+       "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+      },
+      "forwards": {
+       "total": 9,
+       "conditional": 9,
+       "unconditional": 0
+      },
+      "chunks": 9,
+      "output_frames": 234,
+      "audio": {
+       "input_sample_rate": 24000,
+       "input_channels": 1,
+       "input_samples": 224400,
+       "input_seconds": 9.35,
+       "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+       "samples_16k": 149600,
+       "padded_samples_16k": 161280,
+       "peak_16k": 0.4918,
+       "silent": false,
+       "muxed": {
+        "codec": "aac",
+        "sample_rate": 24000,
+        "channels": 1,
+        "decoded_seconds": 9.35
+       }
+      },
+      "frames_sha256": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163",
+      "reference_latent_sha256": "0f471eb92a1a675099d9717b2fc499bd479c78e6c6c99506bd1a7fb6c33c804c",
+      "mp4_sha256": "d7627f55cf79cd34f3a69a7de23c8146ba363b51beca1caf701cba200cb69997",
+      "job_memory": {
+       "resident_before_job": {
+        "cuda_allocated_bytes": 3427060224,
+        "cuda_reserved_bytes": 3709861888,
+        "gpu_used_bytes": 5533925376,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1792782336,
+        "process_private_bytes": 8332304384
+       },
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5407036416,
+         "peak_reserved_bytes": 5735710720,
+         "reserved_bytes": 5735710720,
+         "reserved_after_release_bytes": 3709861888
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 8681316352,
+         "peak_reserved_bytes": 11874074624,
+         "reserved_bytes": 11874074624
+        }
+       },
+       "after_job": {
+        "cuda_allocated_bytes": 3428108800,
+        "cuda_reserved_bytes": 3711959040,
+        "gpu_used_bytes": 5538119680,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2736123904,
+        "process_private_bytes": 9371971584
+       },
+       "stale_state_found_before_job": []
+      },
+      "memory": {
+       "cuda_max_allocated_bytes": 8681316352,
+       "cuda_max_reserved_bytes": 11874074624,
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5407036416,
+         "peak_reserved_bytes": 5735710720,
+         "reserved_bytes": 5735710720,
+         "reserved_after_release_bytes": 3709861888
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 8681316352,
+         "peak_reserved_bytes": 11874074624,
+         "reserved_bytes": 11874074624
+        }
+       }
+      },
+      "lora_applied_tensors": 480,
+      "effective_config": {
+       "model_type": "pro",
+       "lite": true,
+       "num_inference_steps": 1,
+       "shift_gamma": 5.0,
+       "noise_scale": 1.0,
+       "audio_guidance": 1.0,
+       "frame_num": 33,
+       "motion_frames_latent_num": 2,
+       "cached_audio_duration": 8,
+       "audio_encode_mode": "stream",
+       "history_update_mode": "roundtrip",
+       "color_correction_strength": 1.0,
+       "height": 512,
+       "width": 512,
+       "fps": 25,
+       "dtype": "bf16",
+       "compile": false,
+       "use_face_crop": false
+      }
+     },
+     "saved": [
+      "output/leaptalk/talking_00002_.mp4"
+     ],
+     "decoded": {
+      "video_streams": 1,
+      "audio_streams": 1,
+      "width": 512,
+      "height": 512,
+      "rate": 25.0,
+      "codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate": 24000,
+      "audio_channels": 1,
+      "frames": 234,
+      "audio_seconds": 9.35
+     },
+     "checks": {
+      "one_video": true,
+      "has_audio": true,
+      "frames_match_report": true,
+      "512x512_25fps": true,
+      "audio_tail_s": 0.0,
+      "lora_applied": true
+     },
+     "worker_status_after_job": {
+      "state": "idle",
+      "worker_instance_id": "w39b6fa1eab3c48079120",
+      "jobs_done": 1,
+      "idle_seconds_left": 120.0
+     }
+    },
+    {
+     "name": "shipped_persistent_2",
+     "prompt_id": "158e73f0-034f-42e7-aeff-f085e5a28560",
+     "status": "error",
+     "queued_at": "2026-10-03T18:48:19",
+     "wall_s": 0.15,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk did not start the job on the loaded worker: commit would reach about 97.4 % (81.3 + 9.5 GiB of 93.3 GiB); limit 97 %\n",
+     "memory_window": {},
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "shipped_persistent_3",
+     "prompt_id": "808851d3-dfc0-460f-b451-9e6f78c07714",
+     "status": "error",
+     "queued_at": "2026-10-03T18:48:20",
+     "wall_s": 0.15,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk did not start the job on the loaded worker: commit would reach about 97.4 % (81.3 + 9.5 GiB of 93.3 GiB); limit 97 %\n",
+     "memory_window": {
+      "samples": 1,
+      "commit_pct_max": 87.19,
+      "commit_gib_max": 81.33,
+      "commit_gib_start": 81.33,
+      "available_gib_min": 22.06,
+      "gpu_mib_max": 6561,
+      "gpu_mib_start": 6561
+     },
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    }
+   ],
+   "status": {
+    "name": "shipped_worker_status",
+    "prompt_id": "b8d9c344-e41e-47b7-a7d0-df9f92c0c7ae",
+    "status": "success",
+    "queued_at": "2026-10-03T18:48:21",
+    "wall_s": 0.022,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {},
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "worker": {
+      "state": "idle",
+      "worker_instance_id": "w39b6fa1eab3c48079120",
+      "launcher_pid": 60052,
+      "interpreter_pid": 38684,
+      "runtime_id": "main",
+      "decoder": "lite_tae",
+      "identity": "282517a9bfb2f263",
+      "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4",
+      "initialization_id": "init-8d13ccb4ea51",
+      "engine_counters_at_start": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 0,
+       "jobs_ok": 0,
+       "jobs_failed": 0
+      },
+      "engine_init_timings": {
+       "import_s": 18.774,
+       "pipeline_load_s": 2.295,
+       "lora_load_merge_s": 1.384,
+       "audio_proj_s": 0.176,
+       "fingerprint_s": 0.031
+      },
+      "jobs_done": 1,
+      "start_reason": "first persistent job",
+      "startup_seconds": 22.907,
+      "seconds_since_last_activity": 1.9,
+      "idle_timeout_seconds": 120,
+      "idle_seconds_left": 118.1,
+      "runtime": {
+       "memory": {
+        "cuda_allocated_bytes": 3428108800,
+        "cuda_reserved_bytes": 3711959040,
+        "gpu_used_bytes": 5538119680,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2736140288,
+        "process_private_bytes": 9371971584
+       },
+       "resident_after_init": {
+        "cuda_allocated_bytes": 3427060224,
+        "cuda_reserved_bytes": 3709861888,
+        "gpu_used_bytes": 5533925376,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1792761856,
+        "process_private_bytes": 8332304384
+       },
+       "counters": {
+        "init": 1,
+        "lora_merge": 1,
+        "audio_proj_load": 1,
+        "jobs_started": 1,
+        "jobs_ok": 1,
+        "jobs_failed": 0
+       },
+       "jobs_done": 1
+      }
+     },
+     "host_memory": {
+      "measurable": true,
+      "source": "GetPerformanceInfo",
+      "t": 1080448.937,
+      "total_gib": 63.39,
+      "available_gib": 22.06,
+      "commit_gib": 81.33,
+      "commit_limit_gib": 93.28,
+      "commit_pct": 87.18,
+      "commit_enforced": true
+     },
+     "history": [
+      {
+       "event": "starting",
+       "t": 1791020869.4,
+       "worker_instance_id": "w39b6fa1eab3c48079120",
+       "reason": "first persistent job",
+       "decoder": "lite_tae"
+      },
+      {
+       "event": "ready",
+       "t": 1791020892.3,
+       "worker_instance_id": "w39b6fa1eab3c48079120",
+       "startup_s": 22.907,
+       "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4"
+      }
+     ]
+    }
+   },
+   "unload": {
+    "name": "shipped_worker_unload",
+    "prompt_id": "7464945e-cd67-411d-a3f8-d32b23eb61ae",
+    "status": "success",
+    "queued_at": "2026-10-03T18:48:21",
+    "wall_s": 0.858,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 1,
+     "commit_pct_max": 87.18,
+     "commit_gib_max": 81.33,
+     "commit_gib_start": 81.33,
+     "available_gib_min": 22.06,
+     "gpu_mib_max": 6561,
+     "gpu_mib_start": 6561
+    },
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "status": "unloaded",
+     "worker_instance_id": "w39b6fa1eab3c48079120",
+     "reason": "unload requested from the LeapTalk Worker node",
+     "graceful_exit": true,
+     "active_before": 1,
+     "active_after": 0,
+     "host_memory_after": {
+      "measurable": true,
+      "source": "GetPerformanceInfo",
+      "t": 1080450.312,
+      "total_gib": 63.39,
+      "available_gib": 24.68,
+      "commit_gib": 72.58,
+      "commit_limit_gib": 93.28,
+      "commit_pct": 77.81,
+      "commit_enforced": true
+     },
+     "now": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1080450.312,
+       "total_gib": 63.39,
+       "available_gib": 24.68,
+       "commit_gib": 72.58,
+       "commit_limit_gib": 93.28,
+       "commit_pct": 77.81,
+       "commit_enforced": true
+      },
+      "history": [
+       {
+        "event": "starting",
+        "t": 1791020869.4,
+        "worker_instance_id": "w39b6fa1eab3c48079120",
+        "reason": "first persistent job",
+        "decoder": "lite_tae"
+       },
+       {
+        "event": "ready",
+        "t": 1791020892.3,
+        "worker_instance_id": "w39b6fa1eab3c48079120",
+        "startup_s": 22.907,
+        "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4"
+       },
+       {
+        "event": "stopped",
+        "t": 1791020902.7,
+        "worker_instance_id": "w39b6fa1eab3c48079120",
+        "reason": "unload requested from the LeapTalk Worker node",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       }
+      ]
+     }
+    }
+   },
+   "worker_processes_after_unload": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  "persistent": {
+   "A_a_short": {
+    "unload_before": {
+     "name": "unload_before_A_a_short",
+     "prompt_id": "fa805ed1-07ef-4ab6-a5bc-939613e51910",
+     "status": "success",
+     "queued_at": "2026-10-03T18:48:23",
+     "wall_s": 0.003,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {},
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     },
+     "worker_node": {
+      "status": "no_worker",
+      "now": {
+       "worker": null,
+       "host_memory": {
+        "measurable": true,
+        "source": "GetPerformanceInfo",
+        "t": 1080451.14,
+        "total_gib": 63.39,
+        "available_gib": 24.68,
+        "commit_gib": 72.59,
+        "commit_limit_gib": 93.28,
+        "commit_pct": 77.81,
+        "commit_enforced": true
+       },
+       "history": [
+        {
+         "event": "starting",
+         "t": 1791020869.4,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "reason": "first persistent job",
+         "decoder": "lite_tae"
+        },
+        {
+         "event": "ready",
+         "t": 1791020892.3,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "startup_s": 22.907,
+         "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4"
+        },
+        {
+         "event": "stopped",
+         "t": 1791020902.7,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "reason": "unload requested from the LeapTalk Worker node",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        }
+       ]
+      }
+     },
+     "worker_processes_after": {
+      "launchers": [],
+      "interpreters": [],
+      "others": []
+     }
+    },
+    "before_first": {
+     "commit_pct": 77.8,
+     "commit_gib": 72.58,
+     "available_gib": 24.67,
+     "gpu_mib": 2463
+    },
+    "first": {
+     "name": "persistent_first_A_a_short",
+     "prompt_id": "45c5418a-da5e-4968-aef2-9b87be6151c0",
+     "status": "success",
+     "queued_at": "2026-10-03T18:48:28",
+     "wall_s": 30.931,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "lite_tae",
+      "guidance": 1.0,
+      "backend_input": "persistent",
+      "runtime": "main"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 32,
+      "commit_pct_max": 95.41,
+      "commit_gib_max": 89.0,
+      "commit_gib_start": 72.86,
+      "available_gib_min": 19.09,
+      "gpu_mib_max": 14345,
+      "gpu_mib_start": 2463
+     },
+     "ws": {
+      "progress_msgs": 9,
+      "previews": 9,
+      "first_preview_after_s": 26.49,
+      "preview_vs_job": {
+       "own_job_mad": 0.13,
+       "previous_job_mad": 0.13,
+       "previous_job": "job-20261003-184749-10f0969301cc"
+      }
+     },
+     "job": {
+      "job_id": "job-20261003-184828-157ec6d4d902",
+      "backend": {
+       "requested": "persistent",
+       "runtime_default": "one-shot",
+       "effective": "persistent"
+      },
+      "runtime_id": "main",
+      "decoder": "lite_tae",
+      "worker_instance_id": "w39a8598276694324aebb",
+      "worker_interpreter_pid": 75644,
+      "worker_launcher_pid": 41444,
+      "one_shot_runner_pid": null,
+      "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2",
+      "initialization_id": "init-d2bcabf0aaa9",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 1,
+       "jobs_ok": 1,
+       "jobs_failed": 0
+      },
+      "weight_fingerprint": {
+       "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+       "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+       "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+       "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+      },
+      "worker_jobs_done": 1,
+      "started_new_worker": true,
+      "restart_reason": null,
+      "unloaded_persistent_worker": null,
+      "memory_check": "ok: commit 77.8 %, available 24.7 GiB, projected 95.0 %",
+      "expected_add_gib": 16.0,
+      "startup_s": 23.297,
+      "worker_engine_init_timings": {
+       "import_s": 19.484,
+       "pipeline_load_s": 2.307,
+       "lora_load_merge_s": 1.059,
+       "audio_proj_s": 0.177,
+       "fingerprint_s": 0.035
+      },
+      "one_shot_engine_init_timings": null,
+      "queue_wait_s": 0.0,
+      "job_wall_s": 7.11,
+      "host_wall_s": 30.485,
+      "node_wall_seconds": 30.48,
+      "process_seconds": 7.087,
+      "timings": {
+       "audio_load_s": 1.138,
+       "reference_encode_s": 0.211,
+       "encode_finalize_s": 0.217,
+       "verify_s": 0.164,
+       "sampling_loop_s": 4.731,
+       "chunk_mean_s": 0.4339,
+       "audio_encode_mean_s": 0.0148,
+       "denoise_mean_s": 0.3582,
+       "decode_mean_s": 0.0495,
+       "color_mean_s": 0.0048,
+       "history_mean_s": 0.0063,
+       "frame_io_mean_s": 0.0554,
+       "job_total_s": 6.84,
+       "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+      },
+      "forwards": {
+       "total": 9,
+       "conditional": 9,
+       "unconditional": 0
+      },
+      "chunks": 9,
+      "output_frames": 234,
+      "audio": {
+       "input_sample_rate": 24000,
+       "input_channels": 1,
+       "input_samples": 224400,
+       "input_seconds": 9.35,
+       "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+       "samples_16k": 149600,
+       "padded_samples_16k": 161280,
+       "peak_16k": 0.4918,
+       "silent": false,
+       "muxed": {
+        "codec": "aac",
+        "sample_rate": 24000,
+        "channels": 1,
+        "decoded_seconds": 9.35
+       }
+      },
+      "frames_sha256": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163",
+      "reference_latent_sha256": "0f471eb92a1a675099d9717b2fc499bd479c78e6c6c99506bd1a7fb6c33c804c",
+      "mp4_sha256": "d7627f55cf79cd34f3a69a7de23c8146ba363b51beca1caf701cba200cb69997",
+      "job_memory": {
+       "resident_before_job": {
+        "cuda_allocated_bytes": 3427060224,
+        "cuda_reserved_bytes": 3709861888,
+        "gpu_used_bytes": 5533925376,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1792356352,
+        "process_private_bytes": 8386121728
+       },
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5407036416,
+         "peak_reserved_bytes": 5735710720,
+         "reserved_bytes": 5735710720,
+         "reserved_after_release_bytes": 3709861888
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 8681316352,
+         "peak_reserved_bytes": 11874074624,
+         "reserved_bytes": 11874074624
+        }
+       },
+       "after_job": {
+        "cuda_allocated_bytes": 3428108800,
+        "cuda_reserved_bytes": 3711959040,
+        "gpu_used_bytes": 5538119680,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2735652864,
+        "process_private_bytes": 9368854528
+       },
+       "stale_state_found_before_job": []
+      },
+      "memory": {
+       "cuda_max_allocated_bytes": 8681316352,
+       "cuda_max_reserved_bytes": 11874074624,
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5407036416,
+         "peak_reserved_bytes": 5735710720,
+         "reserved_bytes": 5735710720,
+         "reserved_after_release_bytes": 3709861888
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 8681316352,
+         "peak_reserved_bytes": 11874074624,
+         "reserved_bytes": 11874074624
+        }
+       }
+      },
+      "lora_applied_tensors": 480,
+      "effective_config": {
+       "model_type": "pro",
+       "lite": true,
+       "num_inference_steps": 1,
+       "shift_gamma": 5.0,
+       "noise_scale": 1.0,
+       "audio_guidance": 1.0,
+       "frame_num": 33,
+       "motion_frames_latent_num": 2,
+       "cached_audio_duration": 8,
+       "audio_encode_mode": "stream",
+       "history_update_mode": "roundtrip",
+       "color_correction_strength": 1.0,
+       "height": 512,
+       "width": 512,
+       "fps": 25,
+       "dtype": "bf16",
+       "compile": false,
+       "use_face_crop": false
+      }
+     },
+     "saved": [
+      "output/e2e/persistent_first_A_a_short_00001_.mp4"
+     ],
+     "decoded": {
+      "video_streams": 1,
+      "audio_streams": 1,
+      "width": 512,
+      "height": 512,
+      "rate": 25.0,
+      "codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate": 24000,
+      "audio_channels": 1,
+      "frames": 234,
+      "audio_seconds": 9.35
+     },
+     "checks": {
+      "one_video": true,
+      "has_audio": true,
+      "frames_match_report": true,
+      "512x512_25fps": true,
+      "audio_tail_s": 0.0,
+      "lora_applied": true
+     }
+    },
+    "loaded_idle": {
+     "prompt_id": "f2a0f7e2-b463-4c2f-9681-2fbf2e368f3e",
+     "worker": {
+      "state": "idle",
+      "worker_instance_id": "w39a8598276694324aebb",
+      "interpreter_pid": 75644,
+      "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2",
+      "engine_counters_at_start": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 0,
+       "jobs_ok": 0,
+       "jobs_failed": 0
+      },
+      "jobs_done": 1,
+      "idle_seconds_left": 116.2,
+      "runtime": {
+       "memory": {
+        "cuda_allocated_bytes": 3428108800,
+        "cuda_reserved_bytes": 3711959040,
+        "gpu_used_bytes": 5538119680,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2735722496,
+        "process_private_bytes": 9148223488
+       },
+       "resident_after_init": {
+        "cuda_allocated_bytes": 3427060224,
+        "cuda_reserved_bytes": 3709861888,
+        "gpu_used_bytes": 5533925376,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1792348160,
+        "process_private_bytes": 8386121728
+       },
+       "counters": {
+        "init": 1,
+        "lora_merge": 1,
+        "audio_proj_load": 1,
+        "jobs_started": 1,
+        "jobs_ok": 1,
+        "jobs_failed": 0
+       },
+       "jobs_done": 1
+      }
+     },
+     "host_memory": {
+      "commit_pct": 86.97,
+      "commit_gib": 81.13,
+      "available_gib": 22.04
+     },
+     "history_tail": [
+      {
+       "event": "ready",
+       "t": 1791020892.3,
+       "worker_instance_id": "w39b6fa1eab3c48079120",
+       "startup_s": 22.907,
+       "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4"
+      },
+      {
+       "event": "stopped",
+       "t": 1791020902.7,
+       "worker_instance_id": "w39b6fa1eab3c48079120",
+       "reason": "unload requested from the LeapTalk Worker node",
+       "graceful_exit": true,
+       "active_before": 1,
+       "active_after": 0
+      },
+      {
+       "event": "starting",
+       "t": 1791020908.7,
+       "worker_instance_id": "w39a8598276694324aebb",
+       "reason": "first persistent job",
+       "decoder": "lite_tae"
+      },
+      {
+       "event": "ready",
+       "t": 1791020932.0,
+       "worker_instance_id": "w39a8598276694324aebb",
+       "startup_s": 23.297,
+       "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2"
+      }
+     ],
+     "worker_processes": {
+      "launchers": [
+       41444
+      ],
+      "interpreters": [
+       75644
+      ],
+      "others": [
+       33684
+      ]
+     },
+     "gpu_mib": 6561
+    },
+    "warm": [
+     {
+      "name": "persistent_warm_A_a_short_1",
+      "prompt_id": "199412d7-f1bb-46a4-b5e3-7bdf46e45e6c",
+      "status": "error",
+      "queued_at": "2026-10-03T18:49:03",
+      "wall_s": 0.151,
+      "input": {
+       "image": "A",
+       "audio": "a_short",
+       "decoder": "lite_tae",
+       "guidance": 1.0,
+       "backend_input": "persistent",
+       "runtime": "main"
+      },
+      "messages": [
+       "execution_start",
+       "execution_cached",
+       "execution_error"
+      ],
+      "error": "LeapTalk did not start the job on the loaded worker: commit would reach about 97.2 % (81.1 + 9.5 GiB of 93.3 GiB); limit 97 %\n",
+      "memory_window": {},
+      "ws": {
+       "progress_msgs": 0,
+       "previews": 0,
+       "first_preview_after_s": null
+      },
+      "after_job_status": {
+       "prompt_id": "0f1f1080-1472-41dc-8f03-e31e0144245b",
+       "worker": {
+        "state": "idle",
+        "worker_instance_id": "w39a8598276694324aebb",
+        "interpreter_pid": 75644,
+        "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2",
+        "engine_counters_at_start": {
+         "init": 1,
+         "lora_merge": 1,
+         "audio_proj_load": 1,
+         "jobs_started": 0,
+         "jobs_ok": 0,
+         "jobs_failed": 0
+        },
+        "jobs_done": 1,
+        "idle_seconds_left": 112.0,
+        "runtime": {
+         "memory": {
+          "cuda_allocated_bytes": 3428108800,
+          "cuda_reserved_bytes": 3711959040,
+          "gpu_used_bytes": 5538119680,
+          "gpu_total_bytes": 34190458880,
+          "process_rss_bytes": 2735722496,
+          "process_private_bytes": 9148223488
+         },
+         "resident_after_init": {
+          "cuda_allocated_bytes": 3427060224,
+          "cuda_reserved_bytes": 3709861888,
+          "gpu_used_bytes": 5533925376,
+          "gpu_total_bytes": 34190458880,
+          "process_rss_bytes": 1792348160,
+          "process_private_bytes": 8386121728
+         },
+         "counters": {
+          "init": 1,
+          "lora_merge": 1,
+          "audio_proj_load": 1,
+          "jobs_started": 1,
+          "jobs_ok": 1,
+          "jobs_failed": 0
+         },
+         "jobs_done": 1
+        }
+       },
+       "host_memory": {
+        "commit_pct": 86.99,
+        "commit_gib": 81.15,
+        "available_gib": 22.02
+       },
+       "history_tail": [
+        {
+         "event": "ready",
+         "t": 1791020892.3,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "startup_s": 22.907,
+         "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4"
+        },
+        {
+         "event": "stopped",
+         "t": 1791020902.7,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "reason": "unload requested from the LeapTalk Worker node",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        },
+        {
+         "event": "starting",
+         "t": 1791020908.7,
+         "worker_instance_id": "w39a8598276694324aebb",
+         "reason": "first persistent job",
+         "decoder": "lite_tae"
+        },
+        {
+         "event": "ready",
+         "t": 1791020932.0,
+         "worker_instance_id": "w39a8598276694324aebb",
+         "startup_s": 23.297,
+         "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2"
+        }
+       ],
+       "worker_processes": {
+        "launchers": [
+         41444
+        ],
+        "interpreters": [
+         75644
+        ],
+        "others": [
+         33684
+        ]
+       },
+       "gpu_mib": 6561
+      }
+     },
+     {
+      "name": "persistent_warm_A_a_short_2",
+      "prompt_id": "85b1aca4-5c2d-431d-8d2f-79015295bb71",
+      "status": "error",
+      "queued_at": "2026-10-03T18:49:07",
+      "wall_s": 0.351,
+      "input": {
+       "image": "A",
+       "audio": "a_short",
+       "decoder": "lite_tae",
+       "guidance": 1.0,
+       "backend_input": "persistent",
+       "runtime": "main"
+      },
+      "messages": [
+       "execution_start",
+       "execution_cached",
+       "execution_error"
+      ],
+      "error": "LeapTalk did not start the job on the loaded worker: commit would reach about 97.2 % (81.2 + 9.5 GiB of 93.3 GiB); limit 97 %\n",
+      "memory_window": {
+       "samples": 1,
+       "commit_pct_max": 86.99,
+       "commit_gib_max": 81.14,
+       "commit_gib_start": 81.14,
+       "available_gib_min": 22.02,
+       "gpu_mib_max": 6561,
+       "gpu_mib_start": 6561
+      },
+      "ws": {
+       "progress_msgs": 0,
+       "previews": 0,
+       "first_preview_after_s": null
+      },
+      "after_job_status": {
+       "prompt_id": "4a628203-1a00-46e5-b18b-7bd4c39fa579",
+       "worker": {
+        "state": "idle",
+        "worker_instance_id": "w39a8598276694324aebb",
+        "interpreter_pid": 75644,
+        "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2",
+        "engine_counters_at_start": {
+         "init": 1,
+         "lora_merge": 1,
+         "audio_proj_load": 1,
+         "jobs_started": 0,
+         "jobs_ok": 0,
+         "jobs_failed": 0
+        },
+        "jobs_done": 1,
+        "idle_seconds_left": 107.2,
+        "runtime": {
+         "memory": {
+          "cuda_allocated_bytes": 3428108800,
+          "cuda_reserved_bytes": 3711959040,
+          "gpu_used_bytes": 5538119680,
+          "gpu_total_bytes": 34190458880,
+          "process_rss_bytes": 2735722496,
+          "process_private_bytes": 9148223488
+         },
+         "resident_after_init": {
+          "cuda_allocated_bytes": 3427060224,
+          "cuda_reserved_bytes": 3709861888,
+          "gpu_used_bytes": 5533925376,
+          "gpu_total_bytes": 34190458880,
+          "process_rss_bytes": 1792348160,
+          "process_private_bytes": 8386121728
+         },
+         "counters": {
+          "init": 1,
+          "lora_merge": 1,
+          "audio_proj_load": 1,
+          "jobs_started": 1,
+          "jobs_ok": 1,
+          "jobs_failed": 0
+         },
+         "jobs_done": 1
+        }
+       },
+       "host_memory": {
+        "commit_pct": 86.95,
+        "commit_gib": 81.11,
+        "available_gib": 22.04
+       },
+       "history_tail": [
+        {
+         "event": "ready",
+         "t": 1791020892.3,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "startup_s": 22.907,
+         "engine_instance_id": "8d13ccb4ea5142edbe892620763d2bf4"
+        },
+        {
+         "event": "stopped",
+         "t": 1791020902.7,
+         "worker_instance_id": "w39b6fa1eab3c48079120",
+         "reason": "unload requested from the LeapTalk Worker node",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        },
+        {
+         "event": "starting",
+         "t": 1791020908.7,
+         "worker_instance_id": "w39a8598276694324aebb",
+         "reason": "first persistent job",
+         "decoder": "lite_tae"
+        },
+        {
+         "event": "ready",
+         "t": 1791020932.0,
+         "worker_instance_id": "w39a8598276694324aebb",
+         "startup_s": 23.297,
+         "engine_instance_id": "d2bcabf0aaa94a359e7dcac5876ce4f2"
+        }
+       ],
+       "worker_processes": {
+        "launchers": [
+         41444
+        ],
+        "interpreters": [
+         75644
+        ],
+        "others": [
+         33684
+        ]
+       },
+       "gpu_mib": 6561
+      }
+     }
+    ]
+   }
+  },
+  "kill_idle": {
+   "job": {
+    "name": "kill_idle_job",
+    "prompt_id": "ba081d62-67dc-4d1b-ba5d-8a79f49baea2",
+    "status": "error",
+    "queued_at": "2026-10-03T18:49:13",
+    "wall_s": 0.141,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "lite_tae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk did not start the job on the loaded worker: commit would reach about 97.2 % (81.2 + 9.5 GiB of 93.3 GiB); limit 97 %\n",
+    "memory_window": {},
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   },
+   "worker_processes_before": {
+    "launchers": [
+     41444
+    ],
+    "interpreters": [
+     75644
+    ],
+    "others": [
+     33684
+    ]
+   },
+   "left_after": [],
+   "seconds_to_clean": 1.27,
+   "gpu_mib_after": 2463,
+   "memory_after": {
+    "commit_pct": 75.48,
+    "commit_gib": 70.41,
+    "available_gib": 25.33
+   }
+  }
+ },
+ "sessions": [
+  {
+   "session": 1,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 76.97,
+    "commit_gib": 71.8,
+    "available_gib": 24.76,
+    "gpu_mib": 2463
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  {
+   "session": 2,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 77.71,
+    "commit_gib": 72.49,
+    "available_gib": 24.75,
+    "gpu_mib": 2463
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  }
+ ],
+ "gpu_idle_mib_before": 2463,
+ "memory_before": {
+  "total_gib": 63.39,
+  "commit_limit_gib": 93.28,
+  "commit_pct": 74.58,
+  "commit_gib": 69.57,
+  "available_gib": 25.51
+ },
+ "max_worker_launchers_seen": 1,
+ "watchdog_interrupts": [],
+ "worker_processes_at_end": {
+  "launchers": [],
+  "interpreters": [],
+  "others": []
+ },
+ "left_after_comfy_stop": [],
+ "gpu_idle_mib_after": 2473,
+ "memory_after": {
+  "commit_pct": 75.46,
+  "commit_gib": 70.4,
+  "available_gib": 25.31
+ },
+ "hashes": {
+  "A|a_short|lite_tae|persistent": [
+   "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163"
+  ]
+ },
+ "official_reference": {
+  "A|a_short|lite_tae": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163",
+  "B|b_long|lite_tae": "7bcffb23687269d4b20d6f9a629d2ad27e0cebdd9c68e9a6185e58a53460acc4"
+ }
+}
