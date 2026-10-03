@@ -1,0 +1,23 @@
+{
+ "1": {
+  "class_type": "LeapTalkWorker",
+  "inputs": {
+   "action": "unload"
+  },
+  "_meta": {
+   "title": "LeapTalk Worker (unload: free the loaded model)"
+  }
+ },
+ "2": {
+  "class_type": "PreviewAny",
+  "inputs": {
+   "source": [
+    "1",
+    0
+   ]
+  },
+  "_meta": {
+   "title": "Unload result (JSON)"
+  }
+ }
+}

@@ -1,9 +1,10 @@
 # Benchmarks, comparison and evaluation
 
 Everything below is from one machine, one day (2026-10-03), with the setup in docs/SETUP.md. Raw
-records: `docs/results/gpu_e2e_report.json` (ComfyUI HTTP end-to-end), `docs/results/reference_check.json`
+records: `docs/results/gpu_e2e_report.json` (v0.1.0 ComfyUI HTTP end-to-end), `docs/results/reference_check.json`
 (official script vs this package), `docs/results/quality_eval.json` (frame review and automatic
-proxies), `docs/results/demo_manifest.json` (demo inputs and outputs).
+proxies), `docs/results/demo_manifest.json` (v0.1.0 demo inputs and outputs), `docs/results/v020/`
+(v0.2.0: one-shot vs persistent worker, see [Persistent worker](#persistent-worker)).
 
 ## Setup
 
@@ -108,6 +109,115 @@ charge almost 1:1 (WDDM). With ComfyUI and the runtime running, commit rose from
 of 92–93 % of the 93.3 GB commit limit, with other desktop applications open. If your commit charge
 is already high, close other GPU applications first or use `decoder = wan_vae`. These are observed
 peaks for this configuration, not minimum requirements.
+
+## Persistent worker
+
+v0.2.0 adds `backend = persistent`: the first job starts a worker that imports LeapTalk, loads the
+models and merges the LoRA once; later queue jobs reuse that Engine. Measured through ComfyUI's HTTP
+API on the same machine and day as above, with a test ComfyUI started with `--cache-none` (every
+queued prompt really executes; nothing is served from ComfyUI's output cache), `Load Image` +
+`Load Audio` -> **LeapTalk Generate** (Lite TAE, audio guidance 1.0, previews on) -> `Save Video`
+(MP4, streams copied). "Wall" is queueing the prompt to ComfyUI reporting it finished. The v0.1.0
+column is `git archive v0.1.0` installed alone in the same test ComfyUI and driven by the same script
+(`scripts/gpu_worker_e2e.py`); v0.1.0 and v0.2.0 never had a model loaded at the same time. The
+model files were read many times before these runs (warm OS file cache); no run here is "disk cold".
+
+| Speech | v0.1.0 one-shot | v0.2.0 one-shot | v0.2.0 persistent, first job | persistent, warm jobs | v0.1.0 one-shot / warm | Frames | Memory (worker loaded / job peak) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 9.35 s (A), 234 frames | 36.1 s (31.8–40.4, n=3) | 32.6 s (32.2–33.5, n=3) | 30.4 s | **6.2 s** (5.8–8.2, n=5) | 5.8x | identical in all 12 runs (= official script) | CUDA 3.5 / 11.1 GiB reserved |
+| 33.98 s (B), 850 frames | 45.5 s (43.9–47.4, n=3) | 45.3 s (44.0–46.6, n=2, see below) | 42.7 s | **17.7 s** (17.3–18.1, n=5) | 2.6x | identical in all 11 runs (= official script) | CUDA 3.5 / 11.1 GiB reserved |
+
+Values: median (range, number of runs). Raw values per run: `docs/results/v020/comparison_table.json`.
+The difference between the v0.1.0 and v0.2.0 one-shot columns is within their spread (same code path
+for generation; v0.2.0 adds only bookkeeping). Queue wall per second of speech: one-shot 3.5 (9.35 s)
+and 1.33 (33.98 s), persistent warm 0.67 and 0.52. Generation itself is unchanged: 0.45 s per 28-frame
+chunk (about 62 frames/s produced, playback 25 fps), so warm jobs are now mostly chunk loop.
+
+Where the time goes:
+
+| | first persistent job (33.98 s) | warm job (33.98 s, median) |
+| --- | --- | --- |
+| worker start: imports | 19.0 s | – (paid once per worker) |
+| model load, LoRA load + merge, audio projection | 2.4 + 1.2 + 0.2 s | – |
+| start-up total (spawn to ready, measured in ComfyUI) | 23.2 s | – |
+| job on the worker (audio load, reference encode, chunk loop, encoder finalize, output check) | 19.3 s | 17.6 s (chunk loop 16.0 s) |
+| queue to finished video | 42.7 s | 17.7 s |
+
+The first job pays the same start-up as a one-shot job (it is the same work); a worker started again
+after an Unload, the idle timeout or a decoder change pays it again (22.5–23.0 s start-up measured for
+decoder changes, 22.7–23.2 s after an Unload). The job timings in the report contain only the job's own
+time; the worker's initialization time is reported once (`engine_init_timings` in the Worker status)
+and never added to later jobs.
+
+**Same output.** For every input tried, one-shot and persistent jobs gave identical 8-bit frames
+(SHA-256 over all frames before encoding): portrait A 9.35 s and portrait B 33.98 s match the official
+script's frames (`reference_check.json`); B 10.40 s, A 30.78 s, stereo 48 kHz, 0.5 s, 3 s of silence and
+96.5 s ran on one worker; `wan_vae` gave the same frames persistent and one-shot. A fresh worker and the
+tenth job of a warm worker gave the same frames for the same input. This is equality of the frames
+handed to the encoder for these inputs on this machine, not a general bit-exactness guarantee.
+
+**No state carried between jobs.** Ten jobs on one worker (A 9.35 s, B 10.40 s, A 9.35 s, A 30.78 s,
+B stereo 48 kHz, A 0.5 s, B silence, B 33.98 s, A 9.35 s, B 10.40 s), then a 96.5 s job: one worker id,
+one Engine id, the Engine counters stayed at `init 1, lora_merge 1, audio_proj_load 1` while
+`jobs_started` went from 1 to 10, one generator call per chunk in every job, and each portrait gave its
+own frames again (A -> B -> A: A's hash both times). The progress previews ComfyUI received belonged to
+the running job: the last preview of each prompt differed from that job's own `preview.jpg` by 0.13–0.14
+(mean absolute difference of 0–255 values, JPEG re-encoding) and from the previous job's by 42–43 when the
+portrait changed.
+
+What is kept and what is reset:
+
+| Kept for the worker's lifetime (one Engine) | Recreated for every job |
+| --- | --- |
+| imported LeapTalk / SoulX-FlashHead modules, the `Model_Pro` weights with the LoRA merged once, the audio projection, wav2vec2, the decoder | the job folder, `job.json` validation, events and cancel flag, the portrait encoding and reference latents, the history/motion latents, audio features, the generator state of the pipeline (`prepare_params` state is dropped before and after each job), ffmpeg, CUDA peak statistics; afterwards unused CUDA cache is released (`empty_cache` is not an unload) |
+
+Before every job the worker checks that its model files (size, modification time), the pinned upstream
+files and a fingerprint of four merged weight tensors are unchanged; anything else (decoder, runtime
+settings, package scripts) changes the worker identity and starts a new worker.
+
+**Memory.** Resident while loaded and idle: CUDA 3.2 GiB allocated / 3.5 GiB reserved, about 4.0 GiB of
+GPU memory in use by the worker (nvidia-smi, on top of the desktop's 2.4 GiB), 1.9–2.6 GiB resident set
+and 7.9 GiB private bytes in the worker process; the system commit charge was 8.4–8.8 GiB higher than
+with ComfyUI alone. A job adds the same peak as a one-shot job (CUDA 8.1 GiB allocated / 11.1 GiB
+reserved in the chunk loop; 14.0 GiB in use on the whole GPU); after each job the worker returned to the
+same 3.46 GiB reserved and 1.9 GiB resident set and the system commit to 80.4–80.6 GiB, flat over the
+ten-job sequence (the same warm condition repeated, no growth). An Unload or the idle timeout returned
+commit and GPU memory to the ComfyUI-only level (72.6 GiB commit, 2.4 GiB on the GPU = the desktop).
+
+**The memory guard on this machine.** The commit limit is 93.3 GiB; with the desktop applications that
+were open and the test ComfyUI, the baseline was 71.6–73.0 GiB, so a LeapTalk job peak (about 16.5 GiB
+of commit, one-shot or persistent) reached 94.5–95.5 % of the limit. With the default guard
+(docs/SETUP.md) this means:
+
+- warm jobs ran when the loaded worker left room for the measured job peak plus 25 % below 97 %; when
+  the background was about 0.5 GiB higher they were refused before starting ("commit would reach about
+  97.3 %"), with the worker kept;
+- when commit stayed at or above 95 % for 5 s during a job, the job and the worker were stopped with that
+  message and the next job started a new worker. During development, earlier versions of the stop rule
+  kept the timer running while commit dipped just under 95 % (down to 93 %, then 94.5 %) and stopped
+  every 33.98 s job, including the cold first job of each new worker; the released rule counts only time
+  continuously at or above 95 %, and with it the 33.98 s benchmark above completed 6 of 6 jobs;
+- the test harness applied the same rule to one-shot jobs (which have no guard, as in v0.1) and
+  interrupted one of three v0.2.0 one-shot runs of the 33.98 s clip at 95.3 %; that run is excluded from
+  the one-shot column above.
+
+These defaults are deliberately conservative for this 64 GB workstation. If your commit charge is high,
+close other applications, use `decoder = wan_vae` (job peak about 3.5 GiB lower) or, if you accept the
+risk, adjust `memory_guard` in the runtime config.
+
+**Failure handling (real runs, persistent backend).** Cancel during a job: stopped between chunks, the
+worker was kept, the next job ran on it. Job timeout (`timeout_minutes = 1`, 96.5 s with `wan_vae`):
+`LeapTalk job exceeded 60 s`, cancelled cleanly. Missing model folder: the worker failed to start with
+the runtime's message, nothing left running. Worker interpreter killed during a job: the job failed with
+"the worker exited unexpectedly", all five worker processes were gone, the next job started a new
+worker. Worker launcher killed while idle (the interpreter survived it): the idle check (every second)
+noticed and ended the remaining processes through the job object within the 15 s the test waited; the
+next job started a new worker. Idle timeout (15 s in the test
+runtime): unloaded 17.3 s after the job; Status polls did not extend it. Prompts queued at once
+(generate, generate, Unload, Status, generate): at most one worker at any time, the first two jobs on
+the same worker, a new one after the Unload. ComfyUI killed hard while the worker idled and while it
+generated: every worker process (launcher, interpreter, ffmpeg) was gone after 1.0 s and 1.4 s, GPU
+memory back to the desktop level. Raw records: `docs/results/v020/`.
 
 ## Output review
 

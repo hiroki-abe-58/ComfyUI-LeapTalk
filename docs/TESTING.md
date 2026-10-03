@@ -31,6 +31,33 @@ AAC from the job's audio). Covered:
   quotes and non-ASCII characters, a `VIDEO` output with frames and the original stereo audio,
   rejection of image/audio batches and NaN audio, ComfyUI interrupts mapped to a job stop.
 
+Persistent worker (v0.2), with the real `runtime/leaptalk_worker.py` and a fake Engine
+(`tests/fake_runtime/fake_engine_job.py`: it re-exports the real job module and replaces only the
+model, so job validation, events and result fields are the real ones; its frames depend on the
+portrait, so a stale portrait would show):
+
+- reuse across jobs: one worker and one Engine (same ids, PIDs, init / LoRA-merge counters 1),
+  portrait A -> B -> A gives A's frames again, every job has its own folder, events and result;
+- worker identity: a decoder change starts a new worker and reports why; Status never starts a
+  worker and does not refresh the idle timer; Unload, Unload with nothing loaded;
+- idle timeout, and that neither the idle timer nor Unload cuts a running job (Unload answers
+  `busy`); three concurrent requests start exactly one worker;
+- cancel and timeout keep or replace the worker and the next job succeeds; a worker killed during a
+  job (the job fails, the next job gets a fresh worker); an Engine that fails to load; a worker that
+  answers something that is not the protocol; nothing is left running after any of these;
+- killing the "ComfyUI" process while the worker idles ends the worker tree (job object / stdin EOF);
+- the worker's environment holds no token/secret variables;
+- the memory guard with fixed snapshots: refusing a load (commit, unknown memory), counting only the
+  measured extra peak for a warm job, refusing a warm job near the stop level, the stop rule with
+  its duration and hysteresis (including the 93-95 % pattern of a normal job on the measured machine);
+- a one-shot job unloads an idle worker first; the v0.1 config and the v0.1 workflow stay one-shot;
+- talking to the worker directly: ids outside the allowed characters, a job folder outside the jobs
+  root, a missing job, a duplicate request id, status and shutdown;
+- inside a real ComfyUI: the Worker node is registered, never cached (`IS_CHANGED`), Status starts
+  nothing, Generate with `backend = persistent` reuses one worker over three jobs and reports the
+  requested/effective backend, Unload frees it; every shipped API workflow (v0.1 and new) validates;
+- the files the worker needs are not excluded from the Registry package (`.comfyignore`).
+
 Tests that need ComfyUI are marked `comfy` and fail (not skip) without `COMFYUI_PATH`. CI runs
 everything on Ubuntu and Windows with ComfyUI v0.38.0 and CPU PyTorch.
 
@@ -49,7 +76,24 @@ the GPU work) and drives it through the HTTP API with real weights:
 | timeout | `timeout_minutes: 1` with a 97 s clip -> error, nothing left |
 | crash | ComfyUI killed (no cleanup code runs in it) during the chunk loop -> the runner tree (launcher, interpreter, ffmpeg) is gone, GPU memory back to idle |
 
-Results of the release run: `docs/results/gpu_e2e_report.json`, summarised in docs/BENCHMARKS.md.
+Results of the v0.1.0 release run: `docs/results/gpu_e2e_report.json`, summarised in docs/BENCHMARKS.md.
+
+### Persistent worker series (v0.2)
+
+`scripts/gpu_worker_e2e.py` drives its own ComfyUI the same way, started with `--cache-none` so every
+queued prompt really executes (a cached output would prove nothing about reuse). It listens on the
+websocket (previews are counted per prompt and compared with that job's own `preview.jpg`), samples
+the system commit charge, available memory and GPU memory, counts the worker processes that descend
+from its ComfyUI, and interrupts the prompt if commit stays at or above 95 % for 5 s. For every job it
+records the prompt id, job id, backend, worker instance id and PIDs, Engine instance id, init /
+LoRA-merge counters, generator calls, frame hashes, timings and memory. Steps: the v0.1 workflow
+(one-shot) vs persistent first and warm jobs on the same inputs, ten jobs on one worker (portraits
+A/B/A, speech changes, 0.5 s, silence, stereo 48 kHz, ~34 s), ~96 s, a fresh worker, decoder switch
+and back, cancel / timeout / runtime error / worker killed during a job / worker launcher killed while
+idle, each followed by a normal job, idle timeout and explicit Unload, prompts queued at once with an
+Unload between them, and ComfyUI killed while the worker idles and while it generates. The v0.1.0
+baseline was run with the same driver against `git archive v0.1.0` installed alone in the same test
+ComfyUI. Results: `docs/results/v020/`, summarised in docs/BENCHMARKS.md.
 
 ## Official reference
 

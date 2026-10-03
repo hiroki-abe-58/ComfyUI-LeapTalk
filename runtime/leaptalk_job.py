@@ -28,6 +28,10 @@ Differences from the official script (they do not change the generated frames):
   ignores ffmpeg errors); the result is decoded back and checked;
 - the generator calls are counted, the job can be cancelled between chunks, and progress,
   previews and a JSON report are written to the job directory.
+
+``Engine`` holds what one process loads once (steps 1-2); ``Engine.generate`` holds one job (steps 3-4)
+and drops every per-job object afterwards. This file runs one job and exits (one-shot);
+``leaptalk_worker.py`` keeps one Engine for many jobs (persistent).
 """
 
 from __future__ import annotations
@@ -139,9 +143,16 @@ def _abs_path(value, what: str) -> str:
     return value
 
 
+def _is_link(p: Path) -> bool:
+    is_junction = getattr(p, "is_junction", None)
+    return p.is_symlink() or bool(is_junction and is_junction())
+
+
 def load_job(path: Path) -> dict:
     """Parse and validate job.json (the runtime does not trust the caller's validation)."""
     path = Path(path)
+    if _is_link(path.parent) or any(_is_link(path.parent / n) for n in ("job.json", "input.png", "input.wav")):
+        raise JobError("the job directory and its files must not be symbolic links or junctions")
     if path.name != "job.json" or path.stat().st_size > 64 * 1024:
         raise JobError("expected a small job.json")
     job = json.loads(path.read_text(encoding="utf-8"))
@@ -322,17 +333,56 @@ def _write_json(path: Path, obj: dict) -> None:
 # --------------------------------------------------------------------------- the engine
 
 
-class Engine:
-    """Builds the official LeapTalk pipeline once and generates one video per call."""
+class EngineChanged(Exception):
+    """Files or weights behind a loaded Engine changed; the Engine must not be reused."""
 
-    def __init__(self, job: dict, events: Events, ctl: Control):
-        self.events = events
-        self.ctl = ctl
-        self.timings: dict = {}
+
+def _file_stamp(path: Path) -> list:
+    st = path.stat()
+    return [st.st_size, st.st_mtime_ns]
+
+
+def _tensor_digest(t) -> str:
+    """sha256 of a tensor's raw bytes (bf16 is viewed as int16, so the bytes are exact)."""
+    import torch
+
+    x = t.detach().contiguous().cpu()
+    if x.dtype == torch.bfloat16:
+        x = x.view(torch.int16)
+    return hashlib.sha256(x.numpy().tobytes()).hexdigest()
+
+
+class Engine:
+    """The loaded LeapTalk pipeline: built once per process, then used for one or many jobs.
+
+    Engine lifetime (kept between jobs): Python imports, the pinned upstream modules, the base model with
+    the LeapTalk LoRA merged in, the LeapTalk audio projection, wav2vec2, the selected decoder, the
+    load-time weight checks and a fingerprint of representative weights.
+
+    Job lifetime (created in ``generate`` and dropped when it returns): the job's events and cancel
+    control, the reference image latent and colour reference (``prepare_params``), the scheduler and its
+    RNG, the audio ring buffer and embeddings, the latent history, the ffmpeg process, previews, per-job
+    timings, CUDA peaks and generator-call counters. The decoders keep no state between calls (the Lite
+    TAE allocates its memory per call; the Wan VAE clears its feature cache before and after each call).
+    """
+
+    def __init__(self, settings: dict, on_step=None, check=None):
+        """settings: upstream_dir, models, decoder. on_step(name): progress hook; check(): may raise Cancelled."""
+        import uuid
+
+        on_step = on_step or (lambda name: None)
+        check = check or (lambda: None)
+        self.engine_instance_id = uuid.uuid4().hex
+        self.initialization_id = f"init-{self.engine_instance_id[:12]}"
+        self.settings = {"upstream_dir": settings["upstream_dir"], "models": dict(settings["models"]), "decoder": settings["decoder"]}
+        self.counters = {"init": 0, "lora_merge": 0, "audio_proj_load": 0, "jobs_started": 0, "jobs_ok": 0, "jobs_failed": 0}
+        self.init_timings: dict = {}
+        self.init_memory: dict = {}
         t = time.perf_counter()
-        up = Path(job["upstream_dir"]).resolve()
+        up = Path(settings["upstream_dir"]).resolve()
+        self.upstream_path = up
         self.upstream = check_upstream(up)
-        problems = check_model_files(job["models"], job["decoder"])
+        problems = check_model_files(settings["models"], settings["decoder"])
         if problems:
             raise JobError("model files: " + "; ".join(problems))
         if str(up) not in sys.path:
@@ -350,7 +400,7 @@ class Engine:
             if not Path(mod.__file__).resolve().is_relative_to(up):
                 raise JobError(f"{mod.__name__} was imported from outside the pinned checkout")
         self.lt = lt
-        self.timings["import_s"] = round(time.perf_counter() - t, 3)
+        self.init_timings["import_s"] = round(time.perf_counter() - t, 3)
         self.attention_backend = (
             "sageattention"
             if fh_model_mod.SAGE_ATTN_AVAILABLE
@@ -360,13 +410,13 @@ class Engine:
             if fh_model_mod.FLASH_ATTN_2_AVAILABLE
             else "torch_sdpa"
         )
-        self.ctl.check()
+        check()
 
-        models = job["models"]
+        models = settings["models"]
         lora_dir = os.path.join(models["leaptalk_dir"], "lora")
         audio_proj_path = os.path.join(models["leaptalk_dir"], "audio_proj_step_10400.pt")
         tae_path = os.path.join(models["leaptalk_dir"], "taew2_1.pth")
-        self.decoder = job["decoder"]
+        self.decoder = settings["decoder"]
         lite = self.decoder == "lite_tae"
         if lt._lora_checkpoint_needs_compiled_base(lora_dir):
             raise JobError("this LoRA was saved from a torch.compile()d model; only the published LeapTalk LoRA (plain keys) is supported")
@@ -376,10 +426,9 @@ class Engine:
         fh_pipe_mod.COMPILE_VAE = False
         self.dtype = torch.bfloat16
         self.device = "cuda"
-        self.memory_phases: dict = {}
         torch.cuda.reset_peak_memory_stats()
 
-        events.emit("loading", step="pipeline")
+        on_step("pipeline")
         t = time.perf_counter()
         pipeline = fh_pipe_mod.FlashHeadPipeline(
             checkpoint_dir=models["soulx_dir"],
@@ -392,20 +441,23 @@ class Engine:
             tae_path=tae_path if lite else None,
             tae_model_type="wan21",
         )
-        self.timings["pipeline_load_s"] = round(time.perf_counter() - t, 3)
-        self.mark_memory("pipeline_load", release_cache=True)
-        self.ctl.check()
+        self.init_timings["pipeline_load_s"] = round(time.perf_counter() - t, 3)
+        self.init_memory["pipeline_load"] = self._mark_memory(release_cache=True)
+        check()
 
-        events.emit("loading", step="lora")
+        on_step("lora")
         t = time.perf_counter()
         self.weights = {"lora": self._load_lora(pipeline, lora_dir)}
-        self.timings["lora_load_merge_s"] = round(time.perf_counter() - t, 3)
+        self.init_timings["lora_load_merge_s"] = round(time.perf_counter() - t, 3)
 
         t = time.perf_counter()
+        if self.counters["audio_proj_load"] != 0:
+            raise RuntimeError("audio_proj was already applied to this Engine")
         state = torch.load(audio_proj_path, map_location="cpu", weights_only=True)
         inner = lt._get_inner_flashhead_model(pipeline.model)
         before = inner.audio_proj.proj1.weight.detach().float().cpu().clone()
         inner.audio_proj.load_state_dict(state, strict=True)
+        self.counters["audio_proj_load"] += 1
         after = inner.audio_proj.proj1.weight.detach().float().cpu()
         exact = all(
             torch.equal(inner.audio_proj.state_dict()[k].detach().float().cpu(), v.to(inner.audio_proj.state_dict()[k].dtype).float()) for k, v in state.items()
@@ -419,20 +471,29 @@ class Engine:
             "values_applied": True,
             "proj1_rel_change_vs_base": round(float((after - before).norm() / before.norm()), 4),
         }
-        self.timings["audio_proj_s"] = round(time.perf_counter() - t, 3)
-        self.mark_memory("lora_merge_and_audio_proj", release_cache=True)
+        del state
+        self.init_timings["audio_proj_s"] = round(time.perf_counter() - t, 3)
+        self.init_memory["lora_merge_and_audio_proj"] = self._mark_memory(release_cache=True)
         self.pipeline = pipeline
         self.vae_stride_t = int(pipeline.config.vae_stride[0])
         self.weights["base"] = {"model": "SoulX-FlashHead-1_3B Model_Pro", "class": type(inner).__name__, "dtype": str(self.dtype).replace("torch.", "")}
         self.weights["decoder"] = {"lite_tae": "LeapTalk Lite TAE (taew2_1.pth, TAEHV)", "wan_vae": "Wan2.1 VAE (VAE_Wan/Wan2.1_VAE.pth)"}[self.decoder]
         self.weights["audio_encoder"] = "wav2vec2-base-960h"
-        events.emit("loaded", seconds=round(sum(v for k, v in self.timings.items() if k.endswith("_s")), 3))
+        t = time.perf_counter()
+        self.fingerprint = self._fingerprint()
+        self.stamps = self._stamps()
+        self.init_timings["fingerprint_s"] = round(time.perf_counter() - t, 3)
+        self.counters["init"] += 1
+        self.resident = self._memory_now()
 
-    def mark_memory(self, phase: str, release_cache: bool) -> None:
-        """Record the CUDA peak of the phase that just ended; optionally return unused cached blocks to the driver.
+    # ---- memory and change detection
 
-        On Windows (WDDM) CUDA allocations count against the system commit charge, so releasing the cache
-        after one-off load phases lowers the commit this process holds. Numerics are unaffected.
+    def _mark_memory(self, release_cache: bool) -> dict:
+        """CUDA peak of the phase that just ended; optionally return unused cached blocks to the driver.
+
+        On the Windows machine the results were measured on, CUDA allocations counted against the system
+        commit charge, so releasing the cache after one-off phases lowers what this process holds.
+        Numerics are unaffected.
         """
         torch = self.torch
         torch.cuda.synchronize()
@@ -444,14 +505,91 @@ class Engine:
         if release_cache:
             torch.cuda.empty_cache()
             rec["reserved_after_release_bytes"] = int(torch.cuda.memory_reserved())
-        self.memory_phases[phase] = rec
         torch.cuda.reset_peak_memory_stats()
+        return rec
+
+    def _memory_now(self) -> dict:
+        torch = self.torch
+        free, total = torch.cuda.mem_get_info()
+        rec = {
+            "cuda_allocated_bytes": int(torch.cuda.memory_allocated()),
+            "cuda_reserved_bytes": int(torch.cuda.memory_reserved()),
+            "gpu_used_bytes": int(total - free),
+            "gpu_total_bytes": int(total),
+        }
+        try:
+            import psutil
+
+            mi = psutil.Process().memory_info()
+            rec["process_rss_bytes"] = int(mi.rss)
+            rec["process_private_bytes"] = int(mi.private) if hasattr(mi, "private") else None  # Windows: committed bytes
+        except Exception:  # noqa: BLE001
+            rec["process_rss_bytes"] = None
+        return rec
+
+    def _fingerprint(self) -> dict:
+        lt = self.lt
+        model = self.pipeline.model
+        inner = lt._get_inner_flashhead_model(model)
+        picks = {
+            "blocks.0.self_attn.q.weight": model.blocks[0].self_attn.q.weight,
+            "blocks.29.cross_attn.o.weight": model.blocks[29].cross_attn.o.weight,
+            "audio_proj.proj1.weight": inner.audio_proj.proj1.weight,
+            "audio_proj.norm.weight": inner.audio_proj.norm.weight,
+        }
+        return {k: _tensor_digest(v) for k, v in picks.items()}
+
+    def _stamps(self) -> dict:
+        files = {}
+        for key, entries in MODEL_FILES.items():
+            for rel, _size, _digest in entries:
+                if self.decoder == "lite_tae" and rel in WANVAE_ONLY or self.decoder == "wan_vae" and rel in TAE_ONLY:
+                    continue
+                files[f"{key}/{rel}"] = _file_stamp(Path(self.settings["models"][key]) / rel)
+        return files
+
+    def verify_unchanged(self) -> dict:
+        """Cheap per-job check that nothing behind this Engine changed: model files (size + mtime), the
+        pinned upstream files (content hashes) and a fingerprint of representative loaded weights (which
+        also catches an accidental second LoRA merge). Raises EngineChanged; never reloads weights."""
+        t = time.perf_counter()
+        now = self._stamps()
+        if now != self.stamps:
+            changed = sorted(k for k in now if now.get(k) != self.stamps.get(k))
+            raise EngineChanged(f"model files changed since the Engine was loaded: {changed}")
+        try:
+            check_upstream(self.upstream_path)
+        except JobError as exc:
+            raise EngineChanged(str(exc)) from exc
+        fp = self._fingerprint()
+        if fp != self.fingerprint:
+            raise EngineChanged(f"loaded weights changed since initialisation: {sorted(k for k in fp if fp[k] != self.fingerprint.get(k))}")
+        if (self.counters["init"], self.counters["lora_merge"], self.counters["audio_proj_load"]) != (1, 1, 1):
+            raise EngineChanged(f"unexpected Engine counters {self.counters}")
+        return {"seconds": round(time.perf_counter() - t, 3), "files": len(now), "upstream_files": len(UPSTREAM_FILES), "fingerprint_tensors": len(fp)}
+
+    def describe(self) -> dict:
+        return {
+            "engine_instance_id": self.engine_instance_id,
+            "initialization_id": self.initialization_id,
+            "decoder": self.decoder,
+            "counters": dict(self.counters),
+            "init_timings": dict(self.init_timings),
+            "init_memory": dict(self.init_memory),
+            "resident_after_init": dict(self.resident),
+            "weights": self.weights,
+            "weight_fingerprint": dict(self.fingerprint),
+            "attention_backend": self.attention_backend,
+            "upstream": self.upstream,
+        }
 
     def _load_lora(self, pipeline, lora_dir: str) -> dict:
         torch = self.torch
         from peft import PeftModel
         from safetensors import safe_open
 
+        if self.counters["lora_merge"] != 0:
+            raise RuntimeError("the LeapTalk LoRA was already merged into this Engine")
         model = pipeline.model
         before = model.blocks[0].self_attn.q.weight.detach().float().cpu().clone()
         pm = PeftModel.from_pretrained(model, lora_dir, is_trainable=False)
@@ -478,6 +616,7 @@ class Engine:
         merged.eval().requires_grad_(False)
         if any(".lora_" in n for n, _ in merged.named_parameters()):
             raise RuntimeError("LoRA layers remain after merge")
+        self.counters["lora_merge"] += 1
         after = merged.blocks[0].self_attn.q.weight.detach().float().cpu()
         pipeline.model = merged
         return {
@@ -491,19 +630,73 @@ class Engine:
             "blocks.0.self_attn.q_rel_change": round(float((after - before).norm() / before.norm()), 4),
         }
 
-    def generate(self, job: dict, job_dir: Path) -> dict:
+    # ---- one job
+
+    # attributes FlashHeadPipeline.prepare_params() sets for one portrait; dropped after every job
+    JOB_STATE_ATTRS = (
+        "cond_image_dict",
+        "cond_image_tensor_dict",
+        "ref_img_latent_dict",
+        "person_name",
+        "original_color_reference",
+        "ref_img_latent",
+        "latent_motion_frames",
+        "generator",
+        "timesteps",
+    )
+
+    def _drop_job_state(self) -> list:
+        dropped = []
+        for attr in self.JOB_STATE_ATTRS:
+            if getattr(self.pipeline, attr, None) is not None:
+                setattr(self.pipeline, attr, None)
+                dropped.append(attr)
+        return dropped
+
+    def generate(self, job: dict, job_dir: Path, events: Events, ctl) -> dict:
+        """One video. ``events`` and ``ctl`` belong to this job only."""
+        import gc
+
+        torch = self.torch
+        self.counters["jobs_started"] += 1
+        stale = self._drop_job_state()  # nothing from a previous job may survive into this one
+        resident_before = self._memory_now()
+        torch.cuda.reset_peak_memory_stats()
+        phases: dict = {}
+        ok = False
+        try:
+            result = self._generate(job, job_dir, events, ctl, phases)
+            ok = True
+            return result
+        finally:
+            if ok:
+                self.counters["jobs_ok"] += 1
+            else:
+                self.counters["jobs_failed"] += 1
+            self._drop_job_state()
+            gc.collect()
+            torch.cuda.synchronize()
+            torch.cuda.empty_cache()
+            self.last_job_memory = {
+                "resident_before_job": resident_before,
+                "phases": phases,
+                "after_job": self._memory_now(),
+                "stale_state_found_before_job": stale,
+            }
+
+    def _generate(self, job: dict, job_dir: Path, ev: Events, ctl, phases: dict) -> dict:
         torch, lt, pipeline = self.torch, self.lt, self.pipeline
         import librosa
         import numpy as np
 
-        ev, ctl = self.events, self.ctl
-        timings = dict(self.timings)
+        timings: dict = {}
         image_path = str(job_dir / "input.png")
         audio_path = str(job_dir / "input.wav")
 
         # ---- audio: inspect the original, then load exactly like the official script
         import soundfile as sf
 
+        t_job = time.perf_counter()
         info = sf.info(audio_path)
         if info.frames <= 0 or info.samplerate <= 0:
             raise JobError("the audio is empty")
@@ -549,7 +742,7 @@ class Engine:
             raise RuntimeError("internal: fewer generated frames than the audio needs")
         ev.emit("audio", seconds=round(orig_seconds, 4), chunks=num_chunks, frames=out_frames)
 
-        # ---- reference image -> static anchor latent (official prepare_params)
+        # ---- reference image -> static anchor latent (official prepare_params), fresh for every job
         ctl.check()
         t = time.perf_counter()
         pipeline.prepare_params(
@@ -566,7 +759,8 @@ class Engine:
         x0 = pipeline.ref_img_latent.to(device=self.device, dtype=self.dtype)
         torch.cuda.synchronize()
         timings["reference_encode_s"] = round(time.perf_counter() - t, 3)
-        self.mark_memory("reference_encode", release_cache=True)
+        phases["reference_encode"] = self._mark_memory(release_cache=True)
+        ref_digest = _tensor_digest(x0)
 
         scheduler = lt.ViBTScheduler(num_train_timesteps=1000)
         scheduler.timesteps = lt._build_infer_timesteps(
@@ -739,7 +933,7 @@ class Engine:
                 raise RuntimeError(f"the video encoder stopped: {exc}; ffmpeg: {tail}") from exc
             raise
         sampling_s = time.perf_counter() - t_loop
-        self.mark_memory("chunk_loop", release_cache=False)
+        phases["chunk_loop"] = self._mark_memory(release_cache=False)
         t = time.perf_counter()
         enc.stdin.close()
         code = enc.wait(timeout=600)
@@ -767,6 +961,7 @@ class Engine:
             color_mean_s=mean("color"),
             history_mean_s=mean("hist"),
             frame_io_mean_s=mean("io_s"),
+            job_total_s=round(time.perf_counter() - t_job, 3),
             chunk_timing_note="means exclude the first 2 chunks, as the official script does",
         )
         return {
@@ -796,12 +991,13 @@ class Engine:
             "audio_guidance": guidance,
             "forwards": {"total": forwards["conditional"] + forwards["unconditional"], **forwards},
             "frames_sha256": hashlib.sha256("".join(frame_hashes).encode()).hexdigest(),
+            "reference_latent_sha256": ref_digest,
             "per_chunk": per_chunk,
             "timings": timings,
             "memory": {
-                "cuda_max_allocated_bytes": max(p["peak_allocated_bytes"] for p in self.memory_phases.values()),
-                "cuda_max_reserved_bytes": max(p["peak_reserved_bytes"] for p in self.memory_phases.values()),
-                "phases": dict(self.memory_phases),
+                "cuda_max_allocated_bytes": max(p["peak_allocated_bytes"] for p in phases.values()),
+                "cuda_max_reserved_bytes": max(p["peak_reserved_bytes"] for p in phases.values()),
+                "phases": dict(phases),
             },
         }
 
@@ -867,7 +1063,52 @@ def versions() -> dict:
     return out
 
 
+def effective_config(job: dict) -> dict:
+    return {
+        "model_type": "pro",
+        "lite": job["decoder"] == "lite_tae",
+        "num_inference_steps": NUM_INFERENCE_STEPS,
+        "shift_gamma": SHIFT_GAMMA,
+        "noise_scale": NOISE_SCALE,
+        "audio_guidance": job["audio_guidance"],
+        "frame_num": FRAME_NUM,
+        "motion_frames_latent_num": MOTION_FRAMES_LATENT_NUM,
+        "cached_audio_duration": CACHED_AUDIO_DURATION,
+        "audio_encode_mode": "stream",
+        "history_update_mode": "roundtrip",
+        "color_correction_strength": COLOR_CORRECTION_STRENGTH,
+        "height": SIZE,
+        "width": SIZE,
+        "fps": FPS,
+        "dtype": "bf16",
+        "compile": False,
+        "use_face_crop": False,
+    }
+
+
+def finish_result(result: dict, job: dict, engine: Engine) -> dict:
+    """Fields shared by the one-shot runner and the persistent worker."""
+    result.update(
+        job_id=job["job_id"],
+        decoder=job["decoder"],
+        attention_backend=engine.attention_backend,
+        upstream=engine.upstream,
+        weights=engine.weights,
+        engine={
+            "engine_instance_id": engine.engine_instance_id,
+            "initialization_id": engine.initialization_id,
+            "counters": dict(engine.counters),
+            "weight_fingerprint": dict(engine.fingerprint),
+        },
+        job_memory=getattr(engine, "last_job_memory", None),
+        versions=versions(),
+        effective_config=effective_config(job),
+    )
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
+    """One-shot mode: one process loads the Engine, generates one video and exits."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--watch-stdin", action="store_true", help="treat stdin EOF as 'the parent is gone' and stop")
     ap.add_argument("job")
@@ -885,36 +1126,14 @@ def main(argv: list[str] | None = None) -> int:
     ctl = Control(job_dir, a.watch_stdin)
     apply_env(job["env"], job_dir)
     try:
-        engine = Engine(job, events, ctl)
-        result = engine.generate(job, job_dir)
+        engine = Engine(job, on_step=lambda name: events.emit("loading", step=name), check=ctl.check)
+        events.emit("loaded", seconds=round(sum(v for v in engine.init_timings.values()), 3))
+        result = engine.generate(job, job_dir, events, ctl)
+        finish_result(result, job, engine)
         result.update(
-            job_id=job["job_id"],
-            decoder=job["decoder"],
-            attention_backend=engine.attention_backend,
-            upstream=engine.upstream,
-            weights=engine.weights,
-            versions=versions(),
+            backend="one-shot",
+            engine_init_timings=dict(engine.init_timings),
             process_seconds=round(time.time() - t0, 3),
-            effective_config={
-                "model_type": "pro",
-                "lite": job["decoder"] == "lite_tae",
-                "num_inference_steps": NUM_INFERENCE_STEPS,
-                "shift_gamma": SHIFT_GAMMA,
-                "noise_scale": NOISE_SCALE,
-                "audio_guidance": job["audio_guidance"],
-                "frame_num": FRAME_NUM,
-                "motion_frames_latent_num": MOTION_FRAMES_LATENT_NUM,
-                "cached_audio_duration": CACHED_AUDIO_DURATION,
-                "audio_encode_mode": "stream",
-                "history_update_mode": "roundtrip",
-                "color_correction_strength": COLOR_CORRECTION_STRENGTH,
-                "height": SIZE,
-                "width": SIZE,
-                "fps": FPS,
-                "dtype": "bf16",
-                "compile": False,
-                "use_face_crop": False,
-            },
         )
         _write_json(job_dir / "result.json", result)
         events.emit("done", seconds=round(time.time() - t0, 3))

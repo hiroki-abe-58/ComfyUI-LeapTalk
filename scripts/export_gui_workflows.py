@@ -29,8 +29,10 @@ def main() -> int:
     ap.add_argument("--api-dir", type=Path, default=Path("workflows/api"))
     ap.add_argument("--out", type=Path, default=Path("workflows"))
     ap.add_argument("--shots", type=Path, required=True)
-    ap.add_argument("--layout", type=Path, default=Path("workflows/api/layout.json"), help="optional {workflow: {node_id: [x, y]}}")
+    ap.add_argument("--layout", type=Path, default=Path("workflows/api/layout.json"), help="optional {workflow: {node_id: [x, y] or [x, y, width]}}")
+    ap.add_argument("--only", default="", help="comma-separated workflow names to export (others are only checked, never rewritten)")
     args = ap.parse_args()
+    only = {s for s in args.only.split(",") if s}
     if not args.url.startswith("http://127.0.0.1:"):
         raise SystemExit("only a local test server")
     args.shots.mkdir(parents=True, exist_ok=True)
@@ -55,7 +57,10 @@ def main() -> int:
                     await new Promise(r => setTimeout(r, 1500));
                     for (const [id, xy] of Object.entries(pos || {})) {
                         const n = window.app.graph.getNodeById(Number(id));
-                        if (n) { n.pos = [xy[0], xy[1]]; }
+                        if (n) {
+                            n.pos = [xy[0], xy[1]];
+                            if (xy.length > 2) { n.size = [xy[2], n.size[1]]; }  // optional width
+                        }
                     }
                     window.app.graph.setDirtyCanvas(true, true);
                     await new Promise(r => setTimeout(r, 300));
@@ -83,8 +88,9 @@ def main() -> int:
                 for k, v in node["inputs"].items():
                     if got["inputs"].get(k) != v:
                         mismatch.append((nid, k, v, got["inputs"].get(k)))
-            report[name] = {"nodes": res["count"], "missing_node_types": res["missing"], "roundtrip_mismatches": mismatch}
-            (args.out / f"{name}.json").write_text(json.dumps(res["ui"], indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+            report[name] = {"nodes": res["count"], "missing_node_types": res["missing"], "roundtrip_mismatches": mismatch, "exported": not only or name in only}
+            if not only or name in only:
+                (args.out / f"{name}.json").write_text(json.dumps(res["ui"], indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
         report["page_errors"] = errors
         browser.close()
     print(json.dumps(report, indent=1, ensure_ascii=False))

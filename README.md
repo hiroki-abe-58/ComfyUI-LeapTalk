@@ -27,6 +27,10 @@ the input speech are in the [v0.1.0 release](https://github.com/hiroki-abe-58/Co
   with the LeapTalk code and weights). Workflows cannot name programs or paths.
 - **LeapTalk Doctor**: checks the runtime (pinned upstream files, model files, CUDA, attention
   backend, ffmpeg) without generating.
+- **Persistent worker** (new in v0.2, opt-in): with `backend = persistent` on LeapTalk Runtime, the
+  first job starts a worker that keeps the model loaded, and later queue jobs reuse it instead of
+  importing and loading everything again. **LeapTalk Worker** shows it (`status`, never starts one) or
+  frees it (`unload`). The old workflow and runtime configs stay one-shot.
 
 ![Minimal workflow: Load Image + Load Audio -> LeapTalk Generate -> Save Video](docs/img/workflow.png)
 
@@ -36,12 +40,20 @@ the input speech are in the [v0.1.0 release](https://github.com/hiroki-abe-58/Co
   `inference.py` and this node produce identical 8-bit frames (234/234 and 850/850 frames, also through
   ComfyUI's Load Audio). The LeapTalk LoRA (480/480 tensors), audio projection and ViBT scheduler are
   checked on every job.
-- **Speed**: a 34 s speech clip took 43 s from queueing to the finished video, a 9.4 s clip 35 s (each
-  job starts the runtime and loads the models: about 20 s, mostly Python imports). Once loaded, a
-  28-frame chunk takes about 0.43 s (about 65 frames/s produced; playback is 25 fps).
-- **Long input**: a 96.5 s clip took 71 s; GPU memory does not grow with the length.
+- **Speed, one-shot** (default): a 34 s speech clip takes about 45 s from queueing to the finished
+  video, a 9.4 s clip about 33–36 s; about 23 s of every job is starting the runtime and loading the
+  models (mostly Python imports). Once loaded, a 28-frame chunk takes about 0.45 s (about 62 frames/s
+  produced; playback is 25 fps).
+- **Speed, persistent worker** (v0.2, opt-in): after the first job, further queue jobs on the loaded
+  worker took **6.2 s** for the 9.4 s clip (median of 5; v0.1.0 one-shot 36.1 s) and **17.7 s** for the
+  34 s clip (v0.1.0 one-shot 45.5 s), with the same frames as one-shot and as the official script. The
+  first job of a worker costs the same as a one-shot job.
+- **Long input**: a 96.5 s clip took 71 s one-shot and 47 s on a loaded worker; GPU memory does not
+  grow with the length.
 - **Memory**: peak CUDA 8.1 GiB allocated / 11.1 GiB reserved (Lite TAE), 6.1 / 7.6 GiB with the Wan
-  VAE. On Windows, CUDA memory counts against the system commit charge; see docs/BENCHMARKS.md.
+  VAE. A loaded worker keeps about 3.5 GiB of CUDA memory (about 4 GiB on the GPU) and 8.4–8.8 GiB of
+  Windows commit charge while idle. On Windows, CUDA memory counts against the system commit charge; see
+  docs/BENCHMARKS.md.
 
 Details, method and limits: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
@@ -49,11 +61,11 @@ Details, method and limits: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
 | | Scope |
 | --- | --- |
-| **Tested** (real weights) | Windows 11 + ComfyUI v0.38.0, runtime in a separate venv on the same Windows machine (Python 3.12, torch 2.7.1+cu128, PyTorch SDPA attention), RTX 5090 32 GB. Lite TAE decoder, audio guidance 1.0 (official defaults). Speech from 0.5 s to 96.5 s, mono and stereo, 16/24/48 kHz WAV. Generation through ComfyUI's HTTP API with `Load Image`, `Load Audio`, `Save Video`; installation from `git archive` into a differently named folder; Doctor; cancel, timeout, runtime errors and a killed ComfyUI process (no runtime process left, GPU memory back to idle). |
-| **Tested** (CPU CI) | Ubuntu and Windows: config/job validation, audio/image hand-off, the official chunk arithmetic, process control with a fake runtime, node registration and execution in a real ComfyUI checkout. |
+| **Tested** (real weights) | Windows 11 + ComfyUI v0.38.0, runtime in a separate venv on the same Windows machine (Python 3.12, torch 2.7.1+cu128, PyTorch SDPA attention), RTX 5090 32 GB. Lite TAE decoder, audio guidance 1.0 (official defaults). Speech from 0.5 s to 96.5 s, mono and stereo, 16/24/48 kHz WAV. Generation through ComfyUI's HTTP API with `Load Image`, `Load Audio`, `Save Video`; installation from `git archive` into a differently named folder; Doctor; cancel, timeout, runtime errors and a killed ComfyUI process (no runtime process left, GPU memory back to idle). Persistent worker (v0.2): reuse over separate queue jobs (one Engine, LoRA merged once), portrait/speech/decoder changes, idle timeout, Unload, cancel/timeout/errors/a killed worker followed by a normal job, ComfyUI killed while the worker idles or generates. |
+| **Tested** (CPU CI) | Ubuntu and Windows: config/job validation, audio/image hand-off, the official chunk arithmetic, process control with a fake runtime, the persistent worker protocol and lifecycle with a fake model, the memory guard with fixed measurements, node registration and execution in a real ComfyUI checkout. |
 | **Experimental** | `decoder = wan_vae` (works, about 3x slower per chunk; run without `torch.compile`, while the official script compiles it). `audio_guidance` > 1 (2x generator calls; 2.0 gave visibly over-sharpened, discoloured lips in our test). |
-| **Not supported** | WSL2 runtimes (planned; Windows-native was the tested path), macOS/Apple Silicon ([porting notes](docs/MACOS.md)), multi-GPU, live streaming to a viewer (the video is returned when the job ends), several portraits or speakers, a persistent worker (every job loads the models). |
-| **Untested** | Linux hosts with real weights, other GPUs, GPUs with less memory, flash-attn / SageAttention, non-English speech. |
+| **Not supported** | WSL2 runtimes (planned; Windows-native was the tested path), macOS/Apple Silicon ([porting notes](docs/MACOS.md)), multi-GPU, live streaming to a viewer (the video is returned when the job ends), several portraits or speakers, sharing one worker between several ComfyUI processes. |
+| **Untested** | Linux hosts with real weights (the persistent worker's Linux path is covered by CPU tests only), other GPUs, GPUs with less memory, flash-attn / SageAttention, non-English speech, speech longer than 96.5 s with real weights (`max_audio_seconds` allows up to 1800 s). |
 
 ## Install
 
@@ -66,6 +78,12 @@ Details, method and limits: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
    restart ComfyUI and run **LeapTalk Doctor**.
 4. Load [workflows/leaptalk_portrait_speech.json](workflows/leaptalk_portrait_speech.json), pick your
    runtime, portrait and speech, and queue it.
+5. Optional, to keep the model loaded between jobs: load
+   [workflows/leaptalk_persistent.json](workflows/leaptalk_persistent.json) (LeapTalk Runtime with
+   `backend = persistent`). The worker **keeps GPU and system memory while it is loaded**, also between
+   jobs; it unloads after 120 s without a job (`worker_idle_seconds`), when ComfyUI exits, or with
+   [workflows/leaptalk_worker_unload.json](workflows/leaptalk_worker_unload.json). Details:
+   [docs/SETUP.md](docs/SETUP.md#persistent-worker-optional).
 
 ## How it works
 
@@ -83,8 +101,14 @@ mode):
 - frames streamed to ffmpeg (H.264), trimmed to `ceil(audio seconds x 25)` frames and muxed with your
   original audio (AAC, no `-shortest`); the file is decoded back and checked before it is returned.
 
-Every job starts a new runtime process (one-shot); about 20 s of each job is start-up. The process is
-ended if you cancel, if the job exceeds the runtime's timeout, or if ComfyUI goes away.
+By default every job starts a new runtime process (one-shot); about 23 s of each job is start-up. With
+`backend = persistent` the same code runs in a worker process that loads the models once and then takes
+one job folder at a time from ComfyUI over a local pipe (no network port); everything that belongs to a
+job (portrait, speech, history, events, previews, output) is recreated per job, and the worker is
+replaced when the decoder, the runtime or its files change, or after any error. A memory guard refuses
+to load a model or start a job when the system commit charge is too high, and stops a job (and the
+worker) when commit stays at or above 95 % (defaults; docs/SETUP.md). Processes are ended if you cancel,
+if a job exceeds the runtime's timeout, or if ComfyUI goes away.
 
 Security and trust model: [docs/SECURITY.md](docs/SECURITY.md). Tests: [docs/TESTING.md](docs/TESTING.md).
 

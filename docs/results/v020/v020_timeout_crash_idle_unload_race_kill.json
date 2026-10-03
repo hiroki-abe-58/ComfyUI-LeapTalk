@@ -1,0 +1,3879 @@
+{
+ "label": "v0.2.0-dev",
+ "legacy_workflow": false,
+ "steps": {
+  "timeout": {
+   "timeout": {
+    "name": "timeout_A_aba97_wan",
+    "prompt_id": "effd4651-dd23-4318-a58b-97259092e5d6",
+    "status": "error",
+    "queued_at": "2026-10-03T18:16:18",
+    "wall_s": 87.092,
+    "input": {
+     "image": "A",
+     "audio": "aba97",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "e2e-timeout"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk job exceeded 60 s\n",
+    "memory_window": {
+     "samples": 75,
+     "commit_pct_max": 90.79,
+     "commit_gib_max": 84.7,
+     "commit_gib_start": 71.82,
+     "available_gib_min": 18.6,
+     "gpu_mib_max": 10770,
+     "gpu_mib_start": 2463
+    },
+    "ws": {
+     "progress_msgs": 40,
+     "previews": 40,
+     "first_preview_after_s": 31.43
+    }
+   },
+   "status_after": {
+    "prompt_id": "12855856-471c-400f-aa10-b1a47420b226",
+    "worker": {
+     "state": "idle",
+     "worker_instance_id": "w8f6cd328279844899b6c",
+     "interpreter_pid": 67748,
+     "engine_instance_id": "0d5878a20dc9432aa46f2c9126d70448",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 0,
+      "jobs_ok": 0,
+      "jobs_failed": 0
+     },
+     "jobs_done": 0,
+     "idle_seconds_left": 117.5,
+     "runtime": {
+      "memory": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 4234149888,
+       "gpu_used_bytes": 6062407680,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2112495616,
+       "process_private_bytes": 9246289920
+      },
+      "resident_after_init": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1841807360,
+       "process_private_bytes": 8648900608
+      },
+      "counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 1,
+       "jobs_ok": 0,
+       "jobs_failed": 1
+      },
+      "jobs_done": 0
+     }
+    },
+    "host_memory": {
+     "commit_pct": 86.04,
+     "commit_gib": 80.26,
+     "available_gib": 23.02
+    },
+    "history_tail": [
+     {
+      "event": "starting",
+      "t": 1791018979.1,
+      "worker_instance_id": "w8f6cd328279844899b6c",
+      "reason": "first persistent job",
+      "decoder": "wan_vae"
+     },
+     {
+      "event": "ready",
+      "t": 1791019004.8,
+      "worker_instance_id": "w8f6cd328279844899b6c",
+      "startup_s": 25.703,
+      "engine_instance_id": "0d5878a20dc9432aa46f2c9126d70448"
+     },
+     {
+      "event": "job_cancelled",
+      "t": 1791019066.0,
+      "worker_instance_id": "w8f6cd328279844899b6c",
+      "job_id": "job-20261003-181619-bc4b1653f701",
+      "why": "job timeout",
+      "worker_kept": true
+     }
+    ],
+    "worker_processes": {
+     "launchers": [
+      8320
+     ],
+     "interpreters": [
+      67748
+     ],
+     "others": [
+      48292
+     ]
+    },
+    "gpu_mib": 7061
+   },
+   "next": {
+    "name": "timeout_next_A_a_short",
+    "prompt_id": "6e21d1f3-b9ab-4c47-8bef-28a24ac29d3d",
+    "status": "success",
+    "queued_at": "2026-10-03T18:17:50",
+    "wall_s": 39.402,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 40,
+     "commit_pct_max": 90.74,
+     "commit_gib_max": 84.65,
+     "commit_gib_start": 78.63,
+     "available_gib_min": 21.04,
+     "gpu_mib_max": 10761,
+     "gpu_mib_start": 6065
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 27.99,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 4.67,
+      "previous_job": "job-20261003-181619-bc4b1653f701"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-181750-f423cd4d0e52",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w30cd59952dc04a1fb999",
+     "worker_interpreter_pid": 56176,
+     "worker_launcher_pid": 48988,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "eda16d94f3034aa280ba1b78925f2d7c",
+     "initialization_id": "init-eda16d94f303",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 1,
+      "jobs_ok": 1,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 1,
+     "started_new_worker": true,
+     "restart_reason": "worker identity changed: runtime_id",
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 76.9 %, available 25.0 GiB, projected 94.0 %",
+     "expected_add_gib": 16.0,
+     "startup_s": 22.86,
+     "worker_engine_init_timings": {
+      "import_s": 18.769,
+      "pipeline_load_s": 2.543,
+      "lora_load_merge_s": 1.129,
+      "audio_proj_s": 0.171,
+      "fingerprint_s": 0.038
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 15.531,
+     "host_wall_s": 39.328,
+     "node_wall_seconds": 39.33,
+     "process_seconds": 15.509,
+     "timings": {
+      "audio_load_s": 1.086,
+      "reference_encode_s": 0.735,
+      "encode_finalize_s": 0.216,
+      "verify_s": 0.138,
+      "sampling_loop_s": 12.688,
+      "chunk_mean_s": 1.2968,
+      "audio_encode_mean_s": 0.014,
+      "denoise_mean_s": 0.3603,
+      "decode_mean_s": 0.8391,
+      "color_mean_s": 0.0045,
+      "history_mean_s": 0.0785,
+      "frame_io_mean_s": 0.0606,
+      "job_total_s": 15.255,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1842393088,
+       "process_private_bytes": 8665849856
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2122768384,
+       "process_private_bytes": 8980623360
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/timeout_next_A_a_short_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   }
+  },
+  "crash": {
+   "progress_seen": true,
+   "worker_processes_before": {
+    "launchers": [
+     48988
+    ],
+    "interpreters": [
+     56176
+    ],
+    "others": [
+     23024,
+     58800,
+     3796
+    ]
+   },
+   "killed_interpreter_pid": 56176,
+   "job": {
+    "name": "crash_A_a_long",
+    "prompt_id": "1412b3b9-a3bf-40f5-acb2-40626962172e",
+    "status": "error",
+    "queued_at": "2026-10-03T18:18:30",
+    "wall_s": 7.036,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "the worker exited unexpectedly (exit code None)\n",
+    "memory_window": {
+     "samples": 6,
+     "commit_pct_max": 90.89,
+     "commit_gib_max": 84.79,
+     "commit_gib_start": 80.91,
+     "available_gib_min": 22.71,
+     "gpu_mib_max": 10760,
+     "gpu_mib_start": 9458
+    },
+    "ws": {
+     "progress_msgs": 4,
+     "previews": 4,
+     "first_preview_after_s": 3.14
+    }
+   },
+   "left_after_10s": [],
+   "status_after": {
+    "prompt_id": "bd54a137-a951-4107-bbc3-93f1b29f558a",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.68,
+     "commit_gib": 72.46,
+     "available_gib": 24.96
+    },
+    "history_tail": [
+     {
+      "event": "stopped",
+      "t": 1791019071.2,
+      "worker_instance_id": "w8f6cd328279844899b6c",
+      "reason": "worker identity changed: runtime_id",
+      "graceful_exit": true,
+      "active_before": 1,
+      "active_after": 0
+     },
+     {
+      "event": "starting",
+      "t": 1791019071.2,
+      "worker_instance_id": "w30cd59952dc04a1fb999",
+      "reason": "worker identity changed: runtime_id",
+      "decoder": "wan_vae"
+     },
+     {
+      "event": "ready",
+      "t": 1791019094.0,
+      "worker_instance_id": "w30cd59952dc04a1fb999",
+      "startup_s": 22.86,
+      "engine_instance_id": "eda16d94f3034aa280ba1b78925f2d7c"
+     },
+     {
+      "event": "stopped",
+      "t": 1791019117.2,
+      "worker_instance_id": "w30cd59952dc04a1fb999",
+      "reason": "worker error: the worker exited unexpectedly (exit code None)",
+      "graceful_exit": false,
+      "active_before": 5,
+      "active_after": 0
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2463
+   },
+   "next": {
+    "name": "crash_next_A_a_short",
+    "prompt_id": "41d78798-3330-4303-97dc-efcc50274cf1",
+    "status": "success",
+    "queued_at": "2026-10-03T18:18:38",
+    "wall_s": 38.597,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 40,
+     "commit_pct_max": 91.58,
+     "commit_gib_max": 85.43,
+     "commit_gib_start": 72.48,
+     "available_gib_min": 18.23,
+     "gpu_mib_max": 10760,
+     "gpu_mib_start": 2463
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 27.23,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 2.5,
+      "previous_job": "job-20261003-181830-90a1272d5f49"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-181839-d1f53028bc6d",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w9f160d8db40e4f14af26",
+     "worker_interpreter_pid": 18000,
+     "worker_launcher_pid": 57784,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "945a3dc2f1a4412088e9d947c7ce26be",
+     "initialization_id": "init-945a3dc2f1a4",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 1,
+      "jobs_ok": 1,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 1,
+     "started_new_worker": true,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 77.7 %, available 25.0 GiB, projected 94.8 %",
+     "expected_add_gib": 16.0,
+     "startup_s": 22.735,
+     "worker_engine_init_timings": {
+      "import_s": 18.731,
+      "pipeline_load_s": 2.491,
+      "lora_load_merge_s": 1.022,
+      "audio_proj_s": 0.167,
+      "fingerprint_s": 0.036
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 15.703,
+     "host_wall_s": 38.516,
+     "node_wall_seconds": 38.53,
+     "process_seconds": 15.707,
+     "timings": {
+      "audio_load_s": 1.212,
+      "reference_encode_s": 0.849,
+      "encode_finalize_s": 0.214,
+      "verify_s": 0.14,
+      "sampling_loop_s": 12.672,
+      "chunk_mean_s": 1.3146,
+      "audio_encode_mean_s": 0.0135,
+      "denoise_mean_s": 0.3616,
+      "decode_mean_s": 0.8569,
+      "color_mean_s": 0.0046,
+      "history_mean_s": 0.0777,
+      "frame_io_mean_s": 0.0626,
+      "job_total_s": 15.472,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1843568640,
+       "process_private_bytes": 8663814144
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2123898880,
+       "process_private_bytes": 8972025856
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/crash_next_A_a_short_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   }
+  },
+  "launcher": {
+   "job": {
+    "name": "launcher_job",
+    "prompt_id": "74eefce4-3d20-470e-881a-871ccd9a3257",
+    "status": "success",
+    "queued_at": "2026-10-03T18:19:17",
+    "wall_s": 16.051,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 12,
+     "commit_pct_max": 90.98,
+     "commit_gib_max": 84.87,
+     "commit_gib_start": 80.93,
+     "available_gib_min": 22.61,
+     "gpu_mib_max": 10760,
+     "gpu_mib_start": 7574
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 3.55,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 0.11,
+      "previous_job": "job-20261003-181839-d1f53028bc6d"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-181918-b1b3ecc03d61",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w9f160d8db40e4f14af26",
+     "worker_interpreter_pid": 18000,
+     "worker_launcher_pid": 57784,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "945a3dc2f1a4412088e9d947c7ce26be",
+     "initialization_id": "init-945a3dc2f1a4",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 2,
+      "jobs_ok": 2,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 2,
+     "started_new_worker": false,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 86.7 %, available 22.9 GiB, projected 91.9 %",
+     "expected_add_gib": 4.84,
+     "startup_s": 0.0,
+     "worker_engine_init_timings": {
+      "import_s": 18.731,
+      "pipeline_load_s": 2.491,
+      "lora_load_merge_s": 1.022,
+      "audio_proj_s": 0.167,
+      "fingerprint_s": 0.036
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 15.657,
+     "host_wall_s": 15.766,
+     "node_wall_seconds": 15.77,
+     "process_seconds": 15.641,
+     "timings": {
+      "audio_load_s": 0.001,
+      "reference_encode_s": 1.479,
+      "encode_finalize_s": 0.218,
+      "verify_s": 0.151,
+      "sampling_loop_s": 13.165,
+      "chunk_mean_s": 1.4314,
+      "audio_encode_mean_s": 0.0318,
+      "denoise_mean_s": 0.4329,
+      "decode_mean_s": 0.8837,
+      "color_mean_s": 0.0045,
+      "history_mean_s": 0.0781,
+      "frame_io_mean_s": 0.0565,
+      "job_total_s": 15.388,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2175959040,
+       "process_private_bytes": 9035063296
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5977041408,
+        "peak_reserved_bytes": 6750732288,
+        "reserved_bytes": 6750732288,
+        "reserved_after_release_bytes": 3959422976
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2124828672,
+       "process_private_bytes": 8972042240
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5977041408,
+        "peak_reserved_bytes": 6750732288,
+        "reserved_bytes": 6750732288,
+        "reserved_after_release_bytes": 3959422976
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/launcher_job_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   },
+   "worker_processes_before": {
+    "launchers": [
+     57784
+    ],
+    "interpreters": [
+     18000
+    ],
+    "others": [
+     65204
+    ]
+   },
+   "killed_launcher_pid": 57784,
+   "interpreter_alive_0_5s_after": [
+    18000
+   ],
+   "left_after_15s": [],
+   "status_after": {
+    "prompt_id": "faedd511-5337-40cd-a6b4-e2356187bddf",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.74,
+     "commit_gib": 72.52,
+     "available_gib": 24.93
+    },
+    "history_tail": [
+     {
+      "event": "stopped",
+      "t": 1791019117.2,
+      "worker_instance_id": "w30cd59952dc04a1fb999",
+      "reason": "worker error: the worker exited unexpectedly (exit code None)",
+      "graceful_exit": false,
+      "active_before": 5,
+      "active_after": 0
+     },
+     {
+      "event": "starting",
+      "t": 1791019119.1,
+      "worker_instance_id": "w9f160d8db40e4f14af26",
+      "reason": "first persistent job",
+      "decoder": "wan_vae"
+     },
+     {
+      "event": "ready",
+      "t": 1791019141.8,
+      "worker_instance_id": "w9f160d8db40e4f14af26",
+      "startup_s": 22.735,
+      "engine_instance_id": "945a3dc2f1a4412088e9d947c7ce26be"
+     },
+     {
+      "event": "stopped",
+      "t": 1791019177.5,
+      "worker_instance_id": "w9f160d8db40e4f14af26",
+      "reason": "worker exited while idle (exit code 15)",
+      "graceful_exit": true,
+      "active_before": 1,
+      "active_after": 0
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2463
+   },
+   "next": {
+    "name": "launcher_next_A_a_short",
+    "prompt_id": "87d08791-dfe3-41a4-a29d-75eb9978893a",
+    "status": "success",
+    "queued_at": "2026-10-03T18:19:40",
+    "wall_s": 40.542,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 41,
+     "commit_pct_max": 91.84,
+     "commit_gib_max": 85.67,
+     "commit_gib_start": 72.63,
+     "available_gib_min": 20.91,
+     "gpu_mib_max": 10760,
+     "gpu_mib_start": 2463
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 29.13,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 0.11,
+      "previous_job": "job-20261003-181918-b1b3ecc03d61"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-181940-7e9fee2d7596",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w59199bfa7bce498ca150",
+     "worker_interpreter_pid": 32424,
+     "worker_launcher_pid": 46276,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "2888aa0aaa934029ab32f683be037e58",
+     "initialization_id": "init-2888aa0aaa93",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 1,
+      "jobs_ok": 1,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 1,
+     "started_new_worker": true,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 77.9 %, available 24.9 GiB, projected 95.0 %",
+     "expected_add_gib": 16.0,
+     "startup_s": 24.625,
+     "worker_engine_init_timings": {
+      "import_s": 19.604,
+      "pipeline_load_s": 2.674,
+      "lora_load_merge_s": 1.8,
+      "audio_proj_s": 0.203,
+      "fingerprint_s": 0.037
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 15.75,
+     "host_wall_s": 40.485,
+     "node_wall_seconds": 40.48,
+     "process_seconds": 15.755,
+     "timings": {
+      "audio_load_s": 1.218,
+      "reference_encode_s": 0.863,
+      "encode_finalize_s": 0.222,
+      "verify_s": 0.147,
+      "sampling_loop_s": 12.677,
+      "chunk_mean_s": 1.3117,
+      "audio_encode_mean_s": 0.0135,
+      "denoise_mean_s": 0.3593,
+      "decode_mean_s": 0.856,
+      "color_mean_s": 0.0047,
+      "history_mean_s": 0.0777,
+      "frame_io_mean_s": 0.0606,
+      "job_total_s": 15.514,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1842728960,
+       "process_private_bytes": 8657006592
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2123374592,
+       "process_private_bytes": 8979578880
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/launcher_next_A_a_short_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   }
+  },
+  "idle": {
+   "job": {
+    "name": "idle_job",
+    "prompt_id": "07425a82-131c-424c-8a11-86c6dcedd201",
+    "status": "success",
+    "queued_at": "2026-10-03T18:20:20",
+    "wall_s": 39.692,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "e2e-idle"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 42,
+     "commit_pct_max": 91.67,
+     "commit_gib_max": 85.52,
+     "commit_gib_start": 81.13,
+     "available_gib_min": 17.89,
+     "gpu_mib_max": 10770,
+     "gpu_mib_start": 10760
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 28.62,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 0.11,
+      "previous_job": "job-20261003-181940-7e9fee2d7596"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-182021-d33b00e8221b",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "e2e-idle",
+     "decoder": "wan_vae",
+     "worker_instance_id": "wb9bf78e945614722bd82",
+     "worker_interpreter_pid": 72224,
+     "worker_launcher_pid": 44812,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c",
+     "initialization_id": "init-fb456303883f",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 1,
+      "jobs_ok": 1,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 1,
+     "started_new_worker": true,
+     "restart_reason": "worker identity changed: runtime_id",
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 78.0 %, available 24.9 GiB, projected 95.1 %",
+     "expected_add_gib": 16.0,
+     "startup_s": 22.765,
+     "worker_engine_init_timings": {
+      "import_s": 18.837,
+      "pipeline_load_s": 2.497,
+      "lora_load_merge_s": 1.029,
+      "audio_proj_s": 0.151,
+      "fingerprint_s": 0.03
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 15.86,
+     "host_wall_s": 39.61,
+     "node_wall_seconds": 39.62,
+     "process_seconds": 15.835,
+     "timings": {
+      "audio_load_s": 1.19,
+      "reference_encode_s": 0.856,
+      "encode_finalize_s": 0.202,
+      "verify_s": 0.141,
+      "sampling_loop_s": 12.831,
+      "chunk_mean_s": 1.3329,
+      "audio_encode_mean_s": 0.0139,
+      "denoise_mean_s": 0.38,
+      "decode_mean_s": 0.8559,
+      "color_mean_s": 0.0042,
+      "history_mean_s": 0.0785,
+      "frame_io_mean_s": 0.0639,
+      "job_total_s": 15.609,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1841315840,
+       "process_private_bytes": 8666521600
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2121490432,
+       "process_private_bytes": 8970936320
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/idle_job_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   },
+   "polls": [
+    {
+     "t_since_job_end": 1.0,
+     "prompt_id": "dc54bdbd-0ccf-41fb-83f9-61ff36ed656a",
+     "worker": {
+      "state": "idle",
+      "worker_instance_id": "wb9bf78e945614722bd82",
+      "interpreter_pid": 72224,
+      "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 0,
+       "jobs_ok": 0,
+       "jobs_failed": 0
+      },
+      "jobs_done": 1,
+      "idle_seconds_left": 14.6,
+      "runtime": {
+       "memory": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2121519104,
+        "process_private_bytes": 8970936320
+       },
+       "resident_after_init": {
+        "cuda_allocated_bytes": 3668091392,
+        "cuda_reserved_bytes": 3957325824,
+        "gpu_used_bytes": 5781389312,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1841315840,
+        "process_private_bytes": 8666521600
+       },
+       "counters": {
+        "init": 1,
+        "lora_merge": 1,
+        "audio_proj_load": 1,
+        "jobs_started": 1,
+        "jobs_ok": 1,
+        "jobs_failed": 0
+       },
+       "jobs_done": 1
+      }
+     },
+     "host_memory": {
+      "commit_pct": 86.69,
+      "commit_gib": 80.87,
+      "available_gib": 22.87
+     },
+     "history_tail": [
+      {
+       "event": "ready",
+       "t": 1791019204.8,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "startup_s": 24.625,
+       "engine_instance_id": "2888aa0aaa934029ab32f683be037e58"
+      },
+      {
+       "event": "stopped",
+       "t": 1791019222.0,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "reason": "worker identity changed: runtime_id",
+       "graceful_exit": true,
+       "active_before": 1,
+       "active_after": 0
+      },
+      {
+       "event": "starting",
+       "t": 1791019222.0,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "reason": "worker identity changed: runtime_id",
+       "decoder": "wan_vae"
+      },
+      {
+       "event": "ready",
+       "t": 1791019244.8,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "startup_s": 22.765,
+       "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+      }
+     ],
+     "worker_processes": {
+      "launchers": [
+       44812
+      ],
+      "interpreters": [
+       72224
+      ],
+      "others": [
+       51852
+      ]
+     },
+     "gpu_mib": 6799
+    },
+    {
+     "t_since_job_end": 6.7,
+     "prompt_id": "998d1c5c-34a9-4337-98a2-607cb9605486",
+     "worker": {
+      "state": "idle",
+      "worker_instance_id": "wb9bf78e945614722bd82",
+      "interpreter_pid": 72224,
+      "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 0,
+       "jobs_ok": 0,
+       "jobs_failed": 0
+      },
+      "jobs_done": 1,
+      "idle_seconds_left": 9.6,
+      "runtime": {
+       "memory": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2121519104,
+        "process_private_bytes": 8752398336
+       },
+       "resident_after_init": {
+        "cuda_allocated_bytes": 3668091392,
+        "cuda_reserved_bytes": 3957325824,
+        "gpu_used_bytes": 5781389312,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1841315840,
+        "process_private_bytes": 8666521600
+       },
+       "counters": {
+        "init": 1,
+        "lora_merge": 1,
+        "audio_proj_load": 1,
+        "jobs_started": 1,
+        "jobs_ok": 1,
+        "jobs_failed": 0
+       },
+       "jobs_done": 1
+      }
+     },
+     "host_memory": {
+      "commit_pct": 86.48,
+      "commit_gib": 80.68,
+      "available_gib": 22.87
+     },
+     "history_tail": [
+      {
+       "event": "ready",
+       "t": 1791019204.8,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "startup_s": 24.625,
+       "engine_instance_id": "2888aa0aaa934029ab32f683be037e58"
+      },
+      {
+       "event": "stopped",
+       "t": 1791019222.0,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "reason": "worker identity changed: runtime_id",
+       "graceful_exit": true,
+       "active_before": 1,
+       "active_after": 0
+      },
+      {
+       "event": "starting",
+       "t": 1791019222.0,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "reason": "worker identity changed: runtime_id",
+       "decoder": "wan_vae"
+      },
+      {
+       "event": "ready",
+       "t": 1791019244.8,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "startup_s": 22.765,
+       "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+      }
+     ],
+     "worker_processes": {
+      "launchers": [
+       44812
+      ],
+      "interpreters": [
+       72224
+      ],
+      "others": [
+       51852
+      ]
+     },
+     "gpu_mib": 6799
+    },
+    {
+     "t_since_job_end": 12.1,
+     "prompt_id": "afb7f01b-9246-4db6-9126-e15d8a8ef57c",
+     "worker": {
+      "state": "idle",
+      "worker_instance_id": "wb9bf78e945614722bd82",
+      "interpreter_pid": 72224,
+      "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 0,
+       "jobs_ok": 0,
+       "jobs_failed": 0
+      },
+      "jobs_done": 1,
+      "idle_seconds_left": 3.9,
+      "runtime": {
+       "memory": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2121519104,
+        "process_private_bytes": 8752398336
+       },
+       "resident_after_init": {
+        "cuda_allocated_bytes": 3668091392,
+        "cuda_reserved_bytes": 3957325824,
+        "gpu_used_bytes": 5781389312,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1841315840,
+        "process_private_bytes": 8666521600
+       },
+       "counters": {
+        "init": 1,
+        "lora_merge": 1,
+        "audio_proj_load": 1,
+        "jobs_started": 1,
+        "jobs_ok": 1,
+        "jobs_failed": 0
+       },
+       "jobs_done": 1
+      }
+     },
+     "host_memory": {
+      "commit_pct": 86.5,
+      "commit_gib": 80.69,
+      "available_gib": 22.86
+     },
+     "history_tail": [
+      {
+       "event": "ready",
+       "t": 1791019204.8,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "startup_s": 24.625,
+       "engine_instance_id": "2888aa0aaa934029ab32f683be037e58"
+      },
+      {
+       "event": "stopped",
+       "t": 1791019222.0,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "reason": "worker identity changed: runtime_id",
+       "graceful_exit": true,
+       "active_before": 1,
+       "active_after": 0
+      },
+      {
+       "event": "starting",
+       "t": 1791019222.0,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "reason": "worker identity changed: runtime_id",
+       "decoder": "wan_vae"
+      },
+      {
+       "event": "ready",
+       "t": 1791019244.8,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "startup_s": 22.765,
+       "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+      }
+     ],
+     "worker_processes": {
+      "launchers": [
+       44812
+      ],
+      "interpreters": [
+       72224
+      ],
+      "others": [
+       51852
+      ]
+     },
+     "gpu_mib": 6799
+    },
+    {
+     "t_since_job_end": 17.3,
+     "prompt_id": "4c8cb449-c470-4455-9c0d-45c9696fb49a",
+     "worker": null,
+     "host_memory": {
+      "commit_pct": 77.79,
+      "commit_gib": 72.57,
+      "available_gib": 24.89
+     },
+     "history_tail": [
+      {
+       "event": "stopped",
+       "t": 1791019222.0,
+       "worker_instance_id": "w59199bfa7bce498ca150",
+       "reason": "worker identity changed: runtime_id",
+       "graceful_exit": true,
+       "active_before": 1,
+       "active_after": 0
+      },
+      {
+       "event": "starting",
+       "t": 1791019222.0,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "reason": "worker identity changed: runtime_id",
+       "decoder": "wan_vae"
+      },
+      {
+       "event": "ready",
+       "t": 1791019244.8,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "startup_s": 22.765,
+       "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+      },
+      {
+       "event": "stopped",
+       "t": 1791019276.7,
+       "worker_instance_id": "wb9bf78e945614722bd82",
+       "reason": "idle timeout (15 s without a job)",
+       "graceful_exit": true,
+       "active_before": 1,
+       "active_after": 0
+      }
+     ],
+     "worker_processes": {
+      "launchers": [],
+      "interpreters": [],
+      "others": []
+     },
+     "gpu_mib": 2463
+    }
+   ],
+   "gone_after_s": 17.3,
+   "memory_after": {
+    "commit_pct": 77.9,
+    "commit_gib": 72.67,
+    "available_gib": 24.8,
+    "gpu_mib": 2464
+   },
+   "next_main": {
+    "name": "idle_next_main",
+    "prompt_id": "31e2c16e-9afc-472e-97e3-396621ceb880",
+    "status": "success",
+    "queued_at": "2026-10-03T18:21:21",
+    "wall_s": 38.798,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 38,
+     "commit_pct_max": 91.81,
+     "commit_gib_max": 85.64,
+     "commit_gib_start": 72.94,
+     "available_gib_min": 17.91,
+     "gpu_mib_max": 10761,
+     "gpu_mib_start": 2464
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 27.06,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 0.11,
+      "previous_job": "job-20261003-182021-d33b00e8221b"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-182121-e63bd600746a",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w680f42d56543472db79d",
+     "worker_interpreter_pid": 83000,
+     "worker_launcher_pid": 31348,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "59358acd59b44ff5a7394275fc825a54",
+     "initialization_id": "init-59358acd59b4",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 1,
+      "jobs_ok": 1,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 1,
+     "started_new_worker": true,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 77.9 %, available 24.8 GiB, projected 95.1 %",
+     "expected_add_gib": 16.0,
+     "startup_s": 22.781,
+     "worker_engine_init_timings": {
+      "import_s": 18.701,
+      "pipeline_load_s": 2.588,
+      "lora_load_merge_s": 1.071,
+      "audio_proj_s": 0.171,
+      "fingerprint_s": 0.032
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 15.859,
+     "host_wall_s": 38.734,
+     "node_wall_seconds": 38.73,
+     "process_seconds": 15.827,
+     "timings": {
+      "audio_load_s": 1.157,
+      "reference_encode_s": 0.733,
+      "encode_finalize_s": 0.223,
+      "verify_s": 0.156,
+      "sampling_loop_s": 12.843,
+      "chunk_mean_s": 1.319,
+      "audio_encode_mean_s": 0.0145,
+      "denoise_mean_s": 0.3614,
+      "decode_mean_s": 0.8602,
+      "color_mean_s": 0.0045,
+      "history_mean_s": 0.0781,
+      "frame_io_mean_s": 0.0653,
+      "job_total_s": 15.582,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1842700288,
+       "process_private_bytes": 8675721216
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2122797056,
+       "process_private_bytes": 8985083904
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5975992832,
+        "peak_reserved_bytes": 6748635136,
+        "reserved_bytes": 6748635136,
+        "reserved_after_release_bytes": 3957325824
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/idle_next_main_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   }
+  },
+  "unload": {
+   "job": {
+    "name": "unload_job",
+    "prompt_id": "2275edbf-4960-456a-b4f4-54123c9be7bb",
+    "status": "success",
+    "queued_at": "2026-10-03T18:22:00",
+    "wall_s": 14.484,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 13,
+     "commit_pct_max": 91.17,
+     "commit_gib_max": 85.05,
+     "commit_gib_start": 80.99,
+     "available_gib_min": 22.53,
+     "gpu_mib_max": 10761,
+     "gpu_mib_start": 6799
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 2.96,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 0.11,
+      "previous_job": "job-20261003-182121-e63bd600746a"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-182201-e04b2fd5111c",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w680f42d56543472db79d",
+     "worker_interpreter_pid": 83000,
+     "worker_launcher_pid": 31348,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "59358acd59b44ff5a7394275fc825a54",
+     "initialization_id": "init-59358acd59b4",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 2,
+      "jobs_ok": 2,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 2,
+     "started_new_worker": false,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 86.8 %, available 22.8 GiB, projected 92.0 %",
+     "expected_add_gib": 4.84,
+     "startup_s": 0.0,
+     "worker_engine_init_timings": {
+      "import_s": 18.701,
+      "pipeline_load_s": 2.588,
+      "lora_load_merge_s": 1.071,
+      "audio_proj_s": 0.171,
+      "fingerprint_s": 0.032
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 14.312,
+     "host_wall_s": 14.422,
+     "node_wall_seconds": 14.41,
+     "process_seconds": 14.319,
+     "timings": {
+      "audio_load_s": 0.001,
+      "reference_encode_s": 0.523,
+      "encode_finalize_s": 0.218,
+      "verify_s": 0.133,
+      "sampling_loop_s": 12.632,
+      "chunk_mean_s": 1.3189,
+      "audio_encode_mean_s": 0.0147,
+      "denoise_mean_s": 0.3607,
+      "decode_mean_s": 0.8606,
+      "color_mean_s": 0.0045,
+      "history_mean_s": 0.0781,
+      "frame_io_mean_s": 0.0587,
+      "job_total_s": 14.043,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2174889984,
+       "process_private_bytes": 9048121344
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5977041408,
+        "peak_reserved_bytes": 6750732288,
+        "reserved_bytes": 6750732288,
+        "reserved_after_release_bytes": 3959422976
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2126245888,
+       "process_private_bytes": 8985755648
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5977041408,
+        "peak_reserved_bytes": 6750732288,
+        "reserved_bytes": 6750732288,
+        "reserved_after_release_bytes": 3959422976
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/unload_job_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   },
+   "loaded_idle": {
+    "prompt_id": "2b1b996c-2c66-488c-b962-3ec6fc1d4e22",
+    "worker": {
+     "state": "idle",
+     "worker_instance_id": "w680f42d56543472db79d",
+     "interpreter_pid": 83000,
+     "engine_instance_id": "59358acd59b44ff5a7394275fc825a54",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 0,
+      "jobs_ok": 0,
+      "jobs_failed": 0
+     },
+     "jobs_done": 2,
+     "idle_seconds_left": 114.6,
+     "runtime": {
+      "memory": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2126245888,
+       "process_private_bytes": 8767217664
+      },
+      "resident_after_init": {
+       "cuda_allocated_bytes": 3668091392,
+       "cuda_reserved_bytes": 3957325824,
+       "gpu_used_bytes": 5781389312,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 1842688000,
+       "process_private_bytes": 8675721216
+      },
+      "counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 2,
+       "jobs_ok": 2,
+       "jobs_failed": 0
+      },
+      "jobs_done": 2
+     }
+    },
+    "host_memory": {
+     "commit_pct": 86.62,
+     "commit_gib": 80.8,
+     "available_gib": 22.79
+    },
+    "history_tail": [
+     {
+      "event": "ready",
+      "t": 1791019244.8,
+      "worker_instance_id": "wb9bf78e945614722bd82",
+      "startup_s": 22.765,
+      "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+     },
+     {
+      "event": "stopped",
+      "t": 1791019276.7,
+      "worker_instance_id": "wb9bf78e945614722bd82",
+      "reason": "idle timeout (15 s without a job)",
+      "graceful_exit": true,
+      "active_before": 1,
+      "active_after": 0
+     },
+     {
+      "event": "starting",
+      "t": 1791019281.7,
+      "worker_instance_id": "w680f42d56543472db79d",
+      "reason": "first persistent job",
+      "decoder": "wan_vae"
+     },
+     {
+      "event": "ready",
+      "t": 1791019304.5,
+      "worker_instance_id": "w680f42d56543472db79d",
+      "startup_s": 22.781,
+      "engine_instance_id": "59358acd59b44ff5a7394275fc825a54"
+     }
+    ],
+    "worker_processes": {
+     "launchers": [
+      31348
+     ],
+     "interpreters": [
+      83000
+     ],
+     "others": [
+      42840
+     ]
+    },
+    "gpu_mib": 6799
+   },
+   "unload": {
+    "name": "unload_explicit",
+    "prompt_id": "f3d0c1de-62c8-404b-98f0-d00c50b70e69",
+    "status": "success",
+    "queued_at": "2026-10-03T18:22:21",
+    "wall_s": 0.954,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 1,
+     "commit_pct_max": 86.62,
+     "commit_gib_max": 80.8,
+     "commit_gib_start": 80.8,
+     "available_gib_min": 22.78,
+     "gpu_mib_max": 6799,
+     "gpu_mib_start": 6799
+    },
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "status": "unloaded",
+     "worker_instance_id": "w680f42d56543472db79d",
+     "reason": "unload requested from the LeapTalk Worker node",
+     "graceful_exit": true,
+     "active_before": 1,
+     "active_after": 0,
+     "host_memory_after": {
+      "measurable": true,
+      "source": "GetPerformanceInfo",
+      "t": 1078890.109,
+      "total_gib": 63.39,
+      "available_gib": 24.86,
+      "commit_gib": 72.59,
+      "commit_limit_gib": 93.28,
+      "commit_pct": 77.82,
+      "commit_enforced": true
+     },
+     "now": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1078890.109,
+       "total_gib": 63.39,
+       "available_gib": 24.86,
+       "commit_gib": 72.59,
+       "commit_limit_gib": 93.28,
+       "commit_pct": 77.82,
+       "commit_enforced": true
+      },
+      "history": [
+       {
+        "event": "stopped",
+        "t": 1791019177.5,
+        "worker_instance_id": "w9f160d8db40e4f14af26",
+        "reason": "worker exited while idle (exit code 15)",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019180.2,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "reason": "first persistent job",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019204.8,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "startup_s": 24.625,
+        "engine_instance_id": "2888aa0aaa934029ab32f683be037e58"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019222.0,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "reason": "worker identity changed: runtime_id",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019222.0,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "reason": "worker identity changed: runtime_id",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019244.8,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "startup_s": 22.765,
+        "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019276.7,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "reason": "idle timeout (15 s without a job)",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019281.7,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "reason": "first persistent job",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019304.5,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "startup_s": 22.781,
+        "engine_instance_id": "59358acd59b44ff5a7394275fc825a54"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019342.5,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "reason": "unload requested from the LeapTalk Worker node",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       }
+      ]
+     }
+    },
+    "worker_processes_after": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   },
+   "after_unload": {
+    "commit_pct": 77.8,
+    "commit_gib": 72.57,
+    "available_gib": 24.86,
+    "gpu_mib": 2464,
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   },
+   "unload_again": {
+    "name": "unload_again",
+    "prompt_id": "487944d3-bd39-459e-bd00-61d474b69feb",
+    "status": "success",
+    "queued_at": "2026-10-03T18:22:28",
+    "wall_s": 0.003,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {},
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "status": "no_worker",
+     "now": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1078896.609,
+       "total_gib": 63.39,
+       "available_gib": 24.85,
+       "commit_gib": 72.58,
+       "commit_limit_gib": 93.28,
+       "commit_pct": 77.81,
+       "commit_enforced": true
+      },
+      "history": [
+       {
+        "event": "stopped",
+        "t": 1791019177.5,
+        "worker_instance_id": "w9f160d8db40e4f14af26",
+        "reason": "worker exited while idle (exit code 15)",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019180.2,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "reason": "first persistent job",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019204.8,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "startup_s": 24.625,
+        "engine_instance_id": "2888aa0aaa934029ab32f683be037e58"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019222.0,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "reason": "worker identity changed: runtime_id",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019222.0,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "reason": "worker identity changed: runtime_id",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019244.8,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "startup_s": 22.765,
+        "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019276.7,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "reason": "idle timeout (15 s without a job)",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019281.7,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "reason": "first persistent job",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019304.5,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "startup_s": 22.781,
+        "engine_instance_id": "59358acd59b44ff5a7394275fc825a54"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019342.5,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "reason": "unload requested from the LeapTalk Worker node",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       }
+      ]
+     }
+    },
+    "worker_processes_after": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   }
+  },
+  "race": {
+   "prompts": [
+    {
+     "name": "race_gen_long",
+     "prompt_id": "e5436418-6b2b-41fc-899e-b130fce9d4e3",
+     "status": "success",
+     "queued_at": "2026-10-03T18:22:29",
+     "wall_s": 66.094,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 63,
+      "commit_pct_max": 91.55,
+      "commit_gib_max": 85.4,
+      "commit_gib_start": 72.58,
+      "available_gib_min": 19.39,
+      "gpu_mib_max": 10761,
+      "gpu_mib_start": 2464
+     },
+     "ws": {
+      "progress_msgs": 28,
+      "previews": 28,
+      "first_preview_after_s": 27.73,
+      "preview_vs_job": {
+       "own_job_mad": 0.11,
+       "previous_job_mad": 1.47,
+       "previous_job": "job-20261003-182201-e04b2fd5111c"
+      }
+     },
+     "job": {
+      "job_id": "job-20261003-182229-0e1ab06e7fe9",
+      "backend": {
+       "requested": "persistent",
+       "runtime_default": "one-shot",
+       "effective": "persistent"
+      },
+      "runtime_id": "main",
+      "decoder": "wan_vae",
+      "worker_instance_id": "w73caae76d9464495bee5",
+      "worker_interpreter_pid": 32620,
+      "worker_launcher_pid": 37040,
+      "one_shot_runner_pid": null,
+      "engine_instance_id": "927c9d2efb694a2fbddccb18b316f3d4",
+      "initialization_id": "init-927c9d2efb69",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 1,
+       "jobs_ok": 1,
+       "jobs_failed": 0
+      },
+      "weight_fingerprint": {
+       "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+       "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+       "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+       "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+      },
+      "worker_jobs_done": 1,
+      "started_new_worker": true,
+      "restart_reason": null,
+      "unloaded_persistent_worker": null,
+      "memory_check": "ok: commit 77.8 %, available 24.8 GiB, projected 95.0 %",
+      "expected_add_gib": 16.0,
+      "startup_s": 23.171,
+      "worker_engine_init_timings": {
+       "import_s": 18.924,
+       "pipeline_load_s": 2.654,
+       "lora_load_merge_s": 1.162,
+       "audio_proj_s": 0.147,
+       "fingerprint_s": 0.034
+      },
+      "one_shot_engine_init_timings": null,
+      "queue_wait_s": 0.0,
+      "job_wall_s": 42.454,
+      "host_wall_s": 65.704,
+      "node_wall_seconds": 65.71,
+      "process_seconds": 42.447,
+      "timings": {
+       "audio_load_s": 1.123,
+       "reference_encode_s": 0.819,
+       "encode_finalize_s": 0.256,
+       "verify_s": 0.443,
+       "sampling_loop_s": 39.168,
+       "chunk_mean_s": 1.3201,
+       "audio_encode_mean_s": 0.0131,
+       "denoise_mean_s": 0.361,
+       "decode_mean_s": 0.8628,
+       "color_mean_s": 0.0044,
+       "history_mean_s": 0.0784,
+       "frame_io_mean_s": 0.0597,
+       "job_total_s": 42.194,
+       "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+      },
+      "forwards": {
+       "total": 28,
+       "conditional": 28,
+       "unconditional": 0
+      },
+      "chunks": 28,
+      "output_frames": 770,
+      "audio": {
+       "input_sample_rate": 24000,
+       "input_channels": 1,
+       "input_samples": 738600,
+       "input_seconds": 30.775,
+       "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+       "samples_16k": 492400,
+       "padded_samples_16k": 501760,
+       "peak_16k": 0.4408,
+       "silent": false,
+       "muxed": {
+        "codec": "aac",
+        "sample_rate": 24000,
+        "channels": 1,
+        "decoded_seconds": 30.775
+       }
+      },
+      "frames_sha256": "d37f3bfa3625bcffadd0075f2adf38e80c8cfe64bb90a5158cf55781776972f4",
+      "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+      "mp4_sha256": "69449c2b7a3f29cf6ee1c6cd19ff53beb1915653cbbaaa518bf1de15a9e6570a",
+      "job_memory": {
+       "resident_before_job": {
+        "cuda_allocated_bytes": 3668091392,
+        "cuda_reserved_bytes": 3957325824,
+        "gpu_used_bytes": 5781389312,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1842470912,
+        "process_private_bytes": 8676831232
+       },
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5975992832,
+         "peak_reserved_bytes": 6748635136,
+         "reserved_bytes": 6748635136,
+         "reserved_after_release_bytes": 3957325824
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 6589699072,
+         "peak_reserved_bytes": 8113881088,
+         "reserved_bytes": 8113881088
+        }
+       },
+       "after_job": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2121732096,
+        "process_private_bytes": 8983261184
+       },
+       "stale_state_found_before_job": []
+      },
+      "memory": {
+       "cuda_max_allocated_bytes": 6589699072,
+       "cuda_max_reserved_bytes": 8113881088,
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5975992832,
+         "peak_reserved_bytes": 6748635136,
+         "reserved_bytes": 6748635136,
+         "reserved_after_release_bytes": 3957325824
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 6589699072,
+         "peak_reserved_bytes": 8113881088,
+         "reserved_bytes": 8113881088
+        }
+       }
+      },
+      "lora_applied_tensors": 480,
+      "effective_config": {
+       "model_type": "pro",
+       "lite": false,
+       "num_inference_steps": 1,
+       "shift_gamma": 5.0,
+       "noise_scale": 1.0,
+       "audio_guidance": 1.0,
+       "frame_num": 33,
+       "motion_frames_latent_num": 2,
+       "cached_audio_duration": 8,
+       "audio_encode_mode": "stream",
+       "history_update_mode": "roundtrip",
+       "color_correction_strength": 1.0,
+       "height": 512,
+       "width": 512,
+       "fps": 25,
+       "dtype": "bf16",
+       "compile": false,
+       "use_face_crop": false
+      }
+     },
+     "saved": [
+      "output/e2e/race1_00001_.mp4"
+     ],
+     "decoded": {
+      "video_streams": 1,
+      "audio_streams": 1,
+      "width": 512,
+      "height": 512,
+      "rate": 25.0,
+      "codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate": 24000,
+      "audio_channels": 1,
+      "frames": 770,
+      "audio_seconds": 30.775
+     },
+     "checks": {
+      "one_video": true,
+      "has_audio": true,
+      "frames_match_report": true,
+      "512x512_25fps": true,
+      "audio_tail_s": 0.0,
+      "lora_applied": true
+     }
+    },
+    {
+     "name": "race_gen_short",
+     "prompt_id": "2329d2a9-1bb3-4b83-a5bf-7d610ae686af",
+     "status": "success",
+     "queued_at": "2026-10-03T18:22:29",
+     "wall_s": 81.894,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 75,
+      "commit_pct_max": 91.55,
+      "commit_gib_max": 85.4,
+      "commit_gib_start": 72.87,
+      "available_gib_min": 19.39,
+      "gpu_mib_max": 10761,
+      "gpu_mib_start": 2464
+     },
+     "ws": {
+      "progress_msgs": 10,
+      "previews": 10,
+      "first_preview_after_s": 68.67,
+      "preview_vs_job": {
+       "own_job_mad": 0.13,
+       "previous_job_mad": 43.23,
+       "previous_job": "job-20261003-182229-0e1ab06e7fe9"
+      }
+     },
+     "job": {
+      "job_id": "job-20261003-182335-315ea152b3f5",
+      "backend": {
+       "requested": "persistent",
+       "runtime_default": "one-shot",
+       "effective": "persistent"
+      },
+      "runtime_id": "main",
+      "decoder": "wan_vae",
+      "worker_instance_id": "w73caae76d9464495bee5",
+      "worker_interpreter_pid": 32620,
+      "worker_launcher_pid": 37040,
+      "one_shot_runner_pid": null,
+      "engine_instance_id": "927c9d2efb694a2fbddccb18b316f3d4",
+      "initialization_id": "init-927c9d2efb69",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 2,
+       "jobs_ok": 2,
+       "jobs_failed": 0
+      },
+      "weight_fingerprint": {
+       "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+       "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+       "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+       "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+      },
+      "worker_jobs_done": 2,
+      "started_new_worker": false,
+      "restart_reason": null,
+      "unloaded_persistent_worker": null,
+      "memory_check": "ok: commit 86.7 %, available 22.9 GiB, projected 91.9 %",
+      "expected_add_gib": 4.84,
+      "startup_s": 0.0,
+      "worker_engine_init_timings": {
+       "import_s": 18.924,
+       "pipeline_load_s": 2.654,
+       "lora_load_merge_s": 1.162,
+       "audio_proj_s": 0.147,
+       "fingerprint_s": 0.034
+      },
+      "one_shot_engine_init_timings": null,
+      "queue_wait_s": 0.0,
+      "job_wall_s": 15.735,
+      "host_wall_s": 15.813,
+      "node_wall_seconds": 15.83,
+      "process_seconds": 15.728,
+      "timings": {
+       "audio_load_s": 0.002,
+       "reference_encode_s": 0.537,
+       "encode_finalize_s": 0.237,
+       "verify_s": 0.161,
+       "sampling_loop_s": 14.092,
+       "chunk_mean_s": 1.3454,
+       "audio_encode_mean_s": 0.0227,
+       "denoise_mean_s": 0.362,
+       "decode_mean_s": 0.8765,
+       "color_mean_s": 0.0046,
+       "history_mean_s": 0.0792,
+       "frame_io_mean_s": 0.0549,
+       "job_total_s": 15.415,
+       "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+      },
+      "forwards": {
+       "total": 10,
+       "conditional": 10,
+       "unconditional": 0
+      },
+      "chunks": 10,
+      "output_frames": 260,
+      "audio": {
+       "input_sample_rate": 24000,
+       "input_channels": 1,
+       "input_samples": 249600,
+       "input_seconds": 10.4,
+       "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+       "samples_16k": 166400,
+       "padded_samples_16k": 179200,
+       "peak_16k": 0.4528,
+       "silent": false,
+       "muxed": {
+        "codec": "aac",
+        "sample_rate": 24000,
+        "channels": 1,
+        "decoded_seconds": 10.4
+       }
+      },
+      "frames_sha256": "5ee53e4df089378aa6dd2d6c14877c8f15c5d0f90f247281f6482c9bda7f349f",
+      "reference_latent_sha256": "ed9a344436b00dc0d241a5c041d9c26ca08c0bd5c81d8c2099022836906cacb1",
+      "mp4_sha256": "2778d011bd707b6fc7c27e935f8bce9b39686ca8e056f5c2c2a4bad16fe9dc9a",
+      "job_memory": {
+       "resident_before_job": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2173865984,
+        "process_private_bytes": 9046298624
+       },
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5977041408,
+         "peak_reserved_bytes": 6750732288,
+         "reserved_bytes": 6750732288,
+         "reserved_after_release_bytes": 3959422976
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 6589699072,
+         "peak_reserved_bytes": 8113881088,
+         "reserved_bytes": 8113881088
+        }
+       },
+       "after_job": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2123718656,
+        "process_private_bytes": 8984735744
+       },
+       "stale_state_found_before_job": []
+      },
+      "memory": {
+       "cuda_max_allocated_bytes": 6589699072,
+       "cuda_max_reserved_bytes": 8113881088,
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5977041408,
+         "peak_reserved_bytes": 6750732288,
+         "reserved_bytes": 6750732288,
+         "reserved_after_release_bytes": 3959422976
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 6589699072,
+         "peak_reserved_bytes": 8113881088,
+         "reserved_bytes": 8113881088
+        }
+       }
+      },
+      "lora_applied_tensors": 480,
+      "effective_config": {
+       "model_type": "pro",
+       "lite": false,
+       "num_inference_steps": 1,
+       "shift_gamma": 5.0,
+       "noise_scale": 1.0,
+       "audio_guidance": 1.0,
+       "frame_num": 33,
+       "motion_frames_latent_num": 2,
+       "cached_audio_duration": 8,
+       "audio_encode_mode": "stream",
+       "history_update_mode": "roundtrip",
+       "color_correction_strength": 1.0,
+       "height": 512,
+       "width": 512,
+       "fps": 25,
+       "dtype": "bf16",
+       "compile": false,
+       "use_face_crop": false
+      }
+     },
+     "saved": [
+      "output/e2e/race2_00001_.mp4"
+     ],
+     "decoded": {
+      "video_streams": 1,
+      "audio_streams": 1,
+      "width": 512,
+      "height": 512,
+      "rate": 25.0,
+      "codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate": 24000,
+      "audio_channels": 1,
+      "frames": 260,
+      "audio_seconds": 10.4
+     },
+     "checks": {
+      "one_video": true,
+      "has_audio": true,
+      "frames_match_report": true,
+      "512x512_25fps": true,
+      "audio_tail_s": 0.0,
+      "lora_applied": true
+     }
+    },
+    {
+     "name": "race_unload",
+     "prompt_id": "cc528afb-ccf0-4511-a504-5efaeec36ecb",
+     "status": "success",
+     "queued_at": "2026-10-03T18:22:29",
+     "wall_s": 82.941,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 77,
+      "commit_pct_max": 91.55,
+      "commit_gib_max": 85.4,
+      "commit_gib_start": 72.87,
+      "available_gib_min": 19.39,
+      "gpu_mib_max": 10761,
+      "gpu_mib_start": 2464
+     },
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     },
+     "worker_node": {
+      "status": "unloaded",
+      "worker_instance_id": "w73caae76d9464495bee5",
+      "reason": "unload requested from the LeapTalk Worker node",
+      "graceful_exit": true,
+      "active_before": 1,
+      "active_after": 0,
+      "host_memory_after": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1078980.312,
+       "total_gib": 63.39,
+       "available_gib": 24.94,
+       "commit_gib": 72.49,
+       "commit_limit_gib": 93.28,
+       "commit_pct": 77.71,
+       "commit_enforced": true
+      },
+      "now": {
+       "worker": null,
+       "host_memory": {
+        "measurable": true,
+        "source": "GetPerformanceInfo",
+        "t": 1078980.312,
+        "total_gib": 63.39,
+        "available_gib": 24.94,
+        "commit_gib": 72.49,
+        "commit_limit_gib": 93.28,
+        "commit_pct": 77.71,
+        "commit_enforced": true
+       },
+       "history": [
+        {
+         "event": "stopped",
+         "t": 1791019222.0,
+         "worker_instance_id": "w59199bfa7bce498ca150",
+         "reason": "worker identity changed: runtime_id",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        },
+        {
+         "event": "starting",
+         "t": 1791019222.0,
+         "worker_instance_id": "wb9bf78e945614722bd82",
+         "reason": "worker identity changed: runtime_id",
+         "decoder": "wan_vae"
+        },
+        {
+         "event": "ready",
+         "t": 1791019244.8,
+         "worker_instance_id": "wb9bf78e945614722bd82",
+         "startup_s": 22.765,
+         "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+        },
+        {
+         "event": "stopped",
+         "t": 1791019276.7,
+         "worker_instance_id": "wb9bf78e945614722bd82",
+         "reason": "idle timeout (15 s without a job)",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        },
+        {
+         "event": "starting",
+         "t": 1791019281.7,
+         "worker_instance_id": "w680f42d56543472db79d",
+         "reason": "first persistent job",
+         "decoder": "wan_vae"
+        },
+        {
+         "event": "ready",
+         "t": 1791019304.5,
+         "worker_instance_id": "w680f42d56543472db79d",
+         "startup_s": 22.781,
+         "engine_instance_id": "59358acd59b44ff5a7394275fc825a54"
+        },
+        {
+         "event": "stopped",
+         "t": 1791019342.5,
+         "worker_instance_id": "w680f42d56543472db79d",
+         "reason": "unload requested from the LeapTalk Worker node",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        },
+        {
+         "event": "starting",
+         "t": 1791019349.9,
+         "worker_instance_id": "w73caae76d9464495bee5",
+         "reason": "first persistent job",
+         "decoder": "wan_vae"
+        },
+        {
+         "event": "ready",
+         "t": 1791019373.0,
+         "worker_instance_id": "w73caae76d9464495bee5",
+         "startup_s": 23.171,
+         "engine_instance_id": "927c9d2efb694a2fbddccb18b316f3d4"
+        },
+        {
+         "event": "stopped",
+         "t": 1791019432.7,
+         "worker_instance_id": "w73caae76d9464495bee5",
+         "reason": "unload requested from the LeapTalk Worker node",
+         "graceful_exit": true,
+         "active_before": 1,
+         "active_after": 0
+        }
+       ]
+      }
+     }
+    },
+    {
+     "name": "race_status",
+     "prompt_id": "b049ceaa-c539-4fbf-86f0-a85999586eb7",
+     "status": "success",
+     "queued_at": "2026-10-03T18:22:29",
+     "wall_s": 82.942,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 77,
+      "commit_pct_max": 91.55,
+      "commit_gib_max": 85.4,
+      "commit_gib_start": 72.87,
+      "available_gib_min": 19.39,
+      "gpu_mib_max": 10761,
+      "gpu_mib_start": 2464
+     },
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     },
+     "worker_node": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1078980.328,
+       "total_gib": 63.39,
+       "available_gib": 24.94,
+       "commit_gib": 72.49,
+       "commit_limit_gib": 93.28,
+       "commit_pct": 77.71,
+       "commit_enforced": true
+      },
+      "history": [
+       {
+        "event": "stopped",
+        "t": 1791019222.0,
+        "worker_instance_id": "w59199bfa7bce498ca150",
+        "reason": "worker identity changed: runtime_id",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019222.0,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "reason": "worker identity changed: runtime_id",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019244.8,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "startup_s": 22.765,
+        "engine_instance_id": "fb456303883f4ae6bf5d2e7aba8a836c"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019276.7,
+        "worker_instance_id": "wb9bf78e945614722bd82",
+        "reason": "idle timeout (15 s without a job)",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019281.7,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "reason": "first persistent job",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019304.5,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "startup_s": 22.781,
+        "engine_instance_id": "59358acd59b44ff5a7394275fc825a54"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019342.5,
+        "worker_instance_id": "w680f42d56543472db79d",
+        "reason": "unload requested from the LeapTalk Worker node",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       },
+       {
+        "event": "starting",
+        "t": 1791019349.9,
+        "worker_instance_id": "w73caae76d9464495bee5",
+        "reason": "first persistent job",
+        "decoder": "wan_vae"
+       },
+       {
+        "event": "ready",
+        "t": 1791019373.0,
+        "worker_instance_id": "w73caae76d9464495bee5",
+        "startup_s": 23.171,
+        "engine_instance_id": "927c9d2efb694a2fbddccb18b316f3d4"
+       },
+       {
+        "event": "stopped",
+        "t": 1791019432.7,
+        "worker_instance_id": "w73caae76d9464495bee5",
+        "reason": "unload requested from the LeapTalk Worker node",
+        "graceful_exit": true,
+        "active_before": 1,
+        "active_after": 0
+       }
+      ]
+     }
+    },
+    {
+     "name": "race_gen_after_unload",
+     "prompt_id": "be968c95-43c4-4aac-b782-5813c1a4b6ae",
+     "status": "success",
+     "queued_at": "2026-10-03T18:22:29",
+     "wall_s": 122.425,
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_success"
+     ],
+     "memory_window": {
+      "samples": 117,
+      "commit_pct_max": 91.64,
+      "commit_gib_max": 85.48,
+      "commit_gib_start": 72.87,
+      "available_gib_min": 19.39,
+      "gpu_mib_max": 10761,
+      "gpu_mib_start": 2464
+     },
+     "ws": {
+      "progress_msgs": 9,
+      "previews": 9,
+      "first_preview_after_s": 110.95,
+      "preview_vs_job": {
+       "own_job_mad": 0.11,
+       "previous_job_mad": 43.1,
+       "previous_job": "job-20261003-182335-315ea152b3f5"
+      }
+     },
+     "job": {
+      "job_id": "job-20261003-182352-90c819d965e5",
+      "backend": {
+       "requested": "persistent",
+       "runtime_default": "one-shot",
+       "effective": "persistent"
+      },
+      "runtime_id": "main",
+      "decoder": "wan_vae",
+      "worker_instance_id": "w7405a378347f45adb268",
+      "worker_interpreter_pid": 67112,
+      "worker_launcher_pid": 9124,
+      "one_shot_runner_pid": null,
+      "engine_instance_id": "3b0ea5d16f244f82a140c3d1869951e9",
+      "initialization_id": "init-3b0ea5d16f24",
+      "engine_counters": {
+       "init": 1,
+       "lora_merge": 1,
+       "audio_proj_load": 1,
+       "jobs_started": 1,
+       "jobs_ok": 1,
+       "jobs_failed": 0
+      },
+      "weight_fingerprint": {
+       "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+       "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+       "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+       "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+      },
+      "worker_jobs_done": 1,
+      "started_new_worker": true,
+      "restart_reason": null,
+      "unloaded_persistent_worker": null,
+      "memory_check": "ok: commit 77.8 %, available 24.9 GiB, projected 94.9 %",
+      "expected_add_gib": 16.0,
+      "startup_s": 23.11,
+      "worker_engine_init_timings": {
+       "import_s": 18.996,
+       "pipeline_load_s": 2.624,
+       "lora_load_merge_s": 1.041,
+       "audio_proj_s": 0.173,
+       "fingerprint_s": 0.036
+      },
+      "one_shot_engine_init_timings": null,
+      "queue_wait_s": 0.0,
+      "job_wall_s": 16.218,
+      "host_wall_s": 39.421,
+      "node_wall_seconds": 39.41,
+      "process_seconds": 16.202,
+      "timings": {
+       "audio_load_s": 1.194,
+       "reference_encode_s": 0.727,
+       "encode_finalize_s": 0.209,
+       "verify_s": 0.135,
+       "sampling_loop_s": 13.324,
+       "chunk_mean_s": 1.3312,
+       "audio_encode_mean_s": 0.0143,
+       "denoise_mean_s": 0.375,
+       "decode_mean_s": 0.8584,
+       "color_mean_s": 0.0043,
+       "history_mean_s": 0.0788,
+       "frame_io_mean_s": 0.0613,
+       "job_total_s": 15.98,
+       "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+      },
+      "forwards": {
+       "total": 9,
+       "conditional": 9,
+       "unconditional": 0
+      },
+      "chunks": 9,
+      "output_frames": 234,
+      "audio": {
+       "input_sample_rate": 24000,
+       "input_channels": 1,
+       "input_samples": 224400,
+       "input_seconds": 9.35,
+       "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+       "samples_16k": 149600,
+       "padded_samples_16k": 161280,
+       "peak_16k": 0.4918,
+       "silent": false,
+       "muxed": {
+        "codec": "aac",
+        "sample_rate": 24000,
+        "channels": 1,
+        "decoded_seconds": 9.35
+       }
+      },
+      "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+      "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+      "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+      "job_memory": {
+       "resident_before_job": {
+        "cuda_allocated_bytes": 3668091392,
+        "cuda_reserved_bytes": 3957325824,
+        "gpu_used_bytes": 5781389312,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 1842835456,
+        "process_private_bytes": 8662802432
+       },
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5975992832,
+         "peak_reserved_bytes": 6748635136,
+         "reserved_bytes": 6748635136,
+         "reserved_after_release_bytes": 3957325824
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 6589699072,
+         "peak_reserved_bytes": 8113881088,
+         "reserved_bytes": 8113881088
+        }
+       },
+       "after_job": {
+        "cuda_allocated_bytes": 3669139968,
+        "cuda_reserved_bytes": 3959422976,
+        "gpu_used_bytes": 5787680768,
+        "gpu_total_bytes": 34190458880,
+        "process_rss_bytes": 2122813440,
+        "process_private_bytes": 8977559552
+       },
+       "stale_state_found_before_job": []
+      },
+      "memory": {
+       "cuda_max_allocated_bytes": 6589699072,
+       "cuda_max_reserved_bytes": 8113881088,
+       "phases": {
+        "reference_encode": {
+         "peak_allocated_bytes": 5975992832,
+         "peak_reserved_bytes": 6748635136,
+         "reserved_bytes": 6748635136,
+         "reserved_after_release_bytes": 3957325824
+        },
+        "chunk_loop": {
+         "peak_allocated_bytes": 6589699072,
+         "peak_reserved_bytes": 8113881088,
+         "reserved_bytes": 8113881088
+        }
+       }
+      },
+      "lora_applied_tensors": 480,
+      "effective_config": {
+       "model_type": "pro",
+       "lite": false,
+       "num_inference_steps": 1,
+       "shift_gamma": 5.0,
+       "noise_scale": 1.0,
+       "audio_guidance": 1.0,
+       "frame_num": 33,
+       "motion_frames_latent_num": 2,
+       "cached_audio_duration": 8,
+       "audio_encode_mode": "stream",
+       "history_update_mode": "roundtrip",
+       "color_correction_strength": 1.0,
+       "height": 512,
+       "width": 512,
+       "fps": 25,
+       "dtype": "bf16",
+       "compile": false,
+       "use_face_crop": false
+      }
+     },
+     "saved": [
+      "output/e2e/race3_00001_.mp4"
+     ],
+     "decoded": {
+      "video_streams": 1,
+      "audio_streams": 1,
+      "width": 512,
+      "height": 512,
+      "rate": 25.0,
+      "codec": "h264",
+      "audio_codec": "aac",
+      "audio_rate": 24000,
+      "audio_channels": 1,
+      "frames": 234,
+      "audio_seconds": 9.35
+     },
+     "checks": {
+      "one_video": true,
+      "has_audio": true,
+      "frames_match_report": true,
+      "512x512_25fps": true,
+      "audio_tail_s": 0.0,
+      "lora_applied": true
+     }
+    }
+   ],
+   "max_worker_launchers_during": 1
+  },
+  "kill_idle": {
+   "job": {
+    "name": "kill_idle_job",
+    "prompt_id": "cbcce2b0-adc4-4cd7-9318-de3795ba83f2",
+    "status": "success",
+    "queued_at": "2026-10-03T18:24:32",
+    "wall_s": 14.419,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 12,
+     "commit_pct_max": 91.0,
+     "commit_gib_max": 84.89,
+     "commit_gib_start": 83.41,
+     "available_gib_min": 22.62,
+     "gpu_mib_max": 10761,
+     "gpu_mib_start": 9461
+    },
+    "ws": {
+     "progress_msgs": 9,
+     "previews": 9,
+     "first_preview_after_s": 2.92,
+     "preview_vs_job": {
+      "own_job_mad": 0.11,
+      "previous_job_mad": 0.11,
+      "previous_job": "job-20261003-182352-90c819d965e5"
+     }
+    },
+    "job": {
+     "job_id": "job-20261003-182432-5ac71fc28674",
+     "backend": {
+      "requested": "persistent",
+      "runtime_default": "one-shot",
+      "effective": "persistent"
+     },
+     "runtime_id": "main",
+     "decoder": "wan_vae",
+     "worker_instance_id": "w7405a378347f45adb268",
+     "worker_interpreter_pid": 67112,
+     "worker_launcher_pid": 9124,
+     "one_shot_runner_pid": null,
+     "engine_instance_id": "3b0ea5d16f244f82a140c3d1869951e9",
+     "initialization_id": "init-3b0ea5d16f24",
+     "engine_counters": {
+      "init": 1,
+      "lora_merge": 1,
+      "audio_proj_load": 1,
+      "jobs_started": 2,
+      "jobs_ok": 2,
+      "jobs_failed": 0
+     },
+     "weight_fingerprint": {
+      "blocks.0.self_attn.q.weight": "7c3f20241a8f44bf54262067d093e1c2796895cf67be93c21551884aa01ac163",
+      "blocks.29.cross_attn.o.weight": "612c97fc05e7efbb8ae1c9c57b2d0528c0c44aeca6125f49b3c5db6d58472bf5",
+      "audio_proj.proj1.weight": "081cbbaeb4200984f7710e3d44fd59232d00bb7f2418078d4438e70b431b85f1",
+      "audio_proj.norm.weight": "82c4cd190c337b6511c88a259df786047f390ea045ff94004bfd2e293ba70662"
+     },
+     "worker_jobs_done": 2,
+     "started_new_worker": false,
+     "restart_reason": null,
+     "unloaded_persistent_worker": null,
+     "memory_check": "ok: commit 86.7 %, available 22.9 GiB, projected 91.9 %",
+     "expected_add_gib": 4.84,
+     "startup_s": 0.0,
+     "worker_engine_init_timings": {
+      "import_s": 18.996,
+      "pipeline_load_s": 2.624,
+      "lora_load_merge_s": 1.041,
+      "audio_proj_s": 0.173,
+      "fingerprint_s": 0.036
+     },
+     "one_shot_engine_init_timings": null,
+     "queue_wait_s": 0.0,
+     "job_wall_s": 14.266,
+     "host_wall_s": 14.359,
+     "node_wall_seconds": 14.35,
+     "process_seconds": 14.24,
+     "timings": {
+      "audio_load_s": 0.001,
+      "reference_encode_s": 0.665,
+      "encode_finalize_s": 0.225,
+      "verify_s": 0.155,
+      "sampling_loop_s": 12.542,
+      "chunk_mean_s": 1.3408,
+      "audio_encode_mean_s": 0.0146,
+      "denoise_mean_s": 0.3614,
+      "decode_mean_s": 0.8819,
+      "color_mean_s": 0.0046,
+      "history_mean_s": 0.078,
+      "frame_io_mean_s": 0.0563,
+      "job_total_s": 13.972,
+      "chunk_timing_note": "means exclude the first 2 chunks, as the official script does"
+     },
+     "forwards": {
+      "total": 9,
+      "conditional": 9,
+      "unconditional": 0
+     },
+     "chunks": 9,
+     "output_frames": 234,
+     "audio": {
+      "input_sample_rate": 24000,
+      "input_channels": 1,
+      "input_samples": 224400,
+      "input_seconds": 9.35,
+      "encoder_input": "librosa.load(sr=16000, mono=True), as the official script",
+      "samples_16k": 149600,
+      "padded_samples_16k": 161280,
+      "peak_16k": 0.4918,
+      "silent": false,
+      "muxed": {
+       "codec": "aac",
+       "sample_rate": 24000,
+       "channels": 1,
+       "decoded_seconds": 9.35
+      }
+     },
+     "frames_sha256": "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+     "reference_latent_sha256": "1b2babe1112ca11f42398ce360ed9b4c4b6d2a2dde92be2bba17c613bd6fc961",
+     "mp4_sha256": "fd61a5be2b135cad231f27ebce4c97f4a3967f89bf5eb73241a2f9bcb807a920",
+     "job_memory": {
+      "resident_before_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2174861312,
+       "process_private_bytes": 9040596992
+      },
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5977041408,
+        "peak_reserved_bytes": 6750732288,
+        "reserved_bytes": 6750732288,
+        "reserved_after_release_bytes": 3959422976
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      },
+      "after_job": {
+       "cuda_allocated_bytes": 3669139968,
+       "cuda_reserved_bytes": 3959422976,
+       "gpu_used_bytes": 5787680768,
+       "gpu_total_bytes": 34190458880,
+       "process_rss_bytes": 2125000704,
+       "process_private_bytes": 8979275776
+      },
+      "stale_state_found_before_job": []
+     },
+     "memory": {
+      "cuda_max_allocated_bytes": 6589699072,
+      "cuda_max_reserved_bytes": 8113881088,
+      "phases": {
+       "reference_encode": {
+        "peak_allocated_bytes": 5977041408,
+        "peak_reserved_bytes": 6750732288,
+        "reserved_bytes": 6750732288,
+        "reserved_after_release_bytes": 3959422976
+       },
+       "chunk_loop": {
+        "peak_allocated_bytes": 6589699072,
+        "peak_reserved_bytes": 8113881088,
+        "reserved_bytes": 8113881088
+       }
+      }
+     },
+     "lora_applied_tensors": 480,
+     "effective_config": {
+      "model_type": "pro",
+      "lite": false,
+      "num_inference_steps": 1,
+      "shift_gamma": 5.0,
+      "noise_scale": 1.0,
+      "audio_guidance": 1.0,
+      "frame_num": 33,
+      "motion_frames_latent_num": 2,
+      "cached_audio_duration": 8,
+      "audio_encode_mode": "stream",
+      "history_update_mode": "roundtrip",
+      "color_correction_strength": 1.0,
+      "height": 512,
+      "width": 512,
+      "fps": 25,
+      "dtype": "bf16",
+      "compile": false,
+      "use_face_crop": false
+     }
+    },
+    "saved": [
+     "output/e2e/kill_idle_job_00001_.mp4"
+    ],
+    "decoded": {
+     "video_streams": 1,
+     "audio_streams": 1,
+     "width": 512,
+     "height": 512,
+     "rate": 25.0,
+     "codec": "h264",
+     "audio_codec": "aac",
+     "audio_rate": 24000,
+     "audio_channels": 1,
+     "frames": 234,
+     "audio_seconds": 9.35
+    },
+    "checks": {
+     "one_video": true,
+     "has_audio": true,
+     "frames_match_report": true,
+     "512x512_25fps": true,
+     "audio_tail_s": 0.0,
+     "lora_applied": true
+    }
+   },
+   "worker_processes_before": {
+    "launchers": [
+     9124
+    ],
+    "interpreters": [
+     67112
+    ],
+    "others": [
+     69396
+    ]
+   },
+   "left_after": [],
+   "seconds_to_clean": 1.04,
+   "gpu_mib_after": 2464,
+   "memory_after": {
+    "commit_pct": 75.38,
+    "commit_gib": 70.31,
+    "available_gib": 25.59
+   }
+  },
+  "kill_busy": {
+   "progress_seen": true,
+   "worker_processes_before": {
+    "launchers": [
+     44760
+    ],
+    "interpreters": [
+     42904
+    ],
+    "others": [
+     76540,
+     776,
+     72188
+    ]
+   },
+   "left_after": [],
+   "seconds_to_clean": 1.44,
+   "gpu_mib_after": 2463,
+   "memory_after": {
+    "commit_pct": 75.34,
+    "commit_gib": 70.28,
+    "available_gib": 25.59
+   }
+  }
+ },
+ "sessions": [
+  {
+   "session": 1,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 76.91,
+    "commit_gib": 71.74,
+    "available_gib": 24.99,
+    "gpu_mib": 2463
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  {
+   "session": 2,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 77.67,
+    "commit_gib": 72.45,
+    "available_gib": 24.95,
+    "gpu_mib": 2464
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  {
+   "session": 3,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 77.67,
+    "commit_gib": 72.46,
+    "available_gib": 24.94,
+    "gpu_mib": 2463
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  }
+ ],
+ "gpu_idle_mib_before": 2463,
+ "memory_before": {
+  "total_gib": 63.39,
+  "commit_limit_gib": 93.28,
+  "commit_pct": 74.38,
+  "commit_gib": 69.39,
+  "available_gib": 25.76
+ },
+ "max_worker_launchers_seen": 1,
+ "watchdog_interrupts": [],
+ "worker_processes_at_end": {
+  "launchers": [],
+  "interpreters": [],
+  "others": []
+ },
+ "left_after_comfy_stop": [],
+ "gpu_idle_mib_after": 2463,
+ "memory_after": {
+  "commit_pct": 75.37,
+  "commit_gib": 70.31,
+  "available_gib": 25.58
+ },
+ "hashes": {
+  "A|a_short|wan_vae|persistent": [
+   "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550"
+  ]
+ },
+ "official_reference": {
+  "A|a_short|lite_tae": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163",
+  "B|b_long|lite_tae": "7bcffb23687269d4b20d6f9a629d2ad27e0cebdd9c68e9a6185e58a53460acc4"
+ }
+}

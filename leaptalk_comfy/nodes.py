@@ -5,10 +5,19 @@ from __future__ import annotations
 import json
 import time
 
-from . import client
+from . import client, worker
 from .config import CONFIG_ENV, CONFIG_FILENAME, ConfigError, config_path, load_runtimes
 
 NO_RUNTIME = "(no runtime configured)"
+RUNTIME_DEFAULT = "runtime default"
+BACKEND_CHOICES = (RUNTIME_DEFAULT, "persistent", "one-shot")
+BACKEND_HELP = (
+    "one-shot: every job starts the runtime, loads the model and exits (v0.1 behaviour). "
+    "persistent: the first job starts a worker that keeps the model loaded for later jobs, so they skip about "
+    "20 s of start-up; it keeps GPU and system memory until it is unloaded (LeapTalk Worker node), idles out "
+    "(worker_idle_seconds, default 120 s) or ComfyUI exits. 'runtime default' uses the runtime's configured "
+    "backend (one-shot unless the administrator changed it)."
+)
 DECODER_HELP = (
     "lite_tae: LeapTalk's Lite decoder (taew2_1.pth, the official default). "
     "wan_vae: the standard Wan2.1 VAE from SoulX-FlashHead (slower; run without torch.compile here, the official script compiles it)."
@@ -43,18 +52,21 @@ class LeapTalkRuntime:
     @classmethod
     def INPUT_TYPES(cls):
         return {
-            "required": {"runtime_id": (_runtime_ids(), {"tooltip": f"Runtimes come from {CONFIG_FILENAME} (administrator config), never from the workflow."})}
+            "required": {"runtime_id": (_runtime_ids(), {"tooltip": f"Runtimes come from {CONFIG_FILENAME} (administrator config), never from the workflow."})},
+            "optional": {"backend": (list(BACKEND_CHOICES), {"default": RUNTIME_DEFAULT, "tooltip": BACKEND_HELP})},
         }
 
     RETURN_TYPES = ("LEAPTALK_RUNTIME",)
     RETURN_NAMES = ("runtime",)
     FUNCTION = "select"
     CATEGORY = "LeapTalk"
-    DESCRIPTION = "Pick a LeapTalk runtime registered by the administrator."
+    DESCRIPTION = "Pick a LeapTalk runtime registered by the administrator, and how jobs run on it (one-shot or a persistent worker)."
 
-    def select(self, runtime_id):
+    def select(self, runtime_id, backend=RUNTIME_DEFAULT):
         rt = _resolve(runtime_id)
-        return ({"runtime_id": rt.id},)
+        if backend not in BACKEND_CHOICES:
+            raise ValueError(f"backend must be one of {BACKEND_CHOICES}")
+        return ({"runtime_id": rt.id, "backend": None if backend == RUNTIME_DEFAULT else backend},)
 
 
 def _image_to_uint8(image):
@@ -121,6 +133,8 @@ class LeapTalkGenerate:
         if not isinstance(runtime, dict) or "runtime_id" not in runtime:
             raise ValueError("connect a LeapTalk Runtime node")
         rt = _resolve(runtime["runtime_id"])
+        requested = runtime.get("backend")  # None: the runtime's configured default (one-shot unless the admin changed it)
+        backend = requested or rt.backend
         img = _image_to_uint8(image)
         wav, sr = _audio_to_array(audio)
         pbar = comfy.utils.ProgressBar(1)
@@ -141,10 +155,14 @@ class LeapTalkGenerate:
                 preview=bool(preview),
                 interrupted=mm.processing_interrupted,
                 on_progress=on_progress,
+                backend=backend,
             )
         except client.JobCancelled as exc:
             raise mm.InterruptProcessingException() from exc
+        except worker.MemoryGuardRefused as exc:
+            raise RuntimeError(str(exc)) from exc
         report = _report(outcome, rt, time.time() - t0)
+        report["backend"] = {"requested": requested or RUNTIME_DEFAULT, "runtime_default": rt.backend, "effective": outcome.result.get("backend", backend)}
         return (InputImpl.VideoFromFile(str(outcome.video)), json.dumps(report, indent=1, ensure_ascii=False))
 
 
@@ -170,8 +188,13 @@ def _report(outcome: client.JobOutcome, rt, wall_s: float) -> dict:
         "versions",
         "effective_config",
         "frames_sha256",
+        "reference_latent_sha256",
         "sha256",
         "process_seconds",
+        "engine",
+        "engine_init_timings",
+        "job_memory",
+        "worker",
     )
     rep = {"runtime_id": rt.id, "job": outcome.job_dir.name, "wall_seconds": round(wall_s, 2)}
     rep.update({k: r[k] for k in keep if k in r})
@@ -230,13 +253,63 @@ class LeapTalkDoctor:
         return {"ui": {"text": ["\n".join(lines)]}, "result": (json.dumps(report, indent=1, ensure_ascii=False),)}
 
 
+class LeapTalkWorker:
+    """Status or unload of the persistent worker (the loaded LeapTalk model) of this ComfyUI process."""
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "action": (["status", "unload"], {"tooltip": "status: show the worker without starting it. unload: stop it and free its GPU/system memory."}),
+            },
+            "optional": {
+                "after": ("STRING", {"forceInput": True, "tooltip": "Optional: connect a Generate report to run this after that job."}),
+            },
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("status",)
+    FUNCTION = "run"
+    CATEGORY = "LeapTalk"
+    OUTPUT_NODE = True
+    DESCRIPTION = "Show or unload the persistent LeapTalk worker. Status never starts a worker and does not extend its idle time."
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return time.time()  # always execute; never answer from ComfyUI's cache
+
+    def run(self, action, after=None):
+        if action == "unload":
+            out = worker.MANAGER.unload("unload requested from the LeapTalk Worker node")
+            out["now"] = worker.MANAGER.status()
+        elif action == "status":
+            out = worker.MANAGER.status()
+        else:
+            raise ValueError("action must be status or unload")
+        text = json.dumps(out, indent=1, ensure_ascii=False, default=str)
+        w = (out.get("now") or out).get("worker")
+        if w:
+            line = f"{action}: worker {w['worker_instance_id']} is {w['state']} with the model loaded ({w['decoder']}, {w['jobs_done']} jobs)"
+            if w.get("idle_seconds_left") is not None:
+                line += f"; it unloads after {w['idle_seconds_left']:.0f} more idle seconds"
+        else:
+            line = f"{action}: no worker loaded (no LeapTalk model in memory)"
+        if action == "unload":
+            line += f" | unload: {out.get('status')}"
+            if out.get("detail"):
+                line += f" - {out['detail']}"
+        return {"ui": {"text": [line]}, "result": (text,)}
+
+
 NODE_CLASS_MAPPINGS = {
     "LeapTalkRuntime": LeapTalkRuntime,
     "LeapTalkGenerate": LeapTalkGenerate,
     "LeapTalkDoctor": LeapTalkDoctor,
+    "LeapTalkWorker": LeapTalkWorker,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "LeapTalkRuntime": "LeapTalk Runtime",
     "LeapTalkGenerate": "LeapTalk Generate (portrait + speech)",
     "LeapTalkDoctor": "LeapTalk Doctor",
+    "LeapTalkWorker": "LeapTalk Worker (status / unload)",
 }

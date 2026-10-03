@@ -228,14 +228,16 @@ def read_events(path: Path, offset: int) -> tuple[list[dict], int]:
 
 def error_from_events(job_dir: Path) -> str:
     events, _ = read_events(job_dir / "events.jsonl", 0)
+    from .worker import redact
+
     for ev in reversed(events):
         if ev.get("event") in ("failed", "invalid_job"):
-            return f"{ev.get('error_type', ev['event'])}: {ev.get('error', '')}"[:2000]
+            return redact(f"{ev.get('error_type', ev['event'])}: {ev.get('error', '')}"[:2000])
     try:
         tail = (job_dir / "stderr.log").read_bytes()[-1500:].decode("utf-8", "replace")
     except OSError:
         tail = ""
-    return f"runtime exited without a result; stderr tail:\n{tail}"
+    return redact(f"runtime exited without a result; stderr tail:\n{tail}")
 
 
 def stop_tree(tree: ProcessTree, job_dir: Path, grace_s: float = 15.0) -> dict:
@@ -355,8 +357,20 @@ def generate(
     interrupted: Callable[[], bool] = lambda: False,
     on_progress: Callable[[int, int, Path | None], None] | None = None,
     timeout_s: float | None = None,
+    backend: str | None = None,
 ) -> JobOutcome:
-    """image: HxWx3 uint8; waveform: channels x samples float32 at ``sample_rate``."""
+    """image: HxWx3 uint8; waveform: channels x samples float32 at ``sample_rate``.
+
+    backend: "one-shot" (a runtime process per job) or "persistent" (the plugin's worker keeps the
+    loaded model between jobs); None means the runtime's configured default. A failing persistent job
+    is reported as such - it never falls back to one-shot silently.
+    """
+    from . import worker
+
+    backend = backend or rt.backend
+    if backend not in ("one-shot", "persistent"):
+        raise ValueError(f"unknown backend {backend!r}")
+    t0 = time.monotonic()
     job_id, job_dir = new_job_dir(rt, "job")
     image_info = save_image(image, job_dir / IMAGE_NAME)
     audio_info = save_wav_float32(waveform, sample_rate, job_dir / AUDIO_NAME, rt.max_audio_seconds)
@@ -365,15 +379,28 @@ def generate(
 
     def on_event(ev: dict) -> None:
         if on_progress and ev.get("event") == "progress":
-            prev = job_dir / PREVIEW_NAME if ev.get("preview") else None
+            prev = job_dir / PREVIEW_NAME if ev.get("preview") else None  # this job's own folder only
             on_progress(int(ev.get("chunk", 0)), int(ev.get("chunks", 1)), prev)
 
-    code, info = run_process(rt, JOB_SCRIPT, job_dir, "job.json", timeout_s=timeout_s or rt.timeout_minutes * 60, interrupted=interrupted, on_event=on_event)
-    if code == 4:
-        raise JobCancelled("the runtime job was cancelled")
-    if code != 0:
-        raise RuntimeJobError(f"runtime job failed (exit {code}): {error_from_events(job_dir)}")
-    outcome = load_result(job_dir, job, audio_info)
+    if backend == "persistent":
+        info = worker.MANAGER.run_job(rt, job, job_dir, interrupted=interrupted, on_event=on_event, timeout_s=timeout_s)
+        outcome = load_result(job_dir, job, audio_info)
+        worker.MANAGER.note_job_memory(outcome.result)
+    else:
+
+        def one_shot():
+            return run_process(rt, JOB_SCRIPT, job_dir, "job.json", timeout_s=timeout_s or rt.timeout_minutes * 60, interrupted=interrupted, on_event=on_event)
+
+        (code, info), unloaded = worker.MANAGER.run_one_shot(one_shot)
+        info["backend"] = "one-shot"
+        if unloaded:
+            info["unloaded_persistent_worker"] = {k: unloaded.get(k) for k in ("worker_instance_id", "reason", "active_after")}
+        if code == 4:
+            raise JobCancelled("the runtime job was cancelled")
+        if code != 0:
+            raise RuntimeJobError(f"runtime job failed (exit {code}): {error_from_events(job_dir)}")
+        outcome = load_result(job_dir, job, audio_info)
+    info["host_wall_s"] = round(time.monotonic() - t0, 3)
     outcome.result["host"] = {"image": image_info, "audio": audio_info, "process": info, "python": sys.version.split()[0], "platform": sys.platform}
     return outcome
 

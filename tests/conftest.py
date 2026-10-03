@@ -79,6 +79,14 @@ def make_runtime(tmp_path: Path, mode: str = "ok", **over):
         "jobs_dir": str(tmp_path / "jobs dir 'quoted' ü"),
         "timeout_minutes": 5,
         "max_audio_seconds": 60,
+        # CI machines are small: the guard logic is tested separately with fixed snapshots
+        "memory_guard": {
+            "expected_worker_gib": 0.1,
+            "expected_job_gib": 0.1,
+            "min_available_gib": 0.2,
+            "start_max_commit_pct": 99,
+            "max_projected_commit_pct": 100,
+        },
     }
     data.update(over)
     return parse_runtime(f"fake-{mode}", data)
@@ -90,6 +98,30 @@ def fake_runner(monkeypatch):
 
     monkeypatch.setitem(client.RUNTIME_SCRIPTS, client.JOB_SCRIPT, FAKE_JOB)
     return client
+
+
+def fake_worker_runtime_dir(tmp_path: Path) -> Path:
+    """A runtime code folder with the real leaptalk_worker.py and the fake-Engine leaptalk_job.py."""
+    rt_dir = tmp_path / "runtime code"
+    rt_dir.mkdir()
+    shutil.copyfile(REPO_ROOT / "runtime" / "leaptalk_worker.py", rt_dir / "leaptalk_worker.py")
+    fake = (FAKE_RUNTIME / "fake_engine_job.py").read_text(encoding="utf-8").replace("__REAL_JOB_MODULE__", str(REPO_ROOT / "runtime" / "leaptalk_job.py"))
+    (rt_dir / "leaptalk_job.py").write_text(fake, encoding="utf-8")
+    return rt_dir
+
+
+@pytest.fixture
+def worker_env(tmp_path, monkeypatch):
+    """Persistent-worker test setup: a runtime folder with the real leaptalk_worker.py and a fake Engine.
+
+    Yields (client, worker module); the manager is emptied afterwards (no process left behind)."""
+    from leaptalk_comfy import client, worker
+
+    monkeypatch.setattr(client, "RUNTIME_DIR", fake_worker_runtime_dir(tmp_path))
+    worker.MANAGER.unload("test setup", wait_s=30)
+    worker.MANAGER.history.clear()
+    yield client, worker
+    worker.MANAGER.unload("test teardown", wait_s=30)
 
 
 @pytest.fixture

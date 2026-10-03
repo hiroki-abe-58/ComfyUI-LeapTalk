@@ -1,6 +1,6 @@
 # Setup
 
-ComfyUI-LeapTalk adds three nodes to ComfyUI and runs LeapTalk itself in a **separate Python
+ComfyUI-LeapTalk adds four nodes to ComfyUI and runs LeapTalk itself in a **separate Python
 environment** (the "runtime"). Nothing is installed into ComfyUI's Python, and nothing is downloaded
 while a workflow runs.
 
@@ -100,7 +100,47 @@ Create `ComfyUI/user/leaptalk.runtimes.json` (template:
 
 Only an administrator should edit this file: it decides which program ComfyUI starts. Workflows can
 only pick a `runtime_id`. `max_audio_seconds` (up to 1800) rejects longer clips instead of cutting
-them; `timeout_minutes` stops a job that runs too long.
+them; `timeout_minutes` stops a job that runs too long. A v0.1 file keeps working unchanged.
+
+Optional keys (v0.2):
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `backend` | `one-shot` | what **LeapTalk Runtime** uses when its `backend` input is `runtime default`: `one-shot` (a new runtime process per job, v0.1 behaviour) or `persistent` (a worker keeps the model loaded between jobs) |
+| `worker_idle_seconds` | `120` | persistent worker: unload after this long without a job (10–86400), counted from the end of the last job |
+| `worker_startup_timeout_seconds` | `600` | persistent worker: give up if loading takes longer (30–7200) |
+| `memory_guard` | see below | when a load or a job is refused, when a running job / idle worker is stopped |
+
+`memory_guard` (all optional): `enabled` (`true`), `start_max_commit_pct` (`90`: no model load at or
+above this system commit charge), `min_available_gib` (`8`: nor with less available memory),
+`max_projected_commit_pct` (`97`: commit now plus the expected addition must stay below this),
+`expected_worker_gib` (`16`: commit a new worker adds), `expected_job_gib` (`8`: extra commit of a
+job on a loaded worker until one has been measured), `stop_commit_pct` (`95`) and
+`stop_sustain_seconds` (`5`: a running job or an idle worker is stopped when commit stays at or above
+the stop level that long). The defaults are conservative values for the 64 GB Windows workstation the
+results were measured on, not requirements; a value that cannot be measured refuses the load instead
+of being treated as unlimited. On Linux without strict overcommit only available memory is checked.
+
+## Persistent worker (optional)
+
+One-shot mode starts the runtime for every job, and about 20 s of every job is Python imports and
+model loading. In persistent mode the first job starts a worker that keeps the model loaded, and later
+jobs (separate queue items) reuse it:
+
+- set `backend` on the **LeapTalk Runtime** node to `persistent` (or load
+  `workflows/leaptalk_persistent.json`); the old workflow stays one-shot;
+- while the worker is loaded it **keeps GPU memory and system memory** even when nothing is generated
+  (on the tested machine about 4 GiB of GPU memory and 8.4–8.8 GiB of Windows commit charge; a job adds
+  its usual peak on top);
+- it is unloaded by the **LeapTalk Worker** node (`unload`, workflow
+  `workflows/leaptalk_worker_unload.json`), after `worker_idle_seconds` without a job, under memory
+  pressure while idle, and when ComfyUI exits; `status` (`workflows/leaptalk_worker_status.json`)
+  shows it without starting it or extending its idle time;
+- changing the decoder, the runtime or its files starts a new worker (the report says why); a failed
+  job ends the worker and the next job starts a fresh one.
+
+Measured speed-up, memory, and what is kept and what is reset per job:
+[docs/BENCHMARKS.md](BENCHMARKS.md#persistent-worker).
 
 Restart ComfyUI and run **LeapTalk Doctor** (workflow `workflows/leaptalk_doctor.json`).
 
@@ -121,3 +161,6 @@ queue it.
 | `the audio is … s long; this runtime accepts up to …` | raise `max_audio_seconds` (max 1800) or split the audio |
 | `LeapTalk takes exactly one reference image` | the IMAGE input is a batch; pick one image |
 | Windows: memory pressure | see "Memory" in docs/BENCHMARKS.md: CUDA allocations count against the Windows commit limit |
+| `LeapTalk did not start a worker: system commit charge is …` | the memory guard refused to load a model; close other GPU/memory-heavy applications, unload other models, or adjust `memory_guard` if you accept the risk |
+| `LeapTalk Worker: unload: busy` | a job is running; unload waits for jobs and never cuts one off - run it again afterwards or cancel the job |
+| a persistent job failed and the next one was slow | expected: after any job error the worker is not reused, so the next job starts and loads a new one |

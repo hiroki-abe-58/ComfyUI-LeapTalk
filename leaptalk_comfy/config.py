@@ -28,7 +28,32 @@ MAX_CONFIG_BYTES = 256 * 1024
 RUNTIME_ENV_KEYS = frozenset({"CUDA_VISIBLE_DEVICES", "HF_HOME", "TORCH_HOME", "XDG_CACHE_HOME", "TRITON_CACHE_DIR", "TORCHINDUCTOR_CACHE_DIR"})
 MODEL_KEYS = ("soulx_dir", "wav2vec_dir", "leaptalk_dir")
 _ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
-_RUNTIME_KEYS = {"kind", "python", "upstream_dir", "models", "ffmpeg", "env", "timeout_minutes", "max_audio_seconds", "jobs_dir", "description"}
+_RUNTIME_KEYS = {
+    "kind",
+    "python",
+    "upstream_dir",
+    "models",
+    "ffmpeg",
+    "env",
+    "timeout_minutes",
+    "max_audio_seconds",
+    "jobs_dir",
+    "description",
+    "backend",
+    "worker_idle_seconds",
+    "worker_startup_timeout_seconds",
+    "memory_guard",
+}
+BACKENDS = ("one-shot", "persistent")
+_GUARD_NUMBERS = {
+    "start_max_commit_pct": (10.0, 99.0),
+    "min_available_gib": (0.0, 1024.0),
+    "max_projected_commit_pct": (10.0, 100.0),
+    "expected_worker_gib": (0.0, 1024.0),
+    "expected_job_gib": (0.0, 1024.0),
+    "stop_commit_pct": (10.0, 100.0),
+    "stop_sustain_seconds": (0.5, 600.0),
+}
 
 
 class ConfigError(ValueError):
@@ -48,6 +73,10 @@ class Runtime:
     max_audio_seconds: int = 600
     jobs_dir: str | None = None  # host path; default <ComfyUI temp>/leaptalk
     description: str = ""
+    backend: str = "one-shot"  # default for workflows that do not choose; v0.1 behaviour
+    worker_idle_seconds: int = 120  # persistent worker: unload after this long without a job
+    worker_startup_timeout_seconds: int = 600
+    memory_guard: dict = field(default_factory=dict)  # overrides of leaptalk_comfy.memory.DEFAULTS
 
 
 def _abs(value, what: str, rid: str) -> str:
@@ -97,6 +126,28 @@ def parse_runtime(rid: str, data: dict) -> Runtime:
     desc = data.get("description", "")
     if not isinstance(desc, str) or len(desc) > 500:
         raise ConfigError(f"runtime {rid!r}: description must be a short string")
+    backend = data.get("backend", "one-shot")
+    if backend not in BACKENDS:
+        raise ConfigError(f"runtime {rid!r}: backend must be one of {list(BACKENDS)}")
+    idle = data.get("worker_idle_seconds", 120)
+    if isinstance(idle, bool) or not isinstance(idle, int) or not 10 <= idle <= 86400:
+        raise ConfigError(f"runtime {rid!r}: worker_idle_seconds must be an integer in [10, 86400]")
+    startup = data.get("worker_startup_timeout_seconds", 600)
+    if isinstance(startup, bool) or not isinstance(startup, int) or not 30 <= startup <= 7200:
+        raise ConfigError(f"runtime {rid!r}: worker_startup_timeout_seconds must be an integer in [30, 7200]")
+    guard = data.get("memory_guard", {})
+    if not isinstance(guard, dict):
+        raise ConfigError(f"runtime {rid!r}: memory_guard must be an object")
+    unknown = set(guard) - set(_GUARD_NUMBERS) - {"enabled"}
+    if unknown:
+        raise ConfigError(f"runtime {rid!r}: memory_guard: unknown keys {sorted(unknown)}")
+    if "enabled" in guard and not isinstance(guard["enabled"], bool):
+        raise ConfigError(f"runtime {rid!r}: memory_guard.enabled must be true or false")
+    for k, (lo, hi) in _GUARD_NUMBERS.items():
+        if k in guard:
+            v = guard[k]
+            if isinstance(v, bool) or not isinstance(v, (int, float)) or not lo <= float(v) <= hi:
+                raise ConfigError(f"runtime {rid!r}: memory_guard.{k} must be a number in [{lo}, {hi}]")
     return Runtime(
         id=rid,
         kind=kind,
@@ -109,6 +160,10 @@ def parse_runtime(rid: str, data: dict) -> Runtime:
         max_audio_seconds=max_audio,
         jobs_dir=jobs_dir,
         description=desc,
+        backend=backend,
+        worker_idle_seconds=idle,
+        worker_startup_timeout_seconds=startup,
+        memory_guard={k: (float(v) if k != "enabled" else v) for k, v in guard.items()},
     )
 
 

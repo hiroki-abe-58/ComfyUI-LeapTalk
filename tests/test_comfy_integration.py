@@ -6,13 +6,14 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+import time
 
 import numpy as np
 import pytest
-from conftest import FAKE_JOB, make_runtime, speech_like
+from conftest import FAKE_JOB, REPO_ROOT, fake_worker_runtime_dir, make_runtime, speech_like
 
 pytestmark = pytest.mark.comfy
-NODE_IDS = ("LeapTalkRuntime", "LeapTalkGenerate", "LeapTalkDoctor")
+NODE_IDS = ("LeapTalkRuntime", "LeapTalkGenerate", "LeapTalkDoctor", "LeapTalkWorker")
 
 
 def _mod(comfyui):
@@ -58,15 +59,14 @@ def _prompt(runtime_id="fake", decoder="lite_tae", guidance=1.0):
     }
 
 
-def test_validate_prompt(comfyui, runtimes_file, tmp_path):
-    import execution
+def _write_inputs(image_name: str, audio_name: str) -> None:
+    import struct
+
     import folder_paths
     from PIL import Image
 
     inp = folder_paths.get_input_directory()
-    Image.new("RGB", (128, 128), (100, 120, 140)).save(f"{inp}/portrait 'test' ü.png")
-    import struct
-
+    Image.new("RGB", (128, 128), (100, 120, 140)).save(f"{inp}/{image_name}")
     pcm = (np.zeros(16000, np.int16)).tobytes()
     hdr = (
         b"RIFF"
@@ -76,24 +76,54 @@ def test_validate_prompt(comfyui, runtimes_file, tmp_path):
         + b"data"
         + struct.pack("<I", len(pcm))
     )
-    with open(f"{inp}/speech test ü.wav", "wb") as f:
+    with open(f"{inp}/{audio_name}", "wb") as f:
         f.write(hdr + pcm)
+
+
+def _v01_runtime(tmp_path) -> dict:
+    """A runtime entry in the v0.1 config format (no backend / worker / memory_guard keys)."""
     a = str(tmp_path / "abs")
-    runtimes_file(
-        {
-            "fake": {
-                "python": sys.executable,
-                "upstream_dir": a + "/u",
-                "models": {k: a + "/" + k for k in ("soulx_dir", "wav2vec_dir", "leaptalk_dir")},
-                "ffmpeg": a + "/ffmpeg",
-            }
-        }
-    )
+    return {
+        "python": sys.executable,
+        "upstream_dir": a + "/u",
+        "models": {k: a + "/" + k for k in ("soulx_dir", "wav2vec_dir", "leaptalk_dir")},
+        "ffmpeg": a + "/ffmpeg",
+    }
+
+
+def test_validate_prompt(comfyui, runtimes_file, tmp_path):
+    import execution
+
+    _write_inputs("portrait 'test' ü.png", "speech test ü.wav")
+    runtimes_file({"fake": _v01_runtime(tmp_path)})
     ok = asyncio.run(execution.validate_prompt("p1", _prompt(), None))
     assert ok[0] is True and not ok[3], ok
     for bad in (_prompt(decoder="ltx"), _prompt(runtime_id="not-registered"), _prompt(guidance=9.0)):
         res = asyncio.run(execution.validate_prompt("p2", bad, None))
         assert res[0] is False or res[3]
+    persistent = _prompt()
+    persistent["1"]["inputs"]["backend"] = "persistent"
+    assert asyncio.run(execution.validate_prompt("p3", persistent, None))[0] is True
+    persistent["1"]["inputs"]["backend"] = "gpu-server"
+    res = asyncio.run(execution.validate_prompt("p4", persistent, None))
+    assert res[0] is False or res[3]
+
+
+def test_shipped_api_workflows_validate_unchanged(comfyui, runtimes_file, tmp_path):
+    """The v0.1 workflow (no backend input) and the new ones validate as shipped, against a runtime
+    config without the new keys."""
+    import execution
+
+    _write_inputs("leaptalk_example_portrait.png", "leaptalk_example_speech.wav")
+    runtimes_file({"windows-native": _v01_runtime(tmp_path)})
+    names = sorted(p.stem for p in (REPO_ROOT / "workflows" / "api").glob("*.json") if p.name != "layout.json")
+    assert {"leaptalk_portrait_speech", "leaptalk_doctor", "leaptalk_persistent", "leaptalk_worker_status", "leaptalk_worker_unload"} <= set(names)
+    for name in names:
+        api = json.loads((REPO_ROOT / "workflows" / "api" / f"{name}.json").read_text(encoding="utf-8"))
+        res = asyncio.run(execution.validate_prompt(f"p-{name}", api, None))
+        assert res[0] is True and not res[3], (name, res)
+    old = json.loads((REPO_ROOT / "workflows" / "api" / "leaptalk_portrait_speech.json").read_text(encoding="utf-8"))
+    assert "backend" not in old["1"]["inputs"]  # the v0.1 example stays as it was: one-shot by default
 
 
 def _audio(seconds=1.5, sr=24000, ch=1, batch=1):
@@ -120,6 +150,8 @@ def test_generate_returns_video_with_audio(comfyui, tmp_path, monkeypatch):
     assert comps.audio is not None and comps.audio["waveform"].shape[1] == 2  # original stereo muxed
     rep = json.loads(report)
     assert rep["output_frames"] == 38 and rep["host"]["audio"]["sample_rate"] == 48000 and rep["host"]["audio"]["channels"] == 2
+    # a v0.1 Runtime output (no "backend" key) and a v0.1 runtime config: one-shot, as before
+    assert rep["backend"] == {"requested": "runtime default", "runtime_default": "one-shot", "effective": "one-shot"}
     job_dir = mod.client.jobs_root(rt) / rep["job"]
     from PIL import Image
 
@@ -160,5 +192,48 @@ def test_interrupt_maps_to_comfy_interrupt(comfyui, tmp_path, monkeypatch):
     monkeypatch.setattr(mm, "processing_interrupted", interrupted)
     with pytest.raises(mm.InterruptProcessingException):
         mod.LeapTalkGenerate().generate({"runtime_id": "fake"}, torch.rand(1, 64, 64, 3), _audio(), "lite_tae", 1.0, False)
-    job_dir = max(mod.client.jobs_root(rt).iterdir(), key=lambda p: p.stat().st_mtime)
+    job_dir = max((p for p in mod.client.jobs_root(rt).iterdir() if p.name.startswith("job-")), key=lambda p: p.stat().st_mtime)
     assert json.loads((job_dir / "stop_report.json").read_text(encoding="utf-8"))["active_after"] == 0
+
+
+@pytest.fixture
+def comfy_worker(comfyui, tmp_path, monkeypatch):
+    """ComfyUI's own copy of the package (alias folder) with the fake-Engine worker runtime."""
+    mod = _mod(comfyui)
+    monkeypatch.setattr(mod.client, "RUNTIME_DIR", fake_worker_runtime_dir(tmp_path))
+    mod.worker.MANAGER.unload("test setup", wait_s=30)
+    yield mod
+    mod.worker.MANAGER.unload("test teardown", wait_s=30)
+
+
+def test_persistent_backend_through_the_nodes(comfy_worker, tmp_path, monkeypatch):
+    import torch
+
+    mod = comfy_worker
+    rt = make_runtime(tmp_path, "ok")
+    monkeypatch.setattr(mod, "_resolve", lambda rid: rt)
+    node = mod.LeapTalkWorker()
+    first = node.run("status")
+    assert json.loads(first["result"][0])["worker"] is None and "no worker loaded" in first["ui"]["text"][0]
+    assert mod.worker.MANAGER._worker is None  # status started nothing
+    a = mod.LeapTalkWorker.IS_CHANGED(action="status")
+    time.sleep(0.02)
+    assert mod.LeapTalkWorker.IS_CHANGED(action="status") != a  # never served from ComfyUI's cache
+    assert mod.LeapTalkRuntime().select("fake")[0]["backend"] is None  # v0.1 graph: runtime default
+    (runtime,) = mod.LeapTalkRuntime().select("fake", "persistent")
+    reps = []
+    for v in (0.2, 0.8, 0.2):
+        _video, report = mod.LeapTalkGenerate().generate(runtime, torch.full((1, 96, 128, 3), v), _audio(1.0), "lite_tae", 1.0, True)
+        reps.append(json.loads(report))
+    for r in reps:
+        assert r["backend"] == {"requested": "persistent", "runtime_default": "one-shot", "effective": "persistent"}
+        assert r["engine"]["counters"]["init"] == 1 and r["engine"]["counters"]["lora_merge"] == 1
+    assert len({r["host"]["process"]["worker"]["worker_instance_id"] for r in reps}) == 1
+    assert [r["host"]["process"]["started_new_worker"] for r in reps] == [True, False, False]
+    assert reps[0]["frames_sha256"] == reps[2]["frames_sha256"] != reps[1]["frames_sha256"]
+    st = node.run("status")
+    assert "is idle with the model loaded" in st["ui"]["text"][0] and "3 jobs" in st["ui"]["text"][0]
+    un = node.run("unload")
+    out = json.loads(un["result"][0])
+    assert out["status"] == "unloaded" and out["active_after"] == 0 and out["now"]["worker"] is None
+    assert "no worker loaded" in un["ui"]["text"][0]

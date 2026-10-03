@@ -1,11 +1,13 @@
 """Start and stop one runtime process tree, owned by this ComfyUI process.
 
-Windows: the runner is assigned to a Job Object created with KILL_ON_JOB_CLOSE. Every process it
-starts (the venv launcher's interpreter, ffmpeg) is in the same job, ``terminate()`` ends exactly
-that tree (no PID lookup, so no PID-reuse risk), and if ComfyUI exits or crashes the operating system
-closes the job handle and ends the tree. Linux/macOS: the runner starts a new session (process
-group); ``terminate()`` signals that group, and the runner watches its stdin, which ComfyUI holds
-open, so it stops when ComfyUI goes away.
+Windows: the runtime is created *suspended*, assigned to a Job Object created with
+KILL_ON_JOB_CLOSE, and only then resumed. Nothing in it can run - in particular the venv launcher
+cannot start the real interpreter - before it belongs to the job, and every process it starts later
+(the interpreter, ffmpeg) is in the same job. ``terminate()`` ends exactly that tree (no PID lookup,
+so no PID-reuse risk), and if ComfyUI exits or crashes the operating system closes the job handle and
+ends the tree. The job handle is not inheritable and never duplicated. Linux/macOS: the runtime starts
+a new session (process group); ``terminate()`` signals that group, and the runtime watches its stdin,
+which ComfyUI holds open, so it stops when ComfyUI goes away.
 
 This is process ownership, not a sandbox: the runtime runs with the rights of the ComfyUI user.
 """
@@ -62,6 +64,17 @@ if IS_WINDOWS:
             ("TotalTerminatedProcesses", wintypes.DWORD),
         ]
 
+    class _THREADENTRY32(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", wintypes.DWORD),
+            ("cntUsage", wintypes.DWORD),
+            ("th32ThreadID", wintypes.DWORD),
+            ("th32OwnerProcessID", wintypes.DWORD),
+            ("tpBasePri", wintypes.LONG),
+            ("tpDeltaPri", wintypes.LONG),
+            ("dwFlags", wintypes.DWORD),
+        ]
+
     _k32 = ctypes.WinDLL("kernel32", use_last_error=True)
     _k32.CreateJobObjectW.restype = wintypes.HANDLE
     _k32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR]
@@ -70,20 +83,62 @@ if IS_WINDOWS:
     _k32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
     _k32.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
     _k32.CloseHandle.argtypes = [wintypes.HANDLE]
+    _k32.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    _k32.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+    _k32.Thread32First.argtypes = [wintypes.HANDLE, ctypes.POINTER(_THREADENTRY32)]
+    _k32.Thread32Next.argtypes = [wintypes.HANDLE, ctypes.POINTER(_THREADENTRY32)]
+    _k32.OpenThread.restype = wintypes.HANDLE
+    _k32.OpenThread.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    _k32.ResumeThread.restype = wintypes.DWORD
+    _k32.ResumeThread.argtypes = [wintypes.HANDLE]
+    _k32.IsProcessInJob.argtypes = [wintypes.HANDLE, wintypes.HANDLE, ctypes.POINTER(wintypes.BOOL)]
     _JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x2000
     _JOB_OBJECT_LIMIT_JOB_MEMORY = 0x0200
     _ExtendedLimitInformation = 9
     _BasicAccountingInformation = 1
+    _BasicProcessIdList = 3
+    _CREATE_SUSPENDED = 0x00000004
+    _TH32CS_SNAPTHREAD = 0x00000004
+    _THREAD_SUSPEND_RESUME = 0x0002
+    _INVALID_HANDLE = ctypes.c_void_p(-1).value
+
+    def _resume_process_threads(pid: int) -> int:
+        """Resume every thread of a process created with CREATE_SUSPENDED. Returns how many were resumed."""
+        snap = _k32.CreateToolhelp32Snapshot(_TH32CS_SNAPTHREAD, 0)
+        if not snap or snap == _INVALID_HANDLE:
+            raise OSError(ctypes.get_last_error(), "CreateToolhelp32Snapshot failed")
+        resumed = 0
+        try:
+            entry = _THREADENTRY32()
+            entry.dwSize = ctypes.sizeof(entry)
+            ok = _k32.Thread32First(snap, ctypes.byref(entry))
+            while ok:
+                if entry.th32OwnerProcessID == pid:
+                    th = _k32.OpenThread(_THREAD_SUSPEND_RESUME, False, entry.th32ThreadID)
+                    if th:
+                        try:
+                            if _k32.ResumeThread(th) != 0xFFFFFFFF:
+                                resumed += 1
+                        finally:
+                            _k32.CloseHandle(th)
+                ok = _k32.Thread32Next(snap, ctypes.byref(entry))
+        finally:
+            _k32.CloseHandle(snap)
+        return resumed
 
 
 class ProcessTree:
-    """One runtime process (and its children) owned by the caller."""
+    """One runtime process (and its children) owned by the caller.
 
-    def __init__(self, argv: list[str], *, cwd: Path, env: dict, stdout: Path, stderr: Path, memory_limit_bytes: int | None = None):
+    ``stdout`` is a log file path, or None to get a pipe (``self.proc.stdout``) for a line protocol.
+    """
+
+    def __init__(self, argv: list[str], *, cwd: Path, env: dict, stdout: Path | None, stderr: Path, memory_limit_bytes: int | None = None):
         self.job = None
         self.peak_job_memory = None
+        self.started_suspended = False
         if IS_WINDOWS:
-            self.job = _k32.CreateJobObjectW(None, None)
+            self.job = _k32.CreateJobObjectW(None, None)  # no security attributes: the handle is not inheritable
             if not self.job:
                 raise OSError(ctypes.get_last_error(), "CreateJobObjectW failed")
             info = _EXT_LIMIT()
@@ -97,21 +152,31 @@ class ProcessTree:
                 raise OSError(err, "SetInformationJobObject failed")
         kwargs: dict = {}
         if IS_WINDOWS:
-            kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0) | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
+            kwargs["creationflags"] = getattr(subprocess, "CREATE_NO_WINDOW", 0) | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0) | _CREATE_SUSPENDED
         else:
             kwargs["start_new_session"] = True
-        with open(stdout, "wb") as out, open(stderr, "wb") as err:
-            self.proc = subprocess.Popen(  # noqa: S603 - argv list from the admin config + this package's script, no shell
-                argv, stdin=subprocess.PIPE, stdout=out, stderr=err, env=env, cwd=str(cwd), close_fds=True, **kwargs
-            )
+        out = open(stdout, "wb") if stdout is not None else subprocess.PIPE  # noqa: SIM115
+        try:
+            with open(stderr, "wb") as err:
+                self.proc = subprocess.Popen(  # noqa: S603 - argv list from the admin config + this package's script, no shell
+                    argv, stdin=subprocess.PIPE, stdout=out, stderr=err, env=env, cwd=str(cwd), close_fds=True, **kwargs
+                )
+        finally:
+            if stdout is not None:
+                out.close()
         if IS_WINDOWS:
-            # The runner starts its own children (ffmpeg) only after model loading, long after this call;
-            # children created after assignment belong to the job automatically.
+            self.started_suspended = True
             if not _k32.AssignProcessToJobObject(self.job, int(self.proc._handle)):
                 err = ctypes.get_last_error()
-                self.proc.kill()
+                self.proc.kill()  # still suspended: it has run no code and started no children
+                self.proc.wait(10)
                 self.close()
                 raise OSError(err, "AssignProcessToJobObject failed")
+            if _resume_process_threads(self.proc.pid) < 1:
+                self.proc.kill()
+                self.proc.wait(10)
+                self.close()
+                raise OSError(0, "could not resume the runtime process")
             self.pgid = None
         else:
             self.pgid = os.getpgid(self.proc.pid)
@@ -129,6 +194,29 @@ class ProcessTree:
                 self.proc.stdin.close()
             except OSError:
                 pass
+
+    def job_pids(self) -> list[int] | None:
+        """PIDs currently in this tree's job object (Windows); None where not available."""
+        if not IS_WINDOWS or not self.job:
+            return None
+        n = 64
+        while True:
+
+            class _PIDLIST(ctypes.Structure):
+                _fields_ = [("Assigned", wintypes.DWORD), ("InList", wintypes.DWORD), ("Ids", ctypes.c_size_t * n)]
+
+            lst = _PIDLIST()
+            ok = _k32.QueryInformationJobObject(self.job, _BasicProcessIdList, ctypes.byref(lst), ctypes.sizeof(lst), None)
+            if ok:
+                return [int(lst.Ids[i]) for i in range(lst.InList)]
+            if lst.Assigned > n and n < 4096:
+                n = int(lst.Assigned) + 8
+                continue
+            return None
+
+    def contains(self, pid: int) -> bool | None:
+        pids = self.job_pids()
+        return None if pids is None else int(pid) in pids
 
     def active_processes(self) -> int:
         """Processes of this tree that are still alive (best effort on POSIX)."""
@@ -183,6 +271,12 @@ class ProcessTree:
     def close(self) -> None:
         """Release the tree. On Windows, closing the job handle also ends anything still running in it."""
         self.close_stdin()
+        for stream in (self.proc.stdout,) if getattr(self, "proc", None) is not None else ():
+            if stream is not None:
+                try:
+                    stream.close()
+                except OSError:
+                    pass
         if IS_WINDOWS and self.job:
             self._read_peak_memory()
             _k32.CloseHandle(self.job)

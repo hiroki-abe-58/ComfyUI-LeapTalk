@@ -16,7 +16,17 @@
     "CUDA_VISIBLE_DEVICES": "0"
    },
    "timeout_minutes": 30,
-   "max_audio_seconds": 600
+   "max_audio_seconds": 600,
+   "backend": "one-shot",
+   "worker_idle_seconds": 120,
+   "memory_guard": {
+    "enabled": true,
+    "start_max_commit_pct": 90,
+    "min_available_gib": 8,
+    "max_projected_commit_pct": 97,
+    "stop_commit_pct": 95,
+    "stop_sustain_seconds": 5
+   }
   },
   "linux-native": {
    "kind": "native",
