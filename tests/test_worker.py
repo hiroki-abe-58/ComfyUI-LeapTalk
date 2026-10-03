@@ -236,50 +236,62 @@ def test_worker_env_has_no_secrets(tmp_path, worker_env, monkeypatch):
     assert not [k for k in keys if any(s in k.upper() for s in ("TOKEN", "SECRET", "API_KEY", "PASSWORD"))]
 
 
-def test_memory_guard_blocks_start_and_warm_job(tmp_path, worker_env, monkeypatch):
+def test_memory_guard_admission_on_the_persistent_path(tmp_path, worker_env, monkeypatch):
+    """Cold (load + first job) and warm (job on the loaded worker) admission with the built-in Lite TAE
+    estimates and the fixed 25 % margin; a refusal neither starts anything nor touches the idle timer."""
     client, worker = worker_env
     from leaptalk_comfy import memory
 
-    rt = make_runtime(tmp_path, "ok", memory_guard={"expected_worker_gib": 16, "expected_job_gib": 8})
-    high = {
-        "measurable": True,
-        "commit_enforced": True,
-        "total_gib": 64,
-        "available_gib": 20,
-        "commit_gib": 86,
-        "commit_limit_gib": 93.3,
-        "commit_pct": 92.2,
-        "t": time.monotonic(),
-    }
-    monkeypatch.setattr(memory, "snapshot", lambda: dict(high, t=time.monotonic()))
-    with pytest.raises(worker.MemoryGuardRefused, match="commit charge is 92.2"):
+    gib = memory.GIB
+    rt = make_runtime(tmp_path, "ok", memory_guard={})  # no overrides: built-in estimates, default limits
+
+    def snap(commit, limit=93.3, avail=20.0):
+        return {
+            "measurable": True,
+            "commit_enforced": True,
+            "commit_bytes": int(commit * gib),
+            "commit_limit_bytes": int(limit * gib),
+            "available_bytes": int(avail * gib),
+            "commit_pct": round(100 * commit / limit, 2),
+        }
+
+    state = {"s": snap(86.0)}
+    monkeypatch.setattr(memory, "snapshot", lambda: dict(state["s"], t=time.monotonic()))
+    with pytest.raises(worker.MemoryGuardRefused, match="no model is loaded at or above 90 %") as e:
         _gen(client, rt)
-    assert worker.MANAGER._worker is None  # nothing was started
-    unknown = {"measurable": False, "t": time.monotonic()}
-    monkeypatch.setattr(memory, "snapshot", lambda: dict(unknown, t=time.monotonic()))
-    with pytest.raises(worker.MemoryGuardRefused, match="cannot measure"):
+    assert e.value.kind == "admission" and worker.MANAGER._worker is None
+    # 72.3 GiB now: 72.3 + 16.6 (Lite TAE cold) + 4.15 (25 %) = 93.05 GiB = 99.7 % of 93.3 -> refused at the 95 % stop level
+    state["s"] = snap(72.3)
+    with pytest.raises(worker.MemoryGuardRefused, match=r"did not start a worker: commit would reach about 99\.7 %.*limit is 95 % \(the stop level\)") as e:
         _gen(client, rt)
-    ok_snap = dict(high, commit_gib=60, commit_pct=64.3)
-    monkeypatch.setattr(memory, "snapshot", lambda: dict(ok_snap, t=time.monotonic()))
-    first = _gen(client, rt)  # 60 + 16 GiB -> 81 %: allowed
-    assert first.result["host"]["process"]["memory_check"]["expected_add_gib"] == 16
-    # the warm job only adds its measured extra peak over the resident model (fake: 2 GiB x 1.25),
-    # not the whole worker again and not the 8 GiB default
-    warm = _gen(client, rt)
-    assert warm.result["host"]["process"]["memory_check"]["expected_add_gib"] == 2.5
-    # 92 % with the model resident: too high for a new load (90 %), fine for a warm job (92 % + 2.5 GiB < 97 %)
-    resident = dict(high, commit_gib=85.8, commit_pct=92.0)
-    monkeypatch.setattr(memory, "snapshot", lambda: dict(resident, t=time.monotonic()))
-    assert _gen(client, rt).result["host"]["process"]["started_new_worker"] is False
-    for snap, msg in (
-        (dict(high, commit_gib=88.3, commit_pct=94.6), "commit would reach about 97.3"),  # 88.3 + 2.5 GiB of 93.3
-        (dict(high, commit_gib=89.0, commit_pct=95.4), "at or above the stop level"),
-        (dict(high, commit_gib=80.0, commit_pct=85.7, available_gib=1.5), "only 1.5 GiB of physical memory"),
+    rep = e.value.report
+    assert rep["kind"] == "cold" and rep["estimated_additional_peak_bytes"] == int(16.6 * gib)
+    assert rep["safety_margin_bytes"] == int(round(int(16.6 * gib) * 0.25))
+    assert rep["projected_commit_bytes"] == int(72.3 * gib) + int(16.6 * gib) + rep["safety_margin_bytes"]
+    assert rep["shortfall_bytes"] == rep["projected_commit_bytes"] - int(0.95 * int(93.3 * gib))
+    assert not any(h["event"] == "starting" for h in worker.MANAGER.history)  # nothing started, no other backend tried
+    # 60 GiB: 60 + 20.75 -> 86.5 %: the worker starts; the first job is checked again once the model is loaded
+    state["s"] = snap(60.0)
+    first = _gen(client, rt)
+    proc = first.result["host"]["process"]
+    assert proc["memory_check"]["kind"] == "cold" and proc["memory_check_first_job"]["kind"] == "warm"
+    # warm: only the job's peak on top of the commit that already contains the loaded model
+    state["s"] = snap(77.0)
+    warm = _gen(client, rt).result["host"]["process"]["memory_check"]
+    assert warm["kind"] == "warm" and warm["estimated_additional_peak_bytes"] == int(8.1 * gib)
+    assert warm["projected_commit_bytes"] == int(77.0 * gib) + int(8.1 * gib) + int(round(int(8.1 * gib) * 0.25))
+    w = worker.MANAGER._worker
+    idle_since = w.last_activity
+    for commit, avail, msg in (
+        (79.0, 20.0, r"commit would reach about 95\.5 %"),  # below 97 % but above the stop level: refused
+        (89.0, 20.0, "at or above the stop level"),
+        (70.0, 1.5, "only 1.5 GiB of physical memory available"),
     ):
-        monkeypatch.setattr(memory, "snapshot", lambda snap=snap: dict(snap, t=time.monotonic()))
-        with pytest.raises(worker.MemoryGuardRefused, match=f"on the loaded worker: .*{msg}"):
+        state["s"] = snap(commit, avail=avail)
+        with pytest.raises(worker.MemoryGuardRefused, match=f"did not start the job on the loaded worker: .*{msg}") as e:
             _gen(client, rt)
-        assert worker.MANAGER._worker is not None and worker.MANAGER._worker.state == "idle"  # refused, not killed
+        assert "unload" in str(e.value) and "wan_vae" in str(e.value)  # what the user can do
+        assert worker.MANAGER._worker is w and w.state == "idle" and w.last_activity == idle_since  # kept, idle time not extended
 
 
 def test_memory_pressure_hysteresis():
@@ -422,6 +434,7 @@ def test_package_keeps_worker_files():
         "leaptalk_comfy/process.py",
         "workflows/leaptalk_portrait_speech.json",
         "workflows/leaptalk_persistent.json",
+        "workflows/leaptalk_persistent_lower_memory.json",
     ]
     for path in needed:
         assert (REPO_ROOT / path).is_file(), path

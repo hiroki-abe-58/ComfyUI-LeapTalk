@@ -25,7 +25,9 @@ LeapTalk の著者、Soul AI Lab（SoulX-FlashHead）、Meta（wav2vec 2.0）、
   - **読み込み中の worker は、生成していない間も GPU メモリとシステムメモリを保持します**（本機で CUDA 約 3.5 GiB、Windows のコミット 8.4〜8.8 GiB）。
   - 解放: **LeapTalk Worker** ノードの `unload`、ジョブなしで 120 秒経過（`worker_idle_seconds`）、メモリ逼迫、ComfyUI の終了。`status` は worker を起動せず、待機時間も延長しません。
   - 旧ワークフローと v0.1 の runtime 設定は、変更なしで one-shot のまま動きます。
-  - メモリ保護: システムのコミットが高いときはモデルの読み込みやジョブの開始を理由付きで拒否し、ジョブ中にコミットが 95% 以上のまま 5 秒続くとジョブと worker を停止します（既定値は本機向けの保守的な設定です）。
+  - メモリ保護: 「現在のコミット＋推定ピーク＋25% の余裕」が停止水準（95%）に達する見込みなら、モデルの読み込みやジョブの開始を理由と推定不足量付きで拒否し、読み込み中・生成中にコミットが 95% 以上のまま 5 秒続くとジョブと worker を停止します（既定値は本機向けの保守的な設定で、v0.2.1 でも緩めていません）。
+  - **v0.2.1 からは one-shot（旧ワークフローを含む）も保護の対象です。** メモリが足りないときは旧ワークフローも拒否されることがあります。別の backend や decoder へ自動で切り替えることはしません。
+  - 本機の記録では、ほかのアプリが使うコミットが多いとき Lite TAE の 2 件目以降のジョブは拒否されました（v0.2.0 のクリーン導入では 7 件中 2 件のみ実行）。余裕が少ない環境では `workflows/leaptalk_persistent_lower_memory.json`（persistent＋`wan_vae`。ピークは低いが decode は遅く、Lite TAE とはフレームが異なる）を明示的に選んでください。保護を無効にすることは推奨しません。
 - **メモリ**
   - CUDA ピーク: Lite TAE で 8.1/11.1 GiB、Wan VAE で 6.1/7.6 GiB（allocated/reserved）。
   - Windows では CUDA メモリがシステムのコミットにほぼ 1:1 で計上されました。詳細は [docs/BENCHMARKS.md](docs/BENCHMARKS.md) を参照してください。

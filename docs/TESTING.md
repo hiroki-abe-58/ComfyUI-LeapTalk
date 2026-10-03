@@ -47,9 +47,16 @@ portrait, so a stale portrait would show):
   answers something that is not the protocol; nothing is left running after any of these;
 - killing the "ComfyUI" process while the worker idles ends the worker tree (job object / stdin EOF);
 - the worker's environment holds no token/secret variables;
-- the memory guard with fixed snapshots: refusing a load (commit, unknown memory), counting only the
-  measured extra peak for a warm job, refusing a warm job near the stop level, the stop rule with
-  its duration and hysteresis (including the 93-95 % pattern of a normal job on the measured machine);
+- the memory guard with fixed snapshots (`tests/test_memory_guard.py` and `test_worker.py`): bytes
+  internally, unknown values refused; cold (load + first job) and warm (job on a loaded worker)
+  estimates per decoder, never below the built-in measured values, raised but never lowered by
+  measurements, administrator overrides; the admission formula (now + estimate + 25 % below the lower
+  of the projection limit and the stop level) at its boundaries and with the report fields; no double
+  count of the loaded model; a one-shot job refused before starting, refused after its model loaded, and
+  stopped by sustained pressure (process tree ended); a worker stopped while it is still loading; a
+  refusal that starts nothing else and does not extend the idle time; the stop rule with its duration and
+  reset (including the 93-95 % pattern of a normal job on the measured machine); refusal, stop, cancel,
+  timeout and runtime error reaching ComfyUI as different errors; no private paths in messages/reports;
 - a one-shot job unloads an idle worker first; the v0.1 config and the v0.1 workflow stay one-shot;
 - talking to the worker directly: ids outside the allowed characters, a job folder outside the jobs
   root, a missing job, a duplicate request id, status and shutdown;

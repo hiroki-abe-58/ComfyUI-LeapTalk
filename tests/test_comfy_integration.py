@@ -117,13 +117,62 @@ def test_shipped_api_workflows_validate_unchanged(comfyui, runtimes_file, tmp_pa
     _write_inputs("leaptalk_example_portrait.png", "leaptalk_example_speech.wav")
     runtimes_file({"windows-native": _v01_runtime(tmp_path)})
     names = sorted(p.stem for p in (REPO_ROOT / "workflows" / "api").glob("*.json") if p.name != "layout.json")
-    assert {"leaptalk_portrait_speech", "leaptalk_doctor", "leaptalk_persistent", "leaptalk_worker_status", "leaptalk_worker_unload"} <= set(names)
+    expected = {
+        "leaptalk_portrait_speech",
+        "leaptalk_doctor",
+        "leaptalk_persistent",
+        "leaptalk_persistent_lower_memory",
+        "leaptalk_worker_status",
+        "leaptalk_worker_unload",
+    }
+    assert expected <= set(names)
     for name in names:
         api = json.loads((REPO_ROOT / "workflows" / "api" / f"{name}.json").read_text(encoding="utf-8"))
         res = asyncio.run(execution.validate_prompt(f"p-{name}", api, None))
         assert res[0] is True and not res[3], (name, res)
     old = json.loads((REPO_ROOT / "workflows" / "api" / "leaptalk_portrait_speech.json").read_text(encoding="utf-8"))
     assert "backend" not in old["1"]["inputs"]  # the v0.1 example stays as it was: one-shot by default
+    # the Lite TAE examples stay Lite TAE; only the explicitly named lower-memory workflow uses wan_vae
+    lite = json.loads((REPO_ROOT / "workflows" / "api" / "leaptalk_persistent.json").read_text(encoding="utf-8"))
+    low = json.loads((REPO_ROOT / "workflows" / "api" / "leaptalk_persistent_lower_memory.json").read_text(encoding="utf-8"))
+    assert old["4"]["inputs"]["decoder"] == lite["4"]["inputs"]["decoder"] == "lite_tae"
+    assert low["4"]["inputs"]["decoder"] == "wan_vae" and low["1"]["inputs"]["backend"] == "persistent"
+    assert low["7"]["class_type"] == "LeapTalkWorker" and low["7"]["inputs"]["action"] == "status"
+
+
+def test_failure_causes_stay_distinguishable(comfyui, tmp_path, monkeypatch):
+    """Memory guard refusal/stop, user cancel, timeout and runtime errors reach ComfyUI as different errors."""
+    import comfy.model_management as mm
+    import torch
+
+    mod = _mod(comfyui)
+    _use_fake(mod, make_runtime(tmp_path, "ok"), monkeypatch)
+    cases = [
+        (
+            mod.worker.MemoryGuardRefused("LeapTalk memory guard: did not start a worker: x", kind="admission"),
+            RuntimeError,
+            "LeapTalk memory guard: did not start",
+        ),
+        (
+            mod.worker.MemoryGuardRefused("LeapTalk memory guard: stopped the job and the worker - y", kind="stopped"),
+            RuntimeError,
+            "LeapTalk memory guard: stopped",
+        ),
+        (mod.client.JobTimeout("LeapTalk job exceeded 60 s"), RuntimeError, "LeapTalk timeout: "),
+        (mod.client.RuntimeJobError("runtime job failed (exit 3): boom"), RuntimeError, "LeapTalk runtime error: "),
+        (mod.worker.WorkerError("the worker exited unexpectedly"), RuntimeError, "LeapTalk runtime error: "),
+        (mod.client.JobCancelled("cancelled by the user"), mm.InterruptProcessingException, None),
+    ]
+    for exc, expect, prefix in cases:
+
+        def boom(*a, exc=exc, **k):
+            raise exc
+
+        monkeypatch.setattr(mod.client, "generate", boom)
+        with pytest.raises(expect) as e:
+            mod.LeapTalkGenerate().generate({"runtime_id": "fake"}, torch.rand(1, 64, 64, 3), _audio(), "lite_tae", 1.0, False)
+        if prefix:
+            assert str(e.value).startswith(prefix), str(e.value)
 
 
 def _audio(seconds=1.5, sr=24000, ch=1, batch=1):

@@ -157,10 +157,14 @@ class LeapTalkGenerate:
                 on_progress=on_progress,
                 backend=backend,
             )
-        except client.JobCancelled as exc:
+        except client.JobCancelled as exc:  # the user's cancel
             raise mm.InterruptProcessingException() from exc
-        except worker.MemoryGuardRefused as exc:
+        except worker.MemoryGuardRefused as exc:  # "LeapTalk memory guard: did not start ... / stopped ..."
             raise RuntimeError(str(exc)) from exc
+        except client.JobTimeout as exc:
+            raise RuntimeError(f"LeapTalk timeout: {exc}") from exc
+        except (client.RuntimeJobError, worker.WorkerError) as exc:
+            raise RuntimeError(f"LeapTalk runtime error: {exc}") from exc
         report = _report(outcome, rt, time.time() - t0)
         report["backend"] = {"requested": requested or RUNTIME_DEFAULT, "runtime_default": rt.backend, "effective": outcome.result.get("backend", backend)}
         return (InputImpl.VideoFromFile(str(outcome.video)), json.dumps(report, indent=1, ensure_ascii=False))

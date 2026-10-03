@@ -1,7 +1,7 @@
 [project]
 # Comfy Registry node id: immutable once published.
 name = "leaptalk"
-version = "0.2.0"
+version = "0.2.1"
 description = "Unofficial community integration, not affiliated with the LeapTalk authors: turn a portrait and speech into a talking video locally in ComfyUI with the official LeapTalk weights and 1-step recipe (SoulX-FlashHead base), run in a separate Python environment."
 readme = "README.md"
 license = { file = "LICENSE" }

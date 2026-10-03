@@ -270,8 +270,12 @@ def run_process(
     interrupted: Callable[[], bool] = lambda: False,
     on_event: Callable[[dict], None] | None = None,
     poll_s: float = 0.2,
+    guard=None,
 ) -> tuple[int, dict]:
-    """Run one runtime script on ``job_dir/request_name``. Returns (exit code, process info)."""
+    """Run one runtime script on ``job_dir/request_name``. Returns (exit code, process info).
+
+    ``guard`` (``worker.OneShotGuard``, optional): checked on every poll and for every event; when it
+    raises (memory guard), the process tree is stopped like on cancel and the exception propagates."""
     argv = [rt.python, str(RUNTIME_SCRIPTS[script])]
     if not IS_WINDOWS:
         argv.append("--watch-stdin")  # Windows: the job object ends the tree when ComfyUI goes away
@@ -284,8 +288,10 @@ def run_process(
     try:
         while True:
             events, offset = read_events(job_dir / "events.jsonl", offset)
-            if on_event:
-                for ev in events:
+            for ev in events:
+                if guard is not None:
+                    guard.on_event(ev)
+                if on_event:
                     on_event(ev)
             code = tree.poll()
             if code is not None:
@@ -304,11 +310,15 @@ def run_process(
             if time.monotonic() > deadline:
                 info["stop"] = stop_tree(tree, job_dir, grace_s=5.0)
                 raise JobTimeout(f"runtime job exceeded {timeout_s:.0f} s")
+            if guard is not None:
+                guard.tick()
             time.sleep(poll_s)
     except (JobCancelled, JobTimeout):
         raise
-    except BaseException:
-        stop_tree(tree, job_dir, grace_s=5.0)
+    except BaseException as exc:
+        rep = stop_tree(tree, job_dir, grace_s=5.0)
+        if hasattr(exc, "report") and isinstance(getattr(exc, "report", None), dict):
+            exc.report["stop"] = rep  # memory guard: record how the process tree was ended
         raise
     finally:
         tree.close()
@@ -385,21 +395,22 @@ def generate(
     if backend == "persistent":
         info = worker.MANAGER.run_job(rt, job, job_dir, interrupted=interrupted, on_event=on_event, timeout_s=timeout_s)
         outcome = load_result(job_dir, job, audio_info)
-        worker.MANAGER.note_job_memory(outcome.result)
+        worker.MANAGER.note_job_memory(outcome.result, job)
     else:
 
-        def one_shot():
-            return run_process(rt, JOB_SCRIPT, job_dir, "job.json", timeout_s=timeout_s or rt.timeout_minutes * 60, interrupted=interrupted, on_event=on_event)
+        def one_shot(guard):
+            return run_process(
+                rt, JOB_SCRIPT, job_dir, "job.json", timeout_s=timeout_s or rt.timeout_minutes * 60, interrupted=interrupted, on_event=on_event, guard=guard
+            )
 
-        (code, info), unloaded = worker.MANAGER.run_one_shot(one_shot)
-        info["backend"] = "one-shot"
-        if unloaded:
-            info["unloaded_persistent_worker"] = {k: unloaded.get(k) for k in ("worker_instance_id", "reason", "active_after")}
+        (code, proc_info), info = worker.MANAGER.run_one_shot(rt, job, one_shot)
+        info.update(proc_info)
         if code == 4:
             raise JobCancelled("the runtime job was cancelled")
         if code != 0:
             raise RuntimeJobError(f"runtime job failed (exit {code}): {error_from_events(job_dir)}")
         outcome = load_result(job_dir, job, audio_info)
+        worker.MANAGER.note_job_memory(outcome.result, job)
     info["host_wall_s"] = round(time.monotonic() - t0, 3)
     outcome.result["host"] = {"image": image_info, "audio": audio_info, "process": info, "python": sys.version.split()[0], "platform": sys.platform}
     return outcome

@@ -64,6 +64,23 @@ the input speech are in the [v0.1.0 release](https://github.com/hiroki-abe-58/Co
 
 Details, method and limits: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
 
+## Choosing a decoder: speed vs memory
+
+| | Lite TAE (default) | Wan VAE (`decoder = wan_vae`) |
+| --- | --- | --- |
+| What it is | LeapTalk's official Lite decoder | the standard Wan2.1 VAE of SoulX-FlashHead (experimental here) |
+| Speed | the numbers above; about 0.45 s per 28-frame chunk | about 3x slower decoding; on the test machine a 9.4 s clip took about 14–16 s on a loaded worker (persistent first job about 39 s) |
+| Peak memory on the test machine (Windows commit added) | load + first job about 16.6 GiB, one job on a loaded worker about 8.1 GiB | load + first job about 13.1 GiB, one job on a loaded worker about 4.1 GiB |
+| Frames | identical to LeapTalk's official script | different from Lite TAE (another decoder); compared only with `wan_vae` results |
+| Needs | enough commit headroom | less headroom, but it is not "free" either |
+
+Both are protected by the memory guard, one-shot and persistent alike (since v0.2.1): if the projected
+peak would reach the stop level, the job is refused with the reason, the estimated shortfall and what the
+loaded worker holds. LeapTalk never switches decoder or backend on its own. If your machine is short of
+commit headroom, choose [workflows/leaptalk_persistent_lower_memory.json](workflows/leaptalk_persistent_lower_memory.json)
+(persistent + `wan_vae`) explicitly, unload the worker when you are done, or close other applications
+yourself; loosening or disabling the guard is not the recommended fix.
+
 ## Status
 
 | | Scope |
@@ -89,8 +106,9 @@ Details, method and limits: [docs/BENCHMARKS.md](docs/BENCHMARKS.md).
    [workflows/leaptalk_persistent.json](workflows/leaptalk_persistent.json) (LeapTalk Runtime with
    `backend = persistent`). The worker **keeps GPU and system memory while it is loaded**, also between
    jobs; it unloads after 120 s without a job (`worker_idle_seconds`), when ComfyUI exits, or with
-   [workflows/leaptalk_worker_unload.json](workflows/leaptalk_worker_unload.json). Details:
-   [docs/SETUP.md](docs/SETUP.md#persistent-worker-optional).
+   [workflows/leaptalk_worker_unload.json](workflows/leaptalk_worker_unload.json). With little memory
+   headroom use [workflows/leaptalk_persistent_lower_memory.json](workflows/leaptalk_persistent_lower_memory.json)
+   (`wan_vae`, see above). Details: [docs/SETUP.md](docs/SETUP.md#persistent-worker-optional).
 
 ## How it works
 
@@ -112,10 +130,11 @@ By default every job starts a new runtime process (one-shot); about 23 s of each
 `backend = persistent` the same code runs in a worker process that loads the models once and then takes
 one job folder at a time from ComfyUI over a local pipe (no network port); everything that belongs to a
 job (portrait, speech, history, events, previews, output) is recreated per job, and the worker is
-replaced when the decoder, the runtime or its files change, or after any error. A memory guard refuses
-to load a model or start a job when the system commit charge is too high, and stops a job (and the
-worker) when commit stays at or above 95 % (defaults; docs/SETUP.md). Processes are ended if you cancel,
-if a job exceeds the runtime's timeout, or if ComfyUI goes away.
+replaced when the decoder, the runtime or its files change, or after any error. A memory guard (for
+one-shot and persistent jobs including model loading, since v0.2.1) refuses to load a model or start a job when
+the commit charge plus the estimated peak and a 25 % margin would reach the stop level, and stops a job
+(and the worker) when commit stays at or above 95 % for 5 s (defaults; docs/SETUP.md). Processes are
+ended if you cancel, if a job exceeds the runtime's timeout, or if ComfyUI goes away.
 
 Security and trust model: [docs/SECURITY.md](docs/SECURITY.md). Tests: [docs/TESTING.md](docs/TESTING.md).
 

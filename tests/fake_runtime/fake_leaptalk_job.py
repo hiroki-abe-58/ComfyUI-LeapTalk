@@ -78,6 +78,7 @@ def main() -> int:
         return lj.EXIT_INVALID
     ctl = lj.Control(job_dir, a.watch_stdin)
     mode = Path(job["upstream_dir"]).name
+    ev.emit("loaded", seconds=0.0)  # the real runner emits this once the model is loaded
     try:
         if mode == "fail":
             raise RuntimeError("simulated runtime failure (CUDA out of memory)")

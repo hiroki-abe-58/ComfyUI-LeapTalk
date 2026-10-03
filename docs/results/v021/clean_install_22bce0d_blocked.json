@@ -1,0 +1,1191 @@
+{
+ "label": "v0.2.1-22bce0d-clean-install",
+ "legacy_workflow": false,
+ "steps": {
+  "status0": {
+   "status": {
+    "prompt_id": "6988fc3a-e65e-43b7-82f1-8313ddf029b5",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.58,
+     "commit_gib": 72.37,
+     "available_gib": 24.94
+    },
+    "history_tail": [],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   },
+   "worker_processes_after_status": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  "lowmem": {
+   "status_before": {
+    "prompt_id": "1d86ef36-68f7-4493-a423-1adaa49bd031",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.62,
+     "commit_gib": 72.41,
+     "available_gib": 24.92
+    },
+    "history_tail": [],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   },
+   "jobs": [
+    {
+     "name": "lm1_A_short_cold",
+     "prompt_id": "b535d36c-0645-4759-bc6b-54af8901c90c",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:33",
+     "wall_s": 0.155,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "wan_vae",
+      "workflow": "leaptalk_persistent_lower_memory"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {},
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "lm2_A_short_warm",
+     "prompt_id": "26e95024-3105-47e4-b529-ef5ed5f62323",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:34",
+     "wall_s": 0.14,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "wan_vae",
+      "workflow": "leaptalk_persistent_lower_memory"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {
+      "samples": 1,
+      "commit_pct_max": 77.65,
+      "commit_gib_max": 72.43,
+      "commit_gib_start": 72.43,
+      "available_gib_min": 24.88,
+      "gpu_mib_max": 2510,
+      "gpu_mib_start": 2510
+     },
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "lm3_B_short",
+     "prompt_id": "0d897db8-2633-4a46-83d6-7dad36273b13",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:34",
+     "wall_s": 0.145,
+     "input": {
+      "image": "B",
+      "audio": "b_short",
+      "decoder": "wan_vae",
+      "workflow": "leaptalk_persistent_lower_memory"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.2 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {},
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "lm4_A_short_again",
+     "prompt_id": "68de1875-214d-4329-a004-2d73fc1b93c6",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:35",
+     "wall_s": 0.161,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "wan_vae",
+      "workflow": "leaptalk_persistent_lower_memory"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {
+      "samples": 1,
+      "commit_pct_max": 77.69,
+      "commit_gib_max": 72.47,
+      "commit_gib_start": 72.47,
+      "available_gib_min": 24.86,
+      "gpu_mib_max": 2510,
+      "gpu_mib_start": 2510
+     },
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "lm5_B_long",
+     "prompt_id": "cc61e681-ae72-43ef-8d4a-98a3f81c003e",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:35",
+     "wall_s": 0.151,
+     "input": {
+      "image": "B",
+      "audio": "b_long",
+      "decoder": "wan_vae",
+      "workflow": "leaptalk_persistent_lower_memory"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {
+      "samples": 1,
+      "commit_pct_max": 77.71,
+      "commit_gib_max": 72.49,
+      "commit_gib_start": 72.49,
+      "available_gib_min": 24.84,
+      "gpu_mib_max": 2510,
+      "gpu_mib_start": 2510
+     },
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "lm6_A_short_new_worker",
+     "prompt_id": "4c9eaebd-62e2-474b-89e8-babf6b0e2077",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:41",
+     "wall_s": 0.142,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "wan_vae",
+      "workflow": "leaptalk_persistent_lower_memory"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {
+      "samples": 1,
+      "commit_pct_max": 77.57,
+      "commit_gib_max": 72.36,
+      "commit_gib_start": 72.36,
+      "available_gib_min": 24.92,
+      "gpu_mib_max": 2510,
+      "gpu_mib_start": 2510
+     },
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    }
+   ],
+   "status": {
+    "prompt_id": "7ee77c8b-8ede-4bd7-986d-2ad99424476c",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.71,
+     "commit_gib": 72.49,
+     "available_gib": 24.84
+    },
+    "history_tail": [
+     {
+      "event": "refused",
+      "t": 1791031894.2,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031894.7,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.2 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031895.3,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031895.8,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   },
+   "unload": {
+    "name": "lm_unload",
+    "prompt_id": "1c35d62f-6333-4d0f-a735-3e69a4bc6ddc",
+    "status": "success",
+    "queued_at": "2026-10-03T21:51:37",
+    "wall_s": 0.003,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {},
+    "outcome": "completed",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "status": "no_worker",
+     "now": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1091444.578,
+       "total_bytes": 68065103872,
+       "available_bytes": 26664841216,
+       "commit_bytes": 77838766080,
+       "commit_limit_bytes": 100163256320,
+       "commit_pct": 77.71,
+       "commit_enforced": true,
+       "total_gib": 63.39,
+       "available_gib": 24.83,
+       "commit_gib": 72.49,
+       "commit_limit_gib": 93.28
+      },
+      "memory_estimates": [],
+      "history": [
+       {
+        "event": "refused",
+        "t": 1791031893.4,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031894.2,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031894.7,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031895.3,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031895.8,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       }
+      ]
+     }
+    },
+    "worker_processes_after": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   },
+   "after_unload": {
+    "commit_pct": 77.68,
+    "commit_gib": 72.47,
+    "available_gib": 24.83,
+    "gpu_mib": 2510,
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   },
+   "status_end": {
+    "prompt_id": "4a857c68-befe-4ba2-be9f-06a91c7345bd",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.57,
+     "commit_gib": 72.36,
+     "available_gib": 24.92
+    },
+    "history_tail": [
+     {
+      "event": "refused",
+      "t": 1791031894.7,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.2 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031895.3,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031895.8,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031901.7,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   }
+  },
+  "oneshot_wan_ref": {
+   "A_a_short": {
+    "name": "oneshot_wan_A_a_short",
+    "prompt_id": "1b17f80a-617d-45e0-b0ec-932fffe9ce03",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:43",
+    "wall_s": 0.142,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": null,
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start the one-shot job: commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {
+     "samples": 1,
+     "commit_pct_max": 77.6,
+     "commit_gib_max": 72.39,
+     "commit_gib_start": 72.39,
+     "available_gib_min": 24.9,
+     "gpu_mib_max": 2510,
+     "gpu_mib_start": 2510
+    },
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   },
+   "B_b_long": {
+    "name": "oneshot_wan_B_b_long",
+    "prompt_id": "6dfb750a-1d60-45e5-b320-0549d630e98f",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:43",
+    "wall_s": 0.148,
+    "input": {
+     "image": "B",
+     "audio": "b_long",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": null,
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start the one-shot job: commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {},
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   }
+  },
+  "lite_check": {
+   "unload_before": {
+    "name": "lite_unload_before",
+    "prompt_id": "b697ba1b-9256-4f88-98a1-e64a3081fcfb",
+    "status": "success",
+    "queued_at": "2026-10-03T21:51:44",
+    "wall_s": 0.003,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {
+     "samples": 1,
+     "commit_pct_max": 77.62,
+     "commit_gib_max": 72.41,
+     "commit_gib_start": 72.41,
+     "available_gib_min": 24.9,
+     "gpu_mib_max": 2510,
+     "gpu_mib_start": 2510
+    },
+    "outcome": "completed",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "status": "no_worker",
+     "now": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1091452.062,
+       "total_bytes": 68065103872,
+       "available_bytes": 26717155328,
+       "commit_bytes": 77767135232,
+       "commit_limit_bytes": 100163256320,
+       "commit_pct": 77.64,
+       "commit_enforced": true,
+       "total_gib": 63.39,
+       "available_gib": 24.88,
+       "commit_gib": 72.43,
+       "commit_limit_gib": 93.28
+      },
+      "memory_estimates": [],
+      "history": [
+       {
+        "event": "refused",
+        "t": 1791031893.4,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031894.2,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031894.7,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031895.3,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031895.8,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031901.7,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031903.6,
+        "backend": "one-shot",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031904.1,
+        "backend": "one-shot",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       }
+      ]
+     }
+    },
+    "worker_processes_after": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   },
+   "jobs": [
+    {
+     "name": "lite_1_A_short",
+     "prompt_id": "9ad40c8f-5759-40d5-ba61-14a0227ba0ac",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:48",
+     "wall_s": 0.143,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "lite_tae"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 99.9 % (72.4 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {
+      "samples": 1,
+      "commit_pct_max": 77.67,
+      "commit_gib_max": 72.46,
+      "commit_gib_start": 72.46,
+      "available_gib_min": 24.88,
+      "gpu_mib_max": 2510,
+      "gpu_mib_start": 2510
+     },
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    },
+    {
+     "name": "lite_2_A_short",
+     "prompt_id": "837f61c0-3c91-4409-84cc-88dd4ff4b3ec",
+     "status": "error",
+     "queued_at": "2026-10-03T21:51:48",
+     "wall_s": 0.149,
+     "input": {
+      "image": "A",
+      "audio": "a_short",
+      "decoder": "lite_tae"
+     },
+     "messages": [
+      "execution_start",
+      "execution_cached",
+      "execution_error"
+     ],
+     "error": "LeapTalk memory guard: did not start a worker: commit would reach about 99.9 % (72.5 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+     "memory_window": {},
+     "outcome": "admission_refused",
+     "ws": {
+      "progress_msgs": 0,
+      "previews": 0,
+      "first_preview_after_s": null
+     }
+    }
+   ],
+   "status": {
+    "prompt_id": "698974ed-af6f-485d-80ab-16806f91d65e",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.68,
+     "commit_gib": 72.46,
+     "available_gib": 24.86
+    },
+    "history_tail": [
+     {
+      "event": "refused",
+      "t": 1791031903.6,
+      "backend": "one-shot",
+      "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031904.1,
+      "backend": "one-shot",
+      "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031908.5,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 99.9 % (72.4 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031909.0,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 99.9 % (72.5 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   },
+   "unload": {
+    "name": "lite_unload_after",
+    "prompt_id": "e9d36b0c-1172-4369-b171-98ae4e18d89a",
+    "status": "success",
+    "queued_at": "2026-10-03T21:51:50",
+    "wall_s": 0.003,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_success"
+    ],
+    "memory_window": {},
+    "outcome": "completed",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    },
+    "worker_node": {
+     "status": "no_worker",
+     "now": {
+      "worker": null,
+      "host_memory": {
+       "measurable": true,
+       "source": "GetPerformanceInfo",
+       "t": 1091458.203,
+       "total_bytes": 68065103872,
+       "available_bytes": 26712969216,
+       "commit_bytes": 77778288640,
+       "commit_limit_bytes": 100163256320,
+       "commit_pct": 77.65,
+       "commit_enforced": true,
+       "total_gib": 63.39,
+       "available_gib": 24.88,
+       "commit_gib": 72.44,
+       "commit_limit_gib": 93.28
+      },
+      "memory_estimates": [],
+      "history": [
+       {
+        "event": "refused",
+        "t": 1791031893.4,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031894.2,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031894.7,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.2 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031895.3,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031895.8,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.3 % (72.5 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031901.7,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031903.6,
+        "backend": "one-shot",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031904.1,
+        "backend": "one-shot",
+        "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031908.5,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 99.9 % (72.4 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+       },
+       {
+        "event": "refused",
+        "t": 1791031909.0,
+        "backend": "persistent",
+        "kind": "cold",
+        "reason": "commit would reach about 99.9 % (72.5 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+       }
+      ]
+     }
+    },
+    "worker_processes_after": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    }
+   }
+  },
+  "cancel": {
+   "progress_seen": false,
+   "worker_processes_during": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   },
+   "cancel": {
+    "name": "cancel_A_aba97",
+    "prompt_id": "d0d8c171-8ba3-429d-b7b8-4bf24b7e4926",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:50",
+    "wall_s": 0.169,
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {},
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   },
+   "status_after": {
+    "prompt_id": "25bc11bb-c6aa-43e2-b778-9bceedfc5ff8",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.62,
+     "commit_gib": 72.41,
+     "available_gib": 24.91
+    },
+    "history_tail": [
+     {
+      "event": "refused",
+      "t": 1791031904.1,
+      "backend": "one-shot",
+      "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031908.5,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 99.9 % (72.4 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031909.0,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 99.9 % (72.5 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031911.1,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   },
+   "next": {
+    "name": "cancel_next_A_a_short",
+    "prompt_id": "b67e8524-56d7-416a-8029-0ba49dcdddb4",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:55",
+    "wall_s": 0.03,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.1 % (72.3 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {
+     "samples": 1,
+     "commit_pct_max": 77.61,
+     "commit_gib_max": 72.4,
+     "commit_gib_start": 72.4,
+     "available_gib_min": 24.9,
+     "gpu_mib_max": 2510,
+     "gpu_mib_start": 2510
+    },
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   }
+  },
+  "timeout": {
+   "timeout": {
+    "name": "timeout_A_aba97_wan",
+    "prompt_id": "6e92a0a4-ccf7-44f6-9ae6-5e41de689c4a",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:55",
+    "wall_s": 0.169,
+    "input": {
+     "image": "A",
+     "audio": "aba97",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "e2e-timeout"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {},
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   },
+   "status_after": {
+    "prompt_id": "84b52c5f-753f-4250-b49b-69432e3fae9e",
+    "worker": null,
+    "host_memory": {
+     "commit_pct": 77.57,
+     "commit_gib": 72.36,
+     "available_gib": 24.94
+    },
+    "history_tail": [
+     {
+      "event": "refused",
+      "t": 1791031909.0,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 99.9 % (72.5 GiB now + 16.6 GiB estimated peak + 4.2 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 4.6 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031911.1,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.2 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.2 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031915.3,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.1 % (72.3 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+     },
+     {
+      "event": "refused",
+      "t": 1791031916.0,
+      "backend": "persistent",
+      "kind": "cold",
+      "reason": "commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success)"
+     }
+    ],
+    "worker_processes": {
+     "launchers": [],
+     "interpreters": [],
+     "others": []
+    },
+    "gpu_mib": 2510
+   },
+   "next": {
+    "name": "timeout_next_A_a_short",
+    "prompt_id": "934dcfb0-db59-4188-a2bf-de80ac7d94dc",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:59",
+    "wall_s": 0.145,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {},
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   }
+  },
+  "kill_idle": {
+   "job": {
+    "name": "kill_idle_job",
+    "prompt_id": "c62595d8-9d3a-4489-9d9a-9d7a34cdaf20",
+    "status": "error",
+    "queued_at": "2026-10-03T21:51:59",
+    "wall_s": 0.256,
+    "input": {
+     "image": "A",
+     "audio": "a_short",
+     "decoder": "wan_vae",
+     "guidance": 1.0,
+     "backend_input": "persistent",
+     "runtime": "main"
+    },
+    "messages": [
+     "execution_start",
+     "execution_cached",
+     "execution_error"
+    ],
+    "error": "LeapTalk memory guard: did not start a worker: commit would reach about 95.1 % (72.4 GiB now + 13.1 GiB estimated peak + 3.3 GiB safety margin, of 93.3 GiB); the limit is 95 % (the stop level), about 0.1 GiB short (an estimate; freeing that much does not guarantee success). Options: unload the LeapTalk worker, use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames), or close other applications yourself. LeapTalk never switches decoder or backend on its own.\n",
+    "memory_window": {
+     "samples": 1,
+     "commit_pct_max": 77.54,
+     "commit_gib_max": 72.33,
+     "commit_gib_start": 72.33,
+     "available_gib_min": 24.95,
+     "gpu_mib_max": 2510,
+     "gpu_mib_start": 2510
+    },
+    "outcome": "admission_refused",
+    "ws": {
+     "progress_msgs": 0,
+     "previews": 0,
+     "first_preview_after_s": null
+    }
+   },
+   "worker_processes_before": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   },
+   "left_after": [],
+   "seconds_to_clean": 0.57,
+   "gpu_mib_after": 2510,
+   "memory_after": {
+    "commit_pct": 75.12,
+    "commit_gib": 70.07,
+    "available_gib": 25.67
+   }
+  },
+  "kill_busy": {
+   "progress_seen": false,
+   "worker_processes_before": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   },
+   "left_after": [],
+   "seconds_to_clean": 0.5,
+   "gpu_mib_after": 2510,
+   "memory_after": {
+    "commit_pct": 75.1,
+    "commit_gib": 70.05,
+    "available_gib": 25.68
+   }
+  }
+ },
+ "sessions": [
+  {
+   "session": 1,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 77.61,
+    "commit_gib": 72.39,
+    "available_gib": 24.93,
+    "gpu_mib": 2510
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  {
+   "session": 2,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 77.45,
+    "commit_gib": 72.25,
+    "available_gib": 24.99,
+    "gpu_mib": 2510
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  },
+  {
+   "session": 3,
+   "nodes": [
+    "LeapTalkDoctor",
+    "LeapTalkGenerate",
+    "LeapTalkRuntime",
+    "LeapTalkWorker"
+   ],
+   "runtime_has_backend_input": true,
+   "fresh_memory": {
+    "commit_pct": 77.41,
+    "commit_gib": 72.21,
+    "available_gib": 25.03,
+    "gpu_mib": 2510
+   },
+   "worker_processes_at_start": {
+    "launchers": [],
+    "interpreters": [],
+    "others": []
+   }
+  }
+ ],
+ "gpu_idle_mib_before": 2510,
+ "memory_before": {
+  "total_gib": 63.39,
+  "commit_limit_gib": 93.28,
+  "commit_pct": 75.17,
+  "commit_gib": 70.12,
+  "available_gib": 25.6
+ },
+ "max_worker_launchers_seen": 0,
+ "watchdog_interrupts": [],
+ "worker_processes_at_end": {
+  "launchers": [],
+  "interpreters": [],
+  "others": []
+ },
+ "left_after_comfy_stop": [],
+ "gpu_idle_mib_after": 2510,
+ "memory_after": {
+  "commit_pct": 75.06,
+  "commit_gib": 70.02,
+  "available_gib": 25.71
+ },
+ "hashes": {},
+ "official_reference": {
+  "A|a_short|lite_tae": "e7a290c491b9b5318ab5aa61b2113c71a99f0c5883e4896b14d167a970e13163",
+  "B|b_long|lite_tae": "7bcffb23687269d4b20d6f9a629d2ad27e0cebdd9c68e9a6185e58a53460acc4"
+ },
+ "attempt_outcomes": {
+  "admission_refused": 15
+ }
+}

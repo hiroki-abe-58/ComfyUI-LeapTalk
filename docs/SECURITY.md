@@ -64,12 +64,16 @@ HTTP.
 - **One at a time.** One lock in ComfyUI serialises worker start, jobs, Unload, the idle timer and
   one-shot jobs of this plugin; a one-shot job unloads an idle worker first. Other custom nodes and
   other ComfyUI processes are not coordinated.
-- **Memory guard.** Before loading a model (a new worker) ComfyUI checks the system commit charge,
-  available memory and the projected commit; before a job on a loaded worker it checks only that
-  job's measured extra peak. While a job runs or the worker idles, a commit charge at or above
-  `stop_commit_pct` for `stop_sustain_seconds` stops the job and the worker. A value that cannot be
-  measured refuses the load. These checks reduce the risk of exhausting memory; they do not guarantee
-  it cannot happen. One-shot jobs behave as in v0.1 (no guard; the process exits after the job).
+- **Memory guard** (one-shot and persistent since v0.2.1). Before a model load ComfyUI checks the
+  system commit charge, available memory and the projected commit (now + estimated peak of a load and
+  its first job + 25 %); before every job on a loaded worker - and before a one-shot job once its model
+  has loaded - it checks the job's estimated peak + 25 % on top of the measured commit. A projection at
+  or above the stop level is refused. While a model loads, a job runs or the worker idles, a commit
+  charge at or above `stop_commit_pct` for `stop_sustain_seconds` stops it and ends the process tree
+  (through the job object, also while the runtime is busy importing and does not answer). A value that
+  cannot be measured refuses the job. These checks reduce the risk of exhausting memory; they do not
+  guarantee it cannot happen. A refused or stopped job is never retried with another backend or
+  decoder.
 
 ## Stopping
 

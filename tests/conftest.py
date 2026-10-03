@@ -115,11 +115,12 @@ def worker_env(tmp_path, monkeypatch):
     """Persistent-worker test setup: a runtime folder with the real leaptalk_worker.py and a fake Engine.
 
     Yields (client, worker module); the manager is emptied afterwards (no process left behind)."""
-    from leaptalk_comfy import client, worker
+    from leaptalk_comfy import client, memory, worker
 
     monkeypatch.setattr(client, "RUNTIME_DIR", fake_worker_runtime_dir(tmp_path))
     worker.MANAGER.unload("test setup", wait_s=30)
     worker.MANAGER.history.clear()
+    monkeypatch.setattr(worker.MANAGER, "estimates", memory.PeakEstimates())  # measured peaks do not leak between tests
     yield client, worker
     worker.MANAGER.unload("test teardown", wait_s=30)
 

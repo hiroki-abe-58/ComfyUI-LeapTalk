@@ -113,13 +113,28 @@ Optional keys (v0.2):
 
 `memory_guard` (all optional): `enabled` (`true`), `start_max_commit_pct` (`90`: no model load at or
 above this system commit charge), `min_available_gib` (`8`: nor with less available memory),
-`max_projected_commit_pct` (`97`: commit now plus the expected addition must stay below this),
-`expected_worker_gib` (`16`: commit a new worker adds), `expected_job_gib` (`8`: extra commit of a
-job on a loaded worker until one has been measured), `stop_commit_pct` (`95`) and
-`stop_sustain_seconds` (`5`: a running job or an idle worker is stopped when commit stays at or above
-the stop level that long). The defaults are conservative values for the 64 GB Windows workstation the
-results were measured on, not requirements; a value that cannot be measured refuses the load instead
-of being treated as unlimited. On Linux without strict overcommit only available memory is checked.
+`max_projected_commit_pct` (`97`), `stop_commit_pct` (`95`) and `stop_sustain_seconds` (`5`: a job -
+while loading or generating - or an idle worker is stopped when commit stays at or above the stop level
+that long without a sample below it). Since v0.2.1 this applies to one-shot jobs too, so a v0.1 workflow
+can be refused when memory is tight.
+
+How a job is admitted (Windows; checked before a model load and again before every job):
+
+```text
+projected = commit now + estimated additional peak + 25 % of that estimate
+start only if projected < min(max_projected_commit_pct, stop_commit_pct) of the commit limit
+```
+
+The estimate depends on what starts - *cold* (a model load and its first job; every one-shot job) or
+*warm* (one job on a loaded worker, whose model is already in "commit now") - and on the decoder. It
+never goes below the highest value measured on the reference machine (Lite TAE: 16.6 GiB cold / 8.1 GiB
+warm; Wan VAE: 13.1 / 4.1 GiB) and rises to the highest peak measured in the running ComfyUI process.
+`expected_worker_gib` / `expected_job_gib` replace those built-in cold / warm values for every decoder
+(the measured peaks still raise them). The defaults are conservative values for the 64 GB Windows
+workstation the results were measured on, not requirements; meeting them does not guarantee that memory
+cannot run out. A value that cannot be measured refuses the job instead of being treated as unlimited.
+On Linux without strict overcommit only available memory is checked. Disabling the guard
+(`enabled: false`) is possible for administrators but is not a recommended way around a refusal.
 
 ## Persistent worker (optional)
 
@@ -161,6 +176,7 @@ queue it.
 | `the audio is … s long; this runtime accepts up to …` | raise `max_audio_seconds` (max 1800) or split the audio |
 | `LeapTalk takes exactly one reference image` | the IMAGE input is a batch; pick one image |
 | Windows: memory pressure | see "Memory" in docs/BENCHMARKS.md: CUDA allocations count against the Windows commit limit |
-| `LeapTalk did not start a worker: system commit charge is …` | the memory guard refused to load a model; close other GPU/memory-heavy applications, unload other models, or adjust `memory_guard` if you accept the risk |
+| `LeapTalk memory guard: did not start …` | the projected commit (now + estimated peak + 25 %) would reach the stop level; the message gives the estimated shortfall and what a loaded worker holds. Unload the worker, use `workflows/leaptalk_persistent_lower_memory.json` (`wan_vae`), or close other applications yourself |
+| `LeapTalk memory guard: stopped …` | commit stayed at or above the stop level for 5 s while the job loaded or generated; the job (and a persistent worker) was ended |
 | `LeapTalk Worker: unload: busy` | a job is running; unload waits for jobs and never cuts one off - run it again afterwards or cancel the job |
 | a persistent job failed and the next one was slow | expected: after any job error the worker is not reused, so the next job starts and loads a new one |

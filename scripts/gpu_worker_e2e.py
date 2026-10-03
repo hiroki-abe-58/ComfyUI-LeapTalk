@@ -65,6 +65,10 @@ OFFICIAL_REFERENCE = {  # frames_sha256 of the v0.1.0 package result that matche
     ("B", "b_long", "lite_tae"): "7bcffb23687269d4b20d6f9a629d2ad27e0cebdd9c68e9a6185e58a53460acc4",
 }
 BENCH = (("A", "a_short"), ("B", "b_long"))
+V020_WAN_REFERENCE = {  # frames_sha256 of v0.2.0 with decoder = wan_vae (one-shot and persistent gave the same)
+    ("A", "a_short"): "c63bd9b0822349bf3d84baa023ae85f20b0d44d83d82c7e69301740247bfc550",
+    ("B", "b_short"): "5ee53e4df089378aa6dd2d6c14877c8f15c5d0f90f247281f6482c9bda7f349f",
+}
 
 
 def free_port() -> int:
@@ -262,7 +266,7 @@ class WS(threading.Thread):
 
 
 class Comfy:
-    def __init__(self, comfyui: Path, python: str, config: Path, workdir: Path, tag: str):
+    def __init__(self, comfyui: Path, python: str, config: Path, workdir: Path, tag: str, base_directory: str = ""):
         self.port = free_port()
         self.base = f"http://127.0.0.1:{self.port}"
         self.workdir = workdir
@@ -274,6 +278,8 @@ class Comfy:
             (workdir / sub).mkdir(exist_ok=True)
         self.log = open(workdir / f"comfyui-{tag}.log", "ab")  # noqa: SIM115
         argv = [python, str(comfyui / "main.py"), "--listen", "127.0.0.1", "--port", str(self.port), "--cpu", "--disable-auto-launch", "--cache-none"]
+        if base_directory:  # custom_nodes (and the rest) from another folder; the ComfyUI checkout is only read
+            argv += ["--base-directory", base_directory]
         argv += ["--output-directory", str(workdir / "output"), "--temp-directory", str(workdir / "temp")]
         argv += ["--user-directory", str(workdir / "user"), "--input-directory", str(workdir / "input")]
         flags = getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0) if os.name == "nt" else 0
@@ -358,6 +364,23 @@ class Comfy:
         self.log.close()
 
 
+def outcome(rec: dict) -> str:
+    """completed / admission_refused / memory_stopped / user_cancelled / timeout / runtime_failed
+    (from ComfyUI's status and the node's error text; a user cancel has no error text)."""
+    err = rec.get("error") or ""
+    if rec.get("status") == "success":
+        return "completed"
+    if "LeapTalk memory guard: stopped" in err or "stopped the job: system commit" in err:
+        return "memory_stopped"
+    if "LeapTalk memory guard:" in err or "did not start" in err:
+        return "admission_refused"
+    if "timeout" in err.lower() or "exceeded" in err:
+        return "timeout"
+    if "execution_interrupted" in (rec.get("messages") or []) and not err:
+        return "user_cancelled"
+    return "runtime_failed"
+
+
 def _safe(fn, default):
     """psutil call on a process that may exit at any moment."""
     try:
@@ -425,7 +448,7 @@ class Runner:
 
     def start(self) -> None:
         self.n_session += 1
-        self.comfy = Comfy(self.a.comfyui, self.a.python, self.cfg_path, self.workdir, f"s{self.n_session}")
+        self.comfy = Comfy(self.a.comfyui, self.a.python, self.cfg_path, self.workdir, f"s{self.n_session}", self.a.base_directory)
         self.watch = Watch(self.workdir / "memwatch.csv", self.comfy)
         self.watch.start()
         info = http(self.comfy.base, "/object_info")
@@ -508,6 +531,7 @@ class Runner:
         if err:
             rec["error"] = err[:600]
         rec["memory_window"] = self.watch.window(t0, t_end + 0.5)
+        rec["outcome"] = outcome(rec)
         prev = self.comfy.ws.previews.get(pid, [])
         rec["ws"] = {
             "progress_msgs": self.comfy.ws.progress_count(pid),
@@ -540,7 +564,7 @@ class Runner:
         rec = self.collect(name, pid, t0, meta=meta)
         j = rec.get("job") or {}
         self.log(
-            f"{name}: {rec['status']} {rec['wall_s']:.1f}s"
+            f"{name}: {rec['status']} ({rec.get('outcome')}) {rec['wall_s']:.1f}s"
             + (
                 f" job={j.get('job_id')} worker={j.get('worker_instance_id')} new={j.get('started_new_worker')} frames={str(j.get('frames_sha256'))[:12]}"
                 if j
@@ -796,14 +820,14 @@ class Runner:
 
     def step_cancel(self):
         out = {}
-        pid, t0 = self.submit(gen_wf("main", self.img("A"), self.aud("aba97"), "e2e/cancel", backend="persistent"))
+        pid, t0 = self.submit(gen_wf("main", self.img("A"), self.aud("aba97"), "e2e/cancel", backend="persistent", decoder=self.fd))
         out["progress_seen"] = self.wait_progress(pid, 3)
         out["worker_processes_during"] = self.comfy.worker_processes()
         http(self.comfy.base, "/interrupt", {})
         out["cancel"] = self.collect("cancel_A_aba97", pid, t0)
         time.sleep(2)
         out["status_after"] = self.worker_status("cancel_status")
-        out["next"] = self.gen("cancel_next_A_a_short", "A", "a_short")
+        out["next"] = self.gen("cancel_next_A_a_short", "A", "a_short", decoder=self.fd)
         self.log(f"cancel: {out['cancel']['status']} -> next {out['next']['status']}")
         self.record("cancel", out)
 
@@ -933,6 +957,69 @@ class Runner:
         out["worker_processes_after_unload"] = self.comfy.worker_processes()
         self.record("shipped", out)
 
+    def _shipped_wf(self, name: str, img: str, aud: str) -> dict:
+        wf = json.loads((Path(self.a.shipped_dir) / "workflows" / "api" / f"{name}.json").read_text(encoding="utf-8"))
+        for node in wf.values():
+            ins = node.get("inputs", {})
+            if node.get("class_type") == "LeapTalkRuntime":
+                ins["runtime_id"] = "main"
+            if node.get("class_type") == "LoadImage":
+                ins["image"] = self.img(img)
+            if node.get("class_type") == "LoadAudio":
+                ins["audio"] = self.aud(aud)
+        return wf
+
+    def step_lowmem(self):
+        """The shipped lower-memory workflow (persistent + wan_vae) of the installed package, unchanged except
+        the runtime id and input names: cold A, warm A again, B with other speech, A again, ~34 s, Status,
+        Unload, then a new worker. Every attempt is recorded with its outcome; nothing is retried."""
+        wfname = "leaptalk_persistent_lower_memory"
+        plan = [
+            ("lm1_A_short_cold", "A", "a_short"),
+            ("lm2_A_short_warm", "A", "a_short"),
+            ("lm3_B_short", "B", "b_short"),
+            ("lm4_A_short_again", "A", "a_short"),
+            ("lm5_B_long", "B", "b_long"),
+        ]
+        out = {"status_before": self.worker_status("lm_status_before"), "jobs": []}
+        for name, img, aud in plan:
+            rec = self.run(name, self._shipped_wf(wfname, img, aud), input={"image": img, "audio": aud, "decoder": "wan_vae", "workflow": wfname})
+            out["jobs"].append(rec)
+            self.record("lowmem", out)
+        out["status"] = self.worker_status("lm_status")
+        out["unload"] = self.unload("lm_unload")
+        time.sleep(3)
+        out["after_unload"] = {**self.watch.now(), "worker_processes": self.comfy.worker_processes()}
+        rec = self.run(
+            "lm6_A_short_new_worker",
+            self._shipped_wf(wfname, "A", "a_short"),
+            input={"image": "A", "audio": "a_short", "decoder": "wan_vae", "workflow": wfname},
+        )
+        out["jobs"].append(rec)
+        out["status_end"] = self.worker_status("lm_status_end")
+        self.record("lowmem", out)
+
+    def step_oneshot_wan_ref(self):
+        """One-shot (the v0.1 workflow with decoder = wan_vae) on the benchmark fixtures: the same-decoder reference."""
+        out = {}
+        for img, aud in BENCH:
+            out[f"{img}_{aud}"] = self.gen(f"oneshot_wan_{img}_{aud}", img, aud, backend="default", decoder="wan_vae")
+            self.record("oneshot_wan_ref", out)
+
+    def step_lite_check(self):
+        """Lite TAE with the shipped persistent workflow, guard as shipped: whatever the guard decides is recorded."""
+        out = {"unload_before": self.unload("lite_unload_before")}
+        time.sleep(3)
+        out["jobs"] = [
+            self.run(
+                f"lite_{i}_A_short", self._shipped_wf("leaptalk_persistent", "A", "a_short"), input={"image": "A", "audio": "a_short", "decoder": "lite_tae"}
+            )
+            for i in (1, 2)
+        ]
+        out["status"] = self.worker_status("lite_status")
+        out["unload"] = self.unload("lite_unload_after")
+        self.record("lite_check", out)
+
     def step_kill_idle(self):
         out = {"job": self.gen("kill_idle_job", "A", "a_short", decoder=self.fd)}
         time.sleep(2)
@@ -1028,6 +1115,41 @@ class Runner:
                         lines.append(
                             f"persistent {fx}: first {first:.2f}s, warm n={len(walls)} median {statistics.median(walls):.2f}s range {min(walls):.2f}-{max(walls):.2f}"
                         )
+        # every generation attempt and its outcome (worker status / unload prompts are not counted)
+        counts: dict = {}
+
+        def walk(obj):
+            if isinstance(obj, dict):
+                if (
+                    "outcome" in obj
+                    and "job" in obj
+                    or obj.get("outcome") in ("admission_refused", "memory_stopped", "timeout", "runtime_failed", "user_cancelled")
+                ):
+                    yield obj
+                for v in obj.values():
+                    yield from walk(v)
+            elif isinstance(obj, list):
+                for v in obj:
+                    yield from walk(v)
+
+        seen = set()
+        for rec in walk(st):
+            if rec["prompt_id"] in seen or rec.get("worker_node") is not None:
+                continue
+            seen.add(rec["prompt_id"])
+            counts[rec["outcome"]] = counts.get(rec["outcome"], 0) + 1
+        lines.append(f"attempts: {sum(counts.values())} {counts}")
+        self.report["attempt_outcomes"] = counts
+        for rec in (st.get("lowmem") or {}).get("jobs", []):
+            j = rec.get("job") or {}
+            inp = rec.get("input") or {}
+            ref = V020_WAN_REFERENCE.get((inp.get("image"), inp.get("audio")))
+            h = j.get("frames_sha256")
+            cmp = "no v0.2.0 reference" if ref is None else ("= v0.2.0 wan_vae" if h == ref else "DIFFERENT from v0.2.0 wan_vae")
+            lines.append(
+                f"{rec['name']}: {rec['outcome']} {rec['wall_s']:.1f}s worker={j.get('worker_instance_id')} new={j.get('started_new_worker')} frames={str(h)[:12]} {cmp if h else ''}"
+            )
+        self.save()
         text = "\n".join(lines)
         (self.workdir / "summary.txt").write_text(text + "\n", encoding="utf-8")
         print(text)
@@ -1047,6 +1169,7 @@ def main() -> int:
     ap.add_argument("--oneshot-reps", type=int, default=3)
     ap.add_argument("--warm-reps", type=int, default=5)
     ap.add_argument("--failure-decoder", default="lite_tae", choices=("lite_tae", "wan_vae"), help="decoder of the failure / lifecycle steps")
+    ap.add_argument("--base-directory", default="", help="ComfyUI --base-directory (custom_nodes etc. outside the ComfyUI checkout)")
     ap.add_argument("--shipped-decoder", default="", choices=("", "lite_tae", "wan_vae"), help="'shipped' step: replace the workflows' decoder (recorded)")
     ap.add_argument("--bench", default="", help="benchmark fixtures as IMG:AUDIO,... (default A:a_short,B:b_long)")
     ap.add_argument("--shipped-dir", default=str(REPO), help="installed package folder whose workflows/api the 'shipped' step queues")

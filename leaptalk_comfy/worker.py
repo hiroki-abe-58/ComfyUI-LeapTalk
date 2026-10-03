@@ -48,8 +48,20 @@ class WorkerError(RuntimeError):
     """The persistent worker failed or answered something unexpected; it is not reused."""
 
 
-class MemoryGuardRefused(RuntimeError):
-    """The memory guard refused to load a model or start a job."""
+MemoryGuardRefused = memory.MemoryGuardRefused  # refused to start ("admission") or stopped ("stopped")
+
+
+def _refusal(prefix: str, rep: dict, w: _Worker | None = None) -> str:
+    """User-facing refusal text: what is missing, what the loaded worker holds, what the user can do."""
+    msg = f"LeapTalk memory guard: {prefix}: {rep.get('reason')}."
+    if w is not None and w.resident_commit_bytes:
+        msg += f" The loaded worker holds about {memory.gib(w.resident_commit_bytes)} of commit (measured when it started); LeapTalk Worker 'unload' frees it."
+    options = ["unload the LeapTalk worker"]
+    if not str(rep.get("profile") or "").startswith("wan_vae"):
+        options.append("use the lower-memory workflow (decoder wan_vae: lower peak, slower decoding, different frames)")
+    options.append("close other applications yourself")
+    msg += f" Options: {', '.join(options[:-1])}, or {options[-1]}. LeapTalk never switches decoder or backend on its own."
+    return msg
 
 
 def redact(text: str) -> str:
@@ -124,7 +136,7 @@ class _Worker:
         self.last_activity = time.monotonic()
         self.started_at = time.monotonic()
         self.startup_seconds: float | None = None
-        self.expected_job_gib: float | None = None
+        self.resident_commit_bytes: int | None = None  # commit after "ready" minus commit before the start
         self.loading_step: str | None = None
         self.session: Path | None = None
 
@@ -197,6 +209,7 @@ class _Worker:
             "jobs_done": self.jobs_done,
             "start_reason": self.start_reason,
             "startup_seconds": self.startup_seconds,
+            "resident_commit_gib": round(self.resident_commit_bytes / memory.GIB, 2) if self.resident_commit_bytes else None,
             "seconds_since_last_activity": round(now - self.last_activity, 1),
             "idle_timeout_seconds": self.rt.worker_idle_seconds,
         }
@@ -210,6 +223,7 @@ class WorkerManager:
         self.history: collections.deque = collections.deque(maxlen=50)
         self._pressure: memory.SustainedPressure | None = None
         self._clock = time.monotonic
+        self.estimates = memory.PeakEstimates()  # measured additional peaks, per decoder profile (this process)
         atexit.register(self.shutdown_all)
 
     # ------------------------------------------------------------------ public API
@@ -217,7 +231,12 @@ class WorkerManager:
     def status(self) -> dict:
         """Never starts a worker and never extends its idle time."""
         w = self._worker
-        out = {"worker": w.summary() if w is not None else None, "host_memory": memory.snapshot(), "history": list(self.history)[-10:]}
+        out = {
+            "worker": w.summary() if w is not None else None,
+            "host_memory": memory.snapshot(),
+            "memory_estimates": self.estimates.describe(),
+            "history": list(self.history)[-10:],
+        }
         if w is not None and w.state == "idle":
             left = w.rt.worker_idle_seconds - (self._clock() - w.last_activity)
             out["worker"]["idle_seconds_left"] = round(max(0.0, left), 1)
@@ -262,27 +281,56 @@ class WorkerManager:
             except Exception:  # noqa: BLE001
                 pass
 
-    def note_job_memory(self, result: dict) -> None:
-        """Use the measured extra CUDA memory of a finished job (peak minus the resident baseline) as the
-        expected addition for the next job on this worker, with a 25 % margin."""
-        w = self._worker
+    def note_job_memory(self, result: dict, job: dict) -> None:
+        """Record a finished job's extra CUDA memory (peak of its phases minus the reserved memory before
+        the job) as a measured warm peak of its profile. CUDA reserved memory is only one part of the
+        Windows commit charge; the commit change itself is measured around every job by the manager
+        (``memory.Tracker``) and the estimate uses the larger of the two."""
         jm = (result or {}).get("job_memory") or {}
         try:
             base = jm["resident_before_job"]["cuda_reserved_bytes"]
             peak = max(p["peak_reserved_bytes"] for p in jm["phases"].values())
         except (KeyError, TypeError, ValueError):
             return
-        if w is not None and w.engine.get("engine_instance_id") == (result.get("engine") or {}).get("engine_instance_id"):
-            w.expected_job_gib = max(1.0, (peak - base) / memory.GIB * 1.25)
+        self.estimates.observe(memory.profile_of(job), "warm", peak - base, "cuda_reserved")
 
-    def run_one_shot(self, fn):
-        """Run a one-shot job under the same lock; unload an idle worker first (one model at a time)."""
+    def run_one_shot(self, rt: Runtime, job: dict, run):
+        """Run a one-shot job under the same lock; unload an idle worker first (one model at a time).
+
+        With the memory guard enabled, a one-shot job is admitted like a new worker (load + job), checked
+        again after the model has loaded, and stopped by the run-time rule while it loads or generates.
+        ``run(guard)`` starts the process (``guard`` may be None when the guard is disabled). Returns
+        ``(run(...) result, info)``. Never falls back to another backend."""
         with self._lock:
+            info: dict = {"backend": "one-shot"}
             w = self._worker
-            unloaded = None
             if w is not None:
-                unloaded = self._stop_worker(w, "a one-shot job was requested (one model on the GPU at a time)")
-            return fn(), unloaded
+                rep = self._stop_worker(w, "a one-shot job was requested (one model on the GPU at a time)")
+                info["unloaded_persistent_worker"] = {k: rep.get(k) for k in ("worker_instance_id", "reason", "active_after")}
+            cfg = memory.settings(rt.memory_guard)
+            profile = memory.profile_of(job)
+            snap = memory.snapshot()
+            decision = memory.admit(snap, cfg, self.estimates.estimate(profile, "cold", cfg), "cold")
+            info["memory_check"] = decision
+            if not decision["admitted"]:
+                self._record("refused", backend="one-shot", reason=decision["reason"])
+                raise MemoryGuardRefused(_refusal("did not start the one-shot job", decision), kind="admission", report=decision)
+            guard = OneShotGuard(self, cfg, profile, snap) if cfg["enabled"] else None
+            try:
+                result = run(guard)
+            finally:
+                if guard is not None:  # also after a failed or stopped run: its peak was real
+                    info["memory_check_after_load"] = guard.job_decision
+                    guard.finish(False)
+            return result, info
+
+    def _admit_or_refuse(self, kind: str, rt: Runtime, job: dict, w: _Worker | None, prefix: str) -> dict:
+        cfg = memory.settings(rt.memory_guard)
+        decision = memory.admit(memory.snapshot(), cfg, self.estimates.estimate(memory.profile_of(job), kind, cfg), kind)
+        if not decision["admitted"]:
+            self._record("refused", backend="persistent", kind=kind, reason=decision["reason"])
+            raise MemoryGuardRefused(_refusal(prefix, decision, w), kind="admission", report=decision)
+        return decision
 
     def run_job(self, rt: Runtime, job: dict, job_dir: Path, *, interrupted, on_event, timeout_s: float | None = None) -> dict:
         """Run one prepared job on the persistent worker. Returns info for the report; raises on failure."""
@@ -312,24 +360,29 @@ class WorkerManager:
             if w is not None:
                 w.rt = rt  # same identity: take the current timeouts / idle time / memory settings
             started_new = w is None
+            profile = memory.profile_of(job)
+            cold = None
             if started_new:
-                snap = memory.snapshot()
-                ok, why = memory.check_start(snap, cfg, cfg["expected_worker_gib"], load=True)
-                info["memory_check"] = {"snapshot": snap, "decision": why, "expected_add_gib": cfg["expected_worker_gib"]}
-                if not ok:
-                    raise MemoryGuardRefused(f"LeapTalk did not start a worker: {why}")
-                w = self._start_worker(rt, decoder, parts, restart_reason or "first persistent job", interrupted)
+                # load + first job, projected from the commit charge before anything is loaded
+                info["memory_check"] = self._admit_or_refuse("cold", rt, job, None, "did not start a worker")
+                cold = memory.Tracker(memory.snapshot())
+                w = self._start_worker(rt, decoder, parts, restart_reason or "first persistent job", interrupted, cfg, cold)
+                # and again for the job itself, now that the loaded model is measured in the commit charge
+                info["memory_check_first_job"] = self._admit_or_refuse("warm", rt, job, w, "loaded the worker but did not start the job")
             else:
-                snap = memory.snapshot()
-                expect = w.expected_job_gib if w.expected_job_gib is not None else cfg["expected_job_gib"]
-                ok, why = memory.check_start(snap, cfg, expect, load=False)
-                info["memory_check"] = {"snapshot": snap, "decision": why, "expected_add_gib": round(expect, 2)}
-                if not ok:
-                    raise MemoryGuardRefused(f"LeapTalk did not start the job on the loaded worker: {why}")
+                info["memory_check"] = self._admit_or_refuse("warm", rt, job, w, "did not start the job on the loaded worker")
             info["started_new_worker"] = started_new
             info["restart_reason"] = restart_reason
             info["startup_s"] = w.startup_seconds if started_new else 0.0
-            self._run_on_worker(w, rt, job, job_dir, interrupted, on_event, timeout_s or rt.timeout_minutes * 60.0, cfg, info)
+            warm = memory.Tracker(memory.snapshot())
+            try:
+                self._run_on_worker(w, rt, job, job_dir, interrupted, on_event, timeout_s or rt.timeout_minutes * 60.0, cfg, info, (warm, cold))
+            finally:
+                # also after a failed or stopped job: its peak was real (values only ever raise the estimate)
+                self.estimates.observe(profile, "warm", warm.delta(), "commit")
+                if cold is not None:
+                    self.estimates.observe(profile, "cold", cold.delta(), "commit")
+            info["memory_observed"] = {"job_commit_delta_bytes": warm.delta(), "cold_commit_delta_bytes": cold.delta() if cold else None}
             info["worker"] = w.summary()
             return info
         finally:
@@ -374,9 +427,26 @@ class WorkerManager:
             finally:
                 self._lock.release()
 
-    def _start_worker(self, rt: Runtime, decoder: str, parts: dict, reason: str, interrupted) -> _Worker:
+    def _start_worker(
+        self, rt: Runtime, decoder: str, parts: dict, reason: str, interrupted, cfg: dict | None = None, cold: memory.Tracker | None = None
+    ) -> _Worker:
         w = _Worker(rt, decoder, parts, reason)
         t0 = self._clock()
+        pressure = memory.SustainedPressure(cfg or memory.settings(rt.memory_guard))
+
+        def monitor() -> None:
+            # runs in ComfyUI while the worker imports and loads (it may not answer then); the job object
+            # lets the whole tree be ended even if the interpreter is busy in a long import
+            snap = memory.snapshot()
+            if cold is not None:
+                cold.update(snap)
+            if pressure.update(snap):
+                raise MemoryGuardRefused(
+                    f"LeapTalk memory guard: stopped the worker while it was loading - system commit stayed at or above "
+                    f"{pressure.cfg['stop_commit_pct']:.0f} % for {pressure.cfg['stop_sustain_seconds']:.0f} s",
+                    kind="stopped",
+                )
+
         root = client.jobs_root(rt)
         session = root / "sessions" / w.worker_instance_id
         (session / "code").mkdir(parents=True)
@@ -401,7 +471,7 @@ class WorkerManager:
         try:
             w.tree = ProcessTree(argv, cwd=session, env=client.child_env(session, rt.python), stdout=None, stderr=session / "worker.log")
             threading.Thread(target=w._reader, name="leaptalk-worker-reader", daemon=True).start()
-            hello = self._wait_for(w, {"hello"}, HELLO_TIMEOUT_S, interrupted)
+            hello = self._wait_for(w, {"hello"}, HELLO_TIMEOUT_S, interrupted, monitor)
             if hello.get("worker_instance_id") != w.worker_instance_id or not isinstance(hello.get("pid"), int):
                 raise WorkerError("worker hello does not match")
             w.interpreter_pid = hello["pid"]
@@ -413,6 +483,7 @@ class WorkerManager:
             while True:
                 if interrupted():
                     raise client.JobCancelled("cancelled while the LeapTalk worker was starting")
+                monitor()
                 left = deadline - self._clock()
                 if left <= 0:
                     raise client.JobTimeout(f"the LeapTalk worker did not finish loading within {rt.worker_startup_timeout_seconds} s")
@@ -432,20 +503,26 @@ class WorkerManager:
             w.startup_seconds = round(self._clock() - t0, 3)
             w.state = "idle"
             w.last_activity = self._clock()
+            if cold is not None and cold.start is not None:
+                now = memory.snapshot()
+                cold.update(now)
+                w.resident_commit_bytes = max(0, (memory._b(now, "commit") or 0) - cold.start)
             self._record("ready", worker_instance_id=w.worker_instance_id, startup_s=w.startup_seconds, engine_instance_id=w.engine.get("engine_instance_id"))
             self._ensure_idle_thread()
             return w
         except BaseException as exc:
-            self._stop_worker(w, f"start failed: {type(exc).__name__}")
-            if isinstance(exc, (client.JobCancelled, client.JobTimeout, WorkerError)):
+            self._stop_worker(w, f"start failed: {type(exc).__name__}" + (" (memory guard)" if isinstance(exc, MemoryGuardRefused) else ""))
+            if isinstance(exc, (client.JobCancelled, client.JobTimeout, WorkerError, MemoryGuardRefused)):
                 raise
             raise WorkerError(redact(f"could not start the LeapTalk worker: {exc}")) from exc
 
-    def _wait_for(self, w: _Worker, types: set, timeout: float, interrupted) -> dict:
+    def _wait_for(self, w: _Worker, types: set, timeout: float, interrupted, monitor=None) -> dict:
         deadline = self._clock() + timeout
         while True:
             if interrupted():
                 raise client.JobCancelled("cancelled while the LeapTalk worker was starting")
+            if monitor is not None:
+                monitor()
             left = deadline - self._clock()
             if left <= 0:
                 raise WorkerError(f"no {sorted(types)} from the worker within {timeout:.0f} s")
@@ -456,7 +533,9 @@ class WorkerManager:
                 return msg
             raise WorkerError(f"unexpected message {msg['type']!r} (expected {sorted(types)})")
 
-    def _run_on_worker(self, w: _Worker, rt: Runtime, job: dict, job_dir: Path, interrupted, on_event, timeout_s: float, cfg: dict, info: dict) -> None:
+    def _run_on_worker(
+        self, w: _Worker, rt: Runtime, job: dict, job_dir: Path, interrupted, on_event, timeout_s: float, cfg: dict, info: dict, trackers=()
+    ) -> None:
         rid = f"r{uuid.uuid4().hex[:20]}"
         job_id = job["job_id"]
         w.state = "busy"
@@ -503,11 +582,17 @@ class WorkerManager:
                 if self._clock() > job_deadline:
                     self._cancel(w, rid, job_id, job_dir, "job timeout")
                     raise client.JobTimeout(f"LeapTalk job exceeded {timeout_s:.0f} s")
-                if pressure.update(memory.snapshot()):
+                snap = memory.snapshot()
+                for tr in trackers:
+                    if tr is not None:
+                        tr.update(snap)
+                if pressure.update(snap):
                     self._cancel(w, rid, job_id, job_dir, "memory pressure")
                     self._stop_worker(w, f"memory pressure during a job (commit {pressure.last.get('commit_pct')} %)")
                     raise MemoryGuardRefused(
-                        f"LeapTalk stopped the job: system commit stayed at or above {cfg['stop_commit_pct']:.0f} % for {cfg['stop_sustain_seconds']:.0f} s"
+                        f"LeapTalk memory guard: stopped the job and the worker - system commit stayed at or above "
+                        f"{cfg['stop_commit_pct']:.0f} % for {cfg['stop_sustain_seconds']:.0f} s",
+                        kind="stopped",
                     )
         except WorkerError as exc:
             w.dead_reason = str(exc)
@@ -580,6 +665,50 @@ class WorkerManager:
         rep["host_memory_after"] = memory.snapshot()
         self._record("stopped", **{k: v for k, v in rep.items() if k != "host_memory_after"})
         return rep
+
+
+class OneShotGuard:
+    """Memory guard of one one-shot runtime process (called from ``client.run_process``): the run-time
+    stop rule while the process imports, loads and generates; a second admission check for the job when
+    the runner reports that the model is loaded; afterwards the measured peaks go into the estimates."""
+
+    def __init__(self, manager: WorkerManager, cfg: dict, profile: tuple, start_snap: dict):
+        self.manager, self.cfg, self.profile = manager, cfg, profile
+        self.pressure = memory.SustainedPressure(cfg)
+        self.cold = memory.Tracker(start_snap)
+        self.job: memory.Tracker | None = None
+        self.job_decision: dict | None = None
+        self.phase = "loading"
+
+    def tick(self) -> None:
+        snap = memory.snapshot()
+        self.cold.update(snap)
+        if self.job is not None:
+            self.job.update(snap)
+        if self.pressure.update(snap):
+            raise MemoryGuardRefused(
+                f"LeapTalk memory guard: stopped the one-shot job while {self.phase} - system commit stayed at or above "
+                f"{self.cfg['stop_commit_pct']:.0f} % for {self.cfg['stop_sustain_seconds']:.0f} s",
+                kind="stopped",
+            )
+
+    def on_event(self, ev: dict) -> None:
+        if ev.get("event") != "loaded" or self.job is not None:
+            return
+        snap = memory.snapshot()
+        self.job = memory.Tracker(snap)
+        self.phase = "generating"
+        self.job_decision = memory.admit(snap, self.cfg, self.manager.estimates.estimate(self.profile, "warm", self.cfg), "warm")
+        if not self.job_decision["admitted"]:
+            self.manager._record("refused", backend="one-shot", kind="after load", reason=self.job_decision["reason"])
+            raise MemoryGuardRefused(
+                _refusal("loaded the model but did not start the one-shot job", self.job_decision), kind="admission", report=self.job_decision
+            )
+
+    def finish(self, ok: bool) -> None:
+        self.manager.estimates.observe(self.profile, "cold", self.cold.delta(), "commit")
+        if self.job is not None:
+            self.manager.estimates.observe(self.profile, "warm", self.job.delta(), "commit")
 
 
 MANAGER = WorkerManager()
