@@ -217,6 +217,28 @@ identical both times and equal to the one-shot result; the workflow's Worker sta
 idle worker after each job), Status, Unload, and ComfyUI killed while a worker idled (gone after 1.2 s).
 Records: `docs/results/v020/clean_install_*.json`.
 
+### All attempts
+
+The speed table above uses completed jobs only. Every generation queued in the v0.2.0 GPU runs
+(`docs/results/v020/`), with its outcome:
+
+| Run | Attempted | Completed | Refused before start (memory guard) | Stopped by the memory guard | Cancelled / timeout / error (intended test) | Interrupted by the test harness |
+| --- | --- | --- | --- | --- | --- | --- |
+| one-shot vs persistent, sequence, 96.5 s (Lite TAE) | 31 | 23 | 1 | 6 (stop rule of a development version) | – | 1 |
+| 33.98 s benchmark, decoder switch, cancel, error | 17 (+1 not in the record*) | 14 | (1*) | 1 | 1 cancel, 1 error | – |
+| timeout, crash, idle, Unload, race, kill (`wan_vae`) | 12 | 10 | – | – | 1 timeout, 1 crash | – |
+| clean install, Lite TAE | 8 | 3 | 5 | – | – | – |
+| clean install, `wan_vae` | 5 | 5 | – | – | – | – |
+
+\* The run was stopped by hand after a warm Lite TAE job was refused (projected 97.3 %); that attempt is
+not in its record file. A first v0.2.0 run (not included) was discarded because the test harness's own
+memory watchdog interrupted a one-shot job.
+
+Lite TAE on this machine: the warm jobs that ran peaked at 94.3–94.8 % of the commit limit; whether a job
+ran, was refused or was stopped depended on the background load at that moment, and the 33.98 s benchmark
+completed 6 of 6 only after the stop rule was corrected. `wan_vae` peaked lower (85.4–85.7 GiB of commit,
+about 92 %) and was not refused in these runs.
+
 **Failure handling (real runs, persistent backend).** Cancel during a job: stopped between chunks, the
 worker was kept, the next job ran on it. Job timeout (`timeout_minutes = 1`, 96.5 s with `wan_vae`):
 `LeapTalk job exceeded 60 s`, cancelled cleanly. Missing model folder: the worker failed to start with

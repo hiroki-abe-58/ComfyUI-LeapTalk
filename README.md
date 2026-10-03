@@ -48,6 +48,13 @@ the input speech are in the [v0.1.0 release](https://github.com/hiroki-abe-58/Co
   worker took **6.2 s** for the 9.4 s clip (median of 5; v0.1.0 one-shot 36.1 s) and **17.7 s** for the
   34 s clip (v0.1.0 one-shot 45.5 s), with the same frames as one-shot and as the official script. The
   first job of a worker costs the same as a one-shot job.
+- **Limits of these numbers**: they are medians of the jobs that completed on one machine under the
+  memory load it had at the time. With a high Windows commit charge the memory guard refuses or stops
+  Lite TAE jobs on a loaded worker: in the clean-install check of v0.2.0, 2 of 7 persistent Lite TAE
+  jobs ran (the first job of each worker) and the other 5 were refused before starting. A separate
+  series with `decoder = wan_vae` passed (5 of 5), but that is a different decoder with slower decoding
+  and different frames, not a Lite TAE result. Loosening the guard is not the recommended fix; all
+  attempts and outcomes: [docs/BENCHMARKS.md](docs/BENCHMARKS.md#all-attempts).
 - **Long input**: a 96.5 s clip took 71 s one-shot and 47 s on a loaded worker; GPU memory does not
   grow with the length.
 - **Memory**: peak CUDA 8.1 GiB allocated / 11.1 GiB reserved (Lite TAE), 6.1 / 7.6 GiB with the Wan
